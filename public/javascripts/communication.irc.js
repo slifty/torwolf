@@ -1,7 +1,3 @@
-COMMUNICATION_IRC_PAYLOAD_BROADCAST = "broadcast";
-COMMUNICATION_IRC_PAYLOAD_JOIN = "join";
-COMMUNICATION_IRC_PAYLOAD_LEAVE = "leave";
-
 var IRCCommunication = Communication.extend({
 	ssl: false,
 	users: [],
@@ -90,7 +86,7 @@ var IRCCommunication = Communication.extend({
 				this.newJoin(payload.data);
 				break;
 			case COMMUNICATION_IRC_PAYLOAD_LEAVE:
-				console.log("TODO: IRC Leave");
+				this.newLeave(payload.data);
 				break;
 		}
 	},
@@ -106,9 +102,8 @@ var IRCCommunication = Communication.extend({
 		this.messages.push(message);
 		
 		var output = $('<li />');
-		output.attr('id','message-' + message.id);
-		output.addClass('message');
-		
+		output.attr('id','irc-message-' + message.id);
+		output.addClass('irc-message');
 		message.render(output);
 		this.outputMessages.append(output);
 	},
@@ -126,16 +121,36 @@ var IRCCommunication = Communication.extend({
 		user.render(output);
 		this.outputUsers.append(output);
 		
-		var message = new IRCSystemMessage();
+		var message = new IRCActionMessage();
 		message.id = 0;
-		message.content = user.alias + " has joined the channel.";
-		message.timestamp = window.GAME_COMMUNICATION.turn;
-		message.sender = MESSAGE_IRC_SENDER
-		this.messages.push(message);
+		message.type = MESSAGE_IRC_SYSTEM_TYPE_JOIN;
+		message.target = user;
 		
+		var output = $('<li />');
+		output.attr('id','message-' + message.id);
+		output.addClass('message');
+		message.render(output);
+		this.outputMessages.append(output);
+		this.messages.push(message);
 	},
 	newLeave: function(data) {
+		var user = this.getUserById(data.id);
+		if(user == null) return;
+
+		this.users.splice(this.users.indexOf(user),1);
+		$("#irc-user-" + user.id).remove();
 		
+		var message = new IRCActionMessage();
+		message.id = 0;
+		message.type = MESSAGE_IRC_SYSTEM_TYPE_LEAVE;
+		message.target = user;
+		
+		var output = $('<li />');
+		output.attr('id','message-' + message.id);
+		output.addClass('message');
+		message.render(output);
+		this.outputMessages.append(output);
+		this.messages.push(message);
 	},
 	
 	getUserById: function(id) {
@@ -172,6 +187,19 @@ $(function() {
 				id: 1,
 				content: "test",
 				user: 1,
+			}
+		}
+	}
+	window.COMMUNICATION.receivePayload(test);
+	
+	var test = {
+		target: COMMUNICATION_TARGET_IRC,
+		payload: {
+			type: COMMUNICATION_IRC_PAYLOAD_LEAVE,
+			data: {
+				id: 1,
+				player: 1,
+				alias: "slifty"
 			}
 		}
 	}

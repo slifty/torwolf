@@ -1,4 +1,3 @@
-
 var IRCUser = User.extend({
 	alias: "",
 	

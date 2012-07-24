@@ -26,7 +26,9 @@ Setting up the client and backend
 
 8. Install the SocketIO module (http://socket.io/)
 
-9. Create a local config file
+9. Install the node-uuid module (https://github.com/broofa/node-uuid/)
+
+10. Create a local config file
 		cp config.default.js config.js
 		vi config.js
 

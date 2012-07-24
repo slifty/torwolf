@@ -1,6 +1,3 @@
-COMMUNICATION_GAME_PAYLOAD_ADDPLAYER = "addplayer";
-COMMUNICATION_GAME_PAYLOAD_SETROLE = "setrole";
-
 var GameCommunication = Communication.extend({
 	turn: 0,
 	players: [],
@@ -41,18 +38,16 @@ var GameCommunication = Communication.extend({
 	sendPayload: function(text) {
 		console.log("TODO: Send Game Message");
 	},
+	
 	receivePayload: function(payload) {
 		switch(payload.type) {
-			case COMMUNICATION_GAME_PAYLOAD_ADDPLAYER:
-				this.addPlayer(payload.data);
-				break;
-			case COMMUNICATION_GAME_PAYLOAD_SETROLE:
-				console.log("TODO: Set role");
+			case COMMUNICATION_GAME_PAYLOAD_JOIN:
+				this.join(payload.data);
 				break;
 		}
 	},
 	
-	addPlayer: function(data) {
+	join: function(data) {
 		var player = new Player();
 		player.id = data.id;
 		player.alive = data.alive;
@@ -67,8 +62,6 @@ var GameCommunication = Communication.extend({
 		
 		player.render(output);
 		this.playerList.append(output);
-	},
-	setRole: function(role) {
 	},
 	
 	getPlayerById: function(id) {
@@ -88,7 +81,7 @@ $(function() {
 	var test = {
 		target: COMMUNICATION_TARGET_GAME,
 		payload: {
-			type: COMMUNICATION_GAME_PAYLOAD_ADDPLAYER,
+			type: COMMUNICATION_GAME_PAYLOAD_JOIN,
 			data: {
 				id: 1,
 				alive: true,

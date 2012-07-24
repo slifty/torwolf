@@ -1,18 +1,15 @@
-var COMMUNICATION_TARGET_IRC = "irc";
-var COMMUNICATION_TARGET_EMAIL = "email";
-var COMMUNICATION_TARGET_GAME = "";
-var COMMUNICATION_TARGET_TOR = "";
-var COMMUNICATION_TARGET_NEWSPAPER = "";
-
 var Communication = Class.extend({
 	pane: null,
 	messages: [],
 	
 	init: function() {
 		// Create a socket
+		var socket = io.connect();
+		socket.on('payload', this.receivePayload);
 	},
 	
 	sendPayload: function(message) {
+		socket.emit('payload', message);
 	},
 	
 	receivePayload: function(message) {

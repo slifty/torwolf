@@ -1,6 +1,3 @@
-MESSAGE_IRC_SYSTEM_TYPE_JOIN = "join";
-MESSAGE_IRC_SYSTEM_TYPE_LEAVE = "leave";
-
 var IRCActionMessage = Message.extend({
 	type: "",
 	target: null,
@@ -14,17 +11,17 @@ var IRCActionMessage = Message.extend({
 		
 		outputContent.text(" * ");
 		
-		var outputTarget = $('<span />');
+		var outputName = $('<span />');
 		outputName.addClass('name');
-		outputName.addClass('irc-user-' + this.sender.id);
-		outputName.addClass('player-' + this.sender.player.id);
-		outputName.text(this.sender.alias);
+		outputName.addClass('irc-user-' + this.target.id);
+		outputName.addClass('player-' + this.target.player.id);
+		outputName.text(this.target.alias);
 		outputContent.append(outputName);
 		outputContent.append(" has ");
 		
 		var outputAction = $('<span />');
 		outputAction.addClass('action');
-		switch(this.action) {
+		switch(this.type) {
 			case MESSAGE_IRC_SYSTEM_TYPE_JOIN:
 				outputAction.text("joined the channel");
 				break;
