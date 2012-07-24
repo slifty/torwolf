@@ -1,4 +1,4 @@
-Incommunicado: A game of communication, deception, and media
+TorWolf: A game of communication, deception, and media
 =============
 
 This document explains how to set up the code.
