@@ -5,16 +5,16 @@ var IRCMessage = Message.extend({
 	render: function(output) {
 		output.empty();
 		
-		var outputName = $('<div />');
-		outputName.addClass('name');
-		outputName.addClass('irc-user-' + this.sender.id);
-		outputName.addClass('player-' + this.sender.player.id);
-		outputName.text('<' + this.sender.alias + '>');
-		output.append(outputName);
+		var outputName = $('<div />')
+			.addClass('name')
+			.addClass('irc-user-' + this.sender.id)
+			.addClass('player-' + this.sender.player.id)
+			.text('<' + this.sender.alias + '>')
+			.appendTo(output);
 		
-		var outputContent = $('<div />');
-		outputContent.addClass('content');
-		outputContent.text(this.content);
-		output.append(outputContent);
+		var outputContent = $('<div />')
+			.addClass('content')
+			.text(this.content)
+			.appendTo(output);
 	}
 });

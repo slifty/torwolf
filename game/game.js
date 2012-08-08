@@ -1,82 +1,85 @@
 var uuid = require('node-uuid');
 
 var constants = require('../constants'),
+	payloads = require('../payloads'),
 	communication = require('./communication');
 
 var games = {};
+var lobby = {};
 
 
 // Classes
 function Game () {
 	this.id = uuid.v1();
+	this.maxPlayers = 8;
+	this.messages = [];
 	this.name = "";
 	this.password = "";
-	this.players = [];
-	this.secretCount = 3;
+	this.players = {};
 	this.secrets = [];
-	this.messages = [];
+	this.secretCount = 3;
 }
 
 function Player () {
-	this.id = uuid.v1();
 	this.alive = true,
+	this.allegiance = "";
+	this.id = uuid.v1();
 	this.name = "";
 	this.role = "";
-	this.allegiance = "";
 	this.secrets = [];
-}
-
-
-// Payloads
-function PayloadError(content) {
-	this.content = content;
-	this.getPayload = function() {
-		return {
-			type: constants.COMMUNICATION_GAME_PAYLOAD_ERROR,
-			data: {
-				content: this.content
-			}
-		}
-	}
-}
-
-function PayloadJoin(player) {
-	this.player = player;
-	this.getPayload = function() {
-		return {
-			type: constants.COMMUNICATION_GAME_PAYLOAD_JOIN,
-			data: {
-				id: player.id,
-				alive: player.alive,
-				name: player.name,
-				role: constants.PLAYER_ROLE_UNKNOWN,
-				allegiance: constants.PLAYER_ALLEGIANCE_UNKNOWN
-			}
-		}
-	}
 }
 
 
 // Functions
-function join(data, socket) {
+function connect(data, socket) {
 	var player = new Player();
 	player.name = data.name;
-	if(!data.game in games) {
-		var error = new PayloadError("The game you tried to join doesn't exist.");
-		communication.sendPayload(error.getPayload(), constants.COMMUNICATION_TARGET_GAME, socket);
-	}
 	
-	var game = games[data.game];
-	game.players.push(player);
+	lobby[player.id] = player;
 	communication.registerPlayer(player,socket);
-	
+}
+
+function join(data, socket) {
+	if(!data.gameId in games)
+		return error("The game you tried to join doesn't exist.", socket);
+	var game = games[data.gameId];
+	var player = communication.getPlayerBySocketId(socket.id);
+	delete lobby[player.id];
+	game.players[player.id] = player;
 	
 	var sockets = [];
 	for(var x in game.players)
-		sockets.push(communication.getSocketByPlayer(player));
-	var join = new PayloadJoin(player);
-	communication.sendPayload(join.getPayload(), constants.COMMUNICATION_TARGET_GAME , sockets);
+		sockets.push(communication.getSocketByPlayerId(game.players[x].id));
+	
+	console.log(sockets);
+	
+	var join = new payloads.GameJoinOutPayload(player);
+	communication.sendMessage(constants.COMMUNICATION_TARGET_GAME, join.getPayload(), sockets);
 }
+
+function create(data, socket) {
+	if(data.name == "")
+		return error("Your game name cannot be blank.", socket);
+	if(data.isPassword && data.password == "")
+		return error("You cannot have a private game without a password.", socket);
+	var game = new Game();
+	game.name = data.name;
+	game.password = data.password;
+	games[game.id] = game;
+	
+	var sockets = [];
+	for(var x in lobby)
+		sockets.push(communication.getSocketByPlayerId(lobby[x].id));
+	
+	var create = new payloads.GameCreateOutPayload(game);
+	return communication.sendMessage(constants.COMMUNICATION_TARGET_GAME, create.getPayload(), sockets);
+}
+
+function error(message, socket) {
+	var error = new payloads.ErrorPayload(message);
+	return communication.sendMessage(constants.COMMUNICATION_TARGET_GAME, error.getPayload(), socket);
+}
+
 
 function ready(data, socket) {
 }
@@ -87,18 +90,25 @@ function startGame() {
 
 // Exports
 exports.receivePayload = function(payload, socket) {
-	switch(message.type) {
-		case constants.COMMUNICATION_GAME_PAYLOAD_LISTGAMES:
+	switch(payload.type) {
+		case constants.COMMUNICATION_GAME_PAYLOAD_CONNECT:
+			connect(payload.data, socket);
+			break;
+		case constants.COMMUNICATION_GAME_PAYLOAD_CREATE:
+			create(payload.data, socket);
 			break;
 		case constants.COMMUNICATION_GAME_PAYLOAD_JOIN:
+			join(payload.data, socket);
+			break;
+		case constants.COMMUNICATION_GAME_PAYLOAD_JOIN_LISTGAMES:
 			break;
 		case constants.COMMUNICATION_GAME_PAYLOAD_LEAVE:
 			break;
 		case constants.COMMUNICATION_GAME_PAYLOAD_READY:
 			break;
-		case constants.COMMUNICATION_GAME_PAYLOAD_SETROLE:
-			break;
 		case constants.COMMUNICATION_GAME_PAYLOAD_SETALLEGIANCE:
+			break;
+		case constants.COMMUNICATION_GAME_PAYLOAD_SETROLE:
 			break;
 	}
 };

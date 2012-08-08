@@ -1,4 +1,5 @@
 var constants = require('../constants'),
+	payloads = require('../payloads'),
 	irc = require('./irc'),
 	email = require('./email'),
 	game = require('./game'),
@@ -10,7 +11,9 @@ var sockets = {},
 	players = {};
 
 // Exports
-exports.receivePayload = function(message, socket) {
+exports.receiveMessage = function(message, socket) {
+	console.log("In:");
+	console.log(message);
 	switch(message.target) {
 		case constants.COMMUNICATION_TARGET_IRC:
 			irc.receivePayload(message.payload, socket);
@@ -30,9 +33,18 @@ exports.receivePayload = function(message, socket) {
 	}
 }
 
-exports.sendPayload = function(message, target, sockets) {
+exports.sendMessage = function(target, payload, sockets) {
+	console.log("Out:");
+	console.log(payload);
+
 	if(!(sockets instanceof Array)) sockets = [sockets];
-	console.log("TODO: sendPayload");
+	var message = {
+			target: target,
+			payload: payload
+	};
+	for(var x in sockets) {
+		sockets[x].emit('message', message);
+	}
 }
 
 exports.registerPlayer = function(player, socket) {
@@ -40,7 +52,10 @@ exports.registerPlayer = function(player, socket) {
 	players[socket.id] = player;
 }
 
-exports.getPlayerBySocket = function(socket) {
+exports.getPlayerBySocketId = function(socketId) {
+	return players[socketId];
 }
-exports.getSocketByPlayer = function(player) {
+
+exports.getSocketByPlayerId = function(playerId) {
+	return sockets[playerId]
 }

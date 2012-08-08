@@ -1,111 +1,113 @@
-var EmailCommunication = Communication.extend({
+var EmailCommunication = Class.extend({
 	ssl: false,
 	pgp_public: [],
 	pgp_private: [],
+	messages: [],
 	
 	init: function() {
-		var controlPane = $('<div />');
-		controlPane.attr('id','email-control-pane');
-		controlPane.addClass('control-pane');
+		var controlPane = $('<div />')
+			.attr('id','email-control-pane')
+			.addClass('control-pane')
+			.appendTo($("body"));
 		this.controlPane = controlPane;
-		$("body").append(controlPane);
 		
-		var outputPane = $('<div />');
-		outputPane.attr('id','email-output-pane');
-		outputPane.addClass('output-pane');
+		var outputPane = $('<div />')
+			.attr('id','email-output-pane')
+			.addClass('output-pane')
+			.appendTo(controlPane);
 		this.outputPane = outputPane;
-		controlPane.append(outputPane);
 		
-		var inputPane = $('<div />');
-		inputPane.attr('id','email-input-pane');
-		inputPane.addClass('input-pane');
+		var inputPane = $('<div />')
+			.attr('id','email-input-pane')
+			.addClass('input-pane')
+			.appendTo(controlPane);
 		this.inputPane = inputPane;
-		controlPane.append(inputPane);
 		
-		var toolPane = $('<div />');
-		toolPane.attr('id','email-tool-pane');
-		toolPane.addClass('tool-pane');
+		var toolPane = $('<div />')
+			.attr('id','email-tool-pane')
+			.addClass('tool-pane')
+			.appendTo(controlPane);
 		this.toolPane = toolPane;
-		controlPane.append(toolPane);
 		
-		var outputMessages = $('<ul />');
-		outputMessages.attr('id','email-output-messages');
-		outputMessages.addClass('output-messages');
+		var outputMessages = $('<ul />')
+			.attr('id','email-output-messages')
+			.addClass('output-messages')
+			.appendTo(outputPane);
 		this.outputMessages = outputMessages;
-		outputPane.append(outputMessages);
 		
-		var inputToLabel = $('<label />');
-		inputToLabel.attr('id','email-input-to-label');
-		inputToLabel.attr('for','email-input-to');
-		inputToLabel.text('To:');
-		inputPane.append(inputToLabel);
+		var inputToLabel = $('<label />')
+			.attr('id','email-input-to-label')
+			.attr('for','email-input-to')
+			.text('To:')
+			.appendTo(inputPane);
 		
-		var inputTo = $('<input />');
-		inputTo.attr('id','email-input-to');
-		inputTo.attr('type','text');
+		var inputTo = $('<input />')
+			.attr('id','email-input-to')
+			.attr('type','text')
+			.appendTo(inputPane);
 		this.inputTo = inputTo;
-		inputPane.append(inputTo);
 		
 		
-		var inputCCLabel = $('<label />');
-		inputCCLabel.attr('id','email-input-cc-label');
-		inputCCLabel.attr('for','email-input-cc');
-		inputCCLabel.text('CC:');
-		inputPane.append(inputCCLabel);
+		var inputCCLabel = $('<label />')
+			.attr('id','email-input-cc-label')
+			.attr('for','email-input-cc')
+			.text('CC:')
+			.appendTo(inputPane);
 		
-		var inputCC = $('<input />');
-		inputCC.attr('id','email-input-cc');
-		inputCC.attr('type','text');
+		var inputCC = $('<input />')
+			.attr('id','email-input-cc')
+			.attr('type','text')
+			.appendTo(inputPane);
 		this.inputCC = inputCC;
-		inputPane.append(inputCC);
 		
-		var inputBCCLabel = $('<label />');
-		inputBCCLabel.attr('id','email-input-bcc-label');
-		inputBCCLabel.attr('for','email-input-bcc');
-		inputBCCLabel.text('BCC:');
-		inputPane.append(inputBCCLabel);
+		var inputBCCLabel = $('<label />')
+			.attr('id','email-input-bcc-label')
+			.attr('for','email-input-bcc')
+			.text('BCC:')
+			.appendTo(inputPane);
 		
-		var inputBCC = $('<input />');
-		inputBCC.attr('id','email-input-bcc');
-		inputBCC.attr('type','text');
+		var inputBCC = $('<input />')
+			.attr('id','email-input-bcc')
+			.attr('type','text')
+			.appendTo(inputPane);
 		this.inputBCC = inputBCC;
-		inputPane.append(inputBCC);
 		
-		var inputSubjectLabel = $('<label />');
-		inputSubjectLabel.attr('id','email-input-subject-label');
-		inputSubjectLabel.attr('for','email-input-subject');
-		inputSubjectLabel.text('Subject:');
-		inputPane.append(inputSubjectLabel);
+		var inputSubjectLabel = $('<label />')
+			.attr('id','email-input-subject-label')
+			.attr('for','email-input-subject')
+			.text('Subject:')
+			.appendTo(inputPane);
 		
-		var inputSubject = $('<input />');
-		inputSubject.attr('id','email-input-subject');
-		inputSubject.attr('type','text');
+		var inputSubject = $('<input />')
+			.attr('id','email-input-subject')
+			.attr('type','text')
+			.appendTo(inputPane);
 		this.inputSubject = inputSubject;
-		inputPane.append(inputSubject);
 		
-		var inputBody = $('<textarea />');
-		inputBody.attr('id','email-input-body');
+		var inputBody = $('<textarea />')
+			.attr('id','email-input-body')
+			.appendTo(inputPane);
 		this.inputBody = inputBody;
-		inputPane.append(inputBody);
 		
-		var inputSubmit = $('<input />');
-		inputSubmit.attr('id','email-input-submit');
-		inputSubmit.attr('value','Send');
-		inputSubmit.attr('type','submit');
+		var inputSubmit = $('<input />')
+			.attr('id','email-input-submit')
+			.attr('value','Send')
+			.attr('type','submit')
+			.appendTo(inputPane);
 		this.inputSubmit = inputSubmit;
-		inputPane.append(inputSubmit);
 		
-		var toolSSL = $('<div />');
-		toolSSL.attr('id','email-tool-ssl');
-		toolSSL.addClass('tool');
-		toolSSL.click(function() {
-			if(window.EMAIL_COMMUNICATION.ssl)
-				window.EMAIL_COMMUNICATION.deactivateSSL();
-			else
-				window.EMAIL_COMMUNICATION.activateSSL();
-		});
+		var toolSSL = $('<div />')
+			.attr('id','email-tool-ssl')
+			.addClass('tool')
+			.bind('click',{context: this}, function(ev) {
+				var self = ev.data.context;
+				if(self.ssl)
+					self.deactivateSSL();
+				else
+					self.activateSSL();
+			})
+			.appendTo(toolPane);
 		this.toolSSL = toolSSL;
-		toolPane.append(toolSSL);
 	},
 	
 	activateSSL: function() {
@@ -132,12 +134,12 @@ var EmailCommunication = Communication.extend({
 	receivePayload: function(payload) {
 		switch(payload.type) {
 			case COMMUNICATION_EMAIL_PAYLOAD_EMAIL:
-				this.newEmail(payload.data);
+				this.emailOut(payload.data);
 				break;
 		}
 	},
 	
-	newEmail: function(data) {
+	emailOut: function(data) {
 		var message = new EmailMessage();
 		message.id = data.id;
 		message.content = data.content;
@@ -191,5 +193,5 @@ $(function() {
 			}
 		}
 	}
-	window.COMMUNICATION.receivePayload(test);
+	//window.COMMUNICATION.receiveMessage(test);
 });

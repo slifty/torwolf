@@ -1,4 +1,4 @@
-var TorCommunication = Communication.extend({
+var TorCommunication = Class.extend({
 	active: false,
 	bridge: null,
 	

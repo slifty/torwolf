@@ -45,6 +45,34 @@ Starting the Server
 
     node app.js
 
+
+Code Conventions
+=============
+
+Communication Method and Class Naming
+-------------
+For the sake of simplicity, function and class names concerning communication are always from the perspective of the server, even in client code.
+
+"In" means the message is going from client->server ("into" the server).
+
+"Out" means the message is going server->client ("out" of the server).
+
+jQuery
+-------------
+Chain when possible
+	.because the code
+	.is easier
+	.to read
+
+Misc
+-------------
+In situations where order is functionally irrelevant, lists of things should be sorted alphabetically.  This means classes, constants, lists of lists (e.g. this), switch statements, variable declarations, etc.
+
+Variable Naming
+-------------
+Variable names are camelCase
+This includes acronyms -- "ID" is "Id" and "URL" is "Url"
+
 Licensing
 =============
 The MIT License (MIT)

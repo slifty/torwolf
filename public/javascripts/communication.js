@@ -1,18 +1,23 @@
 var Communication = Class.extend({
-	pane: null,
-	messages: [],
-	
 	init: function() {
 		// Create a socket
-		var socket = io.connect();
-		socket.on('payload', this.receivePayload);
+		this.socket = io.connect();
+		this.socket.on('message', this.receiveMessage);
 	},
 	
-	sendPayload: function(message) {
-		socket.emit('payload', message);
+	sendMessage: function(target, payload) {
+		console.log("In:");
+		console.log(payload);
+
+		this.socket.emit('message', {
+			target: target,
+			payload: payload
+		});
 	},
 	
-	receivePayload: function(message) {
+	receiveMessage: function(message) {
+		console.log("Out:");
+		console.log(message);
 		var communicationTarget = message.target;
 		switch(message.target) {
 			case COMMUNICATION_TARGET_IRC:

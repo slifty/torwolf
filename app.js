@@ -43,13 +43,14 @@ app.listen(3000, function() {
 	console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });
 
-// Shared Contants
+// Shared Content
 app.get("/constants.js", function(req, res) { res.sendfile('./constants.js'); });
+app.get("/payloads.js", function(req, res) { res.sendfile('./payloads.js'); });
 
 
 // Sockets
 io.sockets.on('connection', function (socket) {
-	socket.on('payload', function (payload) {
-		game_routes.receivePayload(payload, socket);
+	socket.on('message', function (payload) {
+		game_routes.receiveMessage(payload, socket);
 	});
 });

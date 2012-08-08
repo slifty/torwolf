@@ -1,68 +1,70 @@
-var IRCCommunication = Communication.extend({
+var IRCCommunication = Class.extend({
 	ssl: false,
-	users: [],
+	users: {},
+	messages: [],
 	
 	init: function() {
-		var controlPane = $('<div />');
-		controlPane.attr('id','irc-control-pane');
-		controlPane.addClass('control-pane');
+		var controlPane = $('<div />')
+			.attr('id','irc-control-pane')
+			.addClass('control-pane')
+			.appendTo($("body"));
 		this.controlPane = controlPane;
-		$("body").append(controlPane);
 		
-		var outputPane = $('<div />');
-		outputPane.attr('id','irc-output-pane');
-		outputPane.addClass('output-pane');
+		var outputPane = $('<div />')
+			.attr('id','irc-output-pane')
+			.addClass('output-pane')
+			.appendTo(controlPane);
 		this.outputPane = outputPane;
-		controlPane.append(outputPane);
 		
-		var inputPane = $('<div />');
-		inputPane.attr('id','irc-input-pane');
-		inputPane.addClass('input-pane');
+		var inputPane = $('<div />')
+			.attr('id','irc-input-pane')
+			.addClass('input-pane')
+			.appendTo(controlPane);
 		this.inputPane = inputPane;
-		controlPane.append(inputPane);
 		
-		var toolPane = $('<div />');
-		toolPane.attr('id','irc-tool-pane');
-		toolPane.addClass('tool-pane');
+		var toolPane = $('<div />')
+			.attr('id','irc-tool-pane')
+			.addClass('tool-pane')
+			.appendTo(controlPane);
 		this.toolPane = toolPane;
-		controlPane.append(toolPane);
 		
-		var outputMessages = $('<ul />');
-		outputMessages.attr('id','irc-output-messages');
-		outputMessages.addClass('output-messages');
+		var outputMessages = $('<ul />')
+			.attr('id','irc-output-messages')
+			.addClass('output-messages')
+			.appendTo(outputPane);
 		this.outputMessages = outputMessages;
-		outputPane.append(outputMessages);
 		
-		var outputUsers = $('<ul />');
-		outputUsers.attr('id','irc-output-users');
-		outputUsers.addClass('output-users');
+		var outputUsers = $('<ul />')
+			.attr('id','irc-output-users')
+			.addClass('output-users')
+			.appendTo(outputPane);
 		this.outputUsers = outputUsers;
-		outputPane.append(outputUsers);
 		
-		var inputTextField = $('<input />');
-		inputTextField.attr('id','irc-input-textfield');
-		inputTextField.attr('type','text');
+		var inputTextField = $('<input />')
+			.attr('id','irc-input-textfield')
+			.attr('type','text')
+			.appendTo(inputPane);
 		this.inputTextField = inputTextField;
-		inputPane.append(inputTextField);
 		
-		var inputSubmit = $('<input />');
-		inputSubmit.attr('id','irc-input-submit');
-		inputSubmit.attr('value','Send');
-		inputSubmit.attr('type','submit');
+		var inputSubmit = $('<input />')
+			.attr('id','irc-input-submit')
+			.attr('value','Send')
+			.attr('type','submit')
+			.appendTo(inputPane);
 		this.inputSubmit = inputSubmit;
-		inputPane.append(inputSubmit);
 		
-		var toolSSL = $('<div />');
-		toolSSL.attr('id','irc-tool-ssl');
-		toolSSL.addClass('tool');
-		toolSSL.click(function() {
-			if(window.IRC_COMMUNICATION.ssl)
-				window.IRC_COMMUNICATION.deactivateSSL();
-			else
-				window.IRC_COMMUNICATION.activateSSL();
-		});
+		var toolSSL = $('<div />')
+			.attr('id','irc-tool-ssl')
+			.addClass('tool')
+			.bind('click',{context: this}, function(ev) {
+				var self = ev.data.context;
+				if(self.ssl)
+					self.deactivateSSL();
+				else
+					self.activateSSL();
+			})
+			.appendTo(toolPane);
 		this.toolSSL = toolSSL;
-		toolPane.append(toolSSL);
 	},
 	
 	activateSSL: function() {
@@ -80,18 +82,18 @@ var IRCCommunication = Communication.extend({
 	receivePayload: function(payload) {
 		switch(payload.type) {
 			case COMMUNICATION_IRC_PAYLOAD_BROADCAST:
-				this.newBroadcast(payload.data);
+				this.broadcastOut(payload.data);
 				break;
 			case COMMUNICATION_IRC_PAYLOAD_JOIN:
-				this.newJoin(payload.data);
+				this.joinOut(payload.data);
 				break;
 			case COMMUNICATION_IRC_PAYLOAD_LEAVE:
-				this.newLeave(payload.data);
+				this.leaveOut(payload.data);
 				break;
 		}
 	},
 	
-	newBroadcast: function(data) {
+	broadcastOut: function(data) {
 		var message = new IRCMessage();
 		message.id = data.id;
 		message.content = data.content;
@@ -107,13 +109,13 @@ var IRCCommunication = Communication.extend({
 		message.render(output);
 		this.outputMessages.append(output);
 	},
-	newJoin: function(data) {
+	joinOut: function(data) {
 		var user = new IRCUser();
 		user.id = data.id;
 		user.alias = data.alias;
 		user.player = window.GAME_COMMUNICATION.getPlayerById(data.player);
 		if(user.player == null) return;
-		this.users.push(user);
+		this.users[user.id] = user;
 		
 		var output = $('<li />');
 		output.attr('id', 'irc-user-' + user.id);
@@ -133,11 +135,11 @@ var IRCCommunication = Communication.extend({
 		this.outputMessages.append(output);
 		this.messages.push(message);
 	},
-	newLeave: function(data) {
+	leaveOut: function(data) {
 		var user = this.getUserById(data.id);
 		if(user == null) return;
-
-		this.users.splice(this.users.indexOf(user),1);
+		
+		delete this.users[user.id];
 		$("#irc-user-" + user.id).remove();
 		
 		var message = new IRCActionMessage();
@@ -154,10 +156,8 @@ var IRCCommunication = Communication.extend({
 	},
 	
 	getUserById: function(id) {
-		for(var x in this.users) {
-			if(this.users[x].id == id)
-				return this.users[x];
-		}
+		if(id in this.users)
+			return this.users[id];
 		return null;
 	}
 });
@@ -177,7 +177,7 @@ $(function() {
 			}
 		}
 	}
-	window.COMMUNICATION.receivePayload(test);
+	//window.COMMUNICATION.receiveMessage(test);
 	
 	var test = {
 		target: COMMUNICATION_TARGET_IRC,
@@ -190,7 +190,7 @@ $(function() {
 			}
 		}
 	}
-	window.COMMUNICATION.receivePayload(test);
+	//window.COMMUNICATION.receiveMessage(test);
 	
 	var test = {
 		target: COMMUNICATION_TARGET_IRC,
@@ -203,5 +203,5 @@ $(function() {
 			}
 		}
 	}
-	window.COMMUNICATION.receivePayload(test);
+	//window.COMMUNICATION.receiveMessage(test);
 });
