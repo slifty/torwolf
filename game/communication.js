@@ -53,9 +53,9 @@ exports.registerPlayer = function(player, socket) {
 }
 
 exports.getPlayerBySocketId = function(socketId) {
-	return players[socketId];
+	return (socketId in players)?players[socketId]:null;
 }
 
 exports.getSocketByPlayerId = function(playerId) {
-	return sockets[playerId]
+	return (playerId in sockets)?sockets[playerId]:null;
 }

@@ -5,7 +5,18 @@ if(typeof(window) != "undefined") {
 	constants = require('./constants');
 }
 
-// In
+exports.ErrorPayload = function(content) {
+	this.content = content;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_GAME_PAYLOAD_ERROR,
+			data: {
+				content: this.content
+			}
+		}
+	};
+};
+
 exports.GameConnectInPayload = function(name) {
 	var name = name;
 	this.getPayload = function() {
@@ -18,21 +29,51 @@ exports.GameConnectInPayload = function(name) {
 	};
 };
 
+exports.GameConnectOutPayload = function(player) {
+	var id = player.id;
+	var name = player.name;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_GAME_PAYLOAD_CONNECT,
+			data: {
+				id: id,
+				name: player.name
+			}
+		}
+	};
+};
+
 exports.GameCreateInPayload = function(game) {
 	this.name = game.name;
 	this.password = game.password;
-	this.isPassword = game.isPassword;
+	this.isPrivate = game.isPrivate;
 	this.getPayload = function() {
 		return {
 			type: constants.COMMUNICATION_GAME_PAYLOAD_CREATE,
 			data: {
 				name: this.name,
 				password: this.password,
-				isPassword: this.isPassword
+				isPrivate: this.isPrivate
 			}
 		}
 	};
 };
+
+exports.GameCreateOutPayload = function(game) {
+	this.game = game;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_GAME_PAYLOAD_CREATE,
+			data: {
+				id: this.game.id,
+				isPrivate: this.game.isPrivate,
+				maxPlayers: this.game.maxPlayers,
+				name: this.game.name,
+				players: this.game.players
+			}
+		}
+	};
+}
 
 exports.GameJoinInPayload = function(game) {
 	this.game = game;
@@ -47,36 +88,6 @@ exports.GameJoinInPayload = function(game) {
 		}
 	};
 };
-
-
-// Out
-exports.GameConnectOutPayload = function(name) {
-	var name = name;
-	this.getPayload = function() {
-		return {
-			type: constants.COMMUNICATION_GAME_PAYLOAD_CONNECT,
-			data: {
-				name: name
-			}
-		}
-	};
-};
-
-exports.GameCreateOutPayload = function(game) {
-	this.game = game;
-	this.getPayload = function() {
-		return {
-			type: constants.COMMUNICATION_GAME_PAYLOAD_CREATE,
-			data: {
-				id: this.game.id,
-				isPassword: ((this.game.password == "")?false:true),
-				maxPlayers: this.game.maxPlayers,
-				name: this.game.name,
-				players: this.game.players
-			}
-		}
-	};
-}
 
 exports.GameJoinOutPayload = function(player) {
 	this.player = player;
@@ -93,17 +104,3 @@ exports.GameJoinOutPayload = function(player) {
 		}
 	}
 }
-
-
-//Universal
-exports.ErrorPayload = function(content) {
-	this.content = content;
-	this.getPayload = function() {
-		return {
-			type: constants.COMMUNICATION_GAME_PAYLOAD_ERROR,
-			data: {
-				content: this.content
-			}
-		}
-	};
-};

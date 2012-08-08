@@ -1,7 +1,7 @@
 var Game = Class.extend({
 	id: "",
 	name: "",
-	isPassword: null,
+	isPrivate: null,
 	password: "",
 	players: {},
 	
@@ -16,7 +16,7 @@ var Game = Class.extend({
 			.text(this.name)
 			.appendTo(output);
 		
-		if(this.isPassword) {
+		if(this.isPrivate) {
 			var outputPrivate = $('<div />')
 				.addClass('game-badge')
 				.addClass('private')

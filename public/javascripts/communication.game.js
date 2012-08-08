@@ -1,5 +1,7 @@
 // Object
 var GameCommunication = Class.extend({
+	playerId: "",
+	playerName: "",
 	turn: 0,
 	games: {},
 	activeGame: null,
@@ -11,6 +13,7 @@ var GameCommunication = Class.extend({
 		var lobbyPane = $('<div />')
 			.attr('id', 'game-lobby-pane')
 			.addClass('lobby-pane')
+			.addClass('lobby-page')
 			.appendTo($("body"));
 		this.lobbyPane = lobbyPane;
 		
@@ -41,7 +44,7 @@ var GameCommunication = Class.extend({
 				if(game == null)
 					return;
 				
-				if(game.isPassword)
+				if(game.isPrivate)
 					var password = prompt("This game is private.  What's the password?","");
 				
 				self.joinIn(game, password);
@@ -65,7 +68,7 @@ var GameCommunication = Class.extend({
 			.attr('id','game-create-pane')
 			.addClass('modal')
 			.hide()
-			.appendTo($("body"));
+			.appendTo(lobbyPane);
 		this.createPane = createPane;
 		
 		var createPaneForm = $('<form />')
@@ -86,15 +89,15 @@ var GameCommunication = Class.extend({
 			.attr('type', 'text')
 			.appendTo(createPaneInputItem_name);
 		
-		var createPaneInputItem_isPassword = $('<li />')
+		var createPaneInputItem_isPrivate = $('<li />')
 			.appendTo(createPaneInputs);
-		var createPaneInputLabel_isPassword = $('<label />')
-			.attr('for', 'game-create-isPassword')
+		var createPaneInputLabel_isPrivate = $('<label />')
+			.attr('for', 'game-create-isPrivate')
 			.addClass('checkbox')
 			.text('Private')
-			.appendTo(createPaneInputItem_isPassword);
-		var createPaneInputField_isPassword = $('<input />')
-			.attr('id', 'game-create-isPassword')
+			.appendTo(createPaneInputItem_isPrivate);
+		var createPaneInputField_isPrivate = $('<input />')
+			.attr('id', 'game-create-isPrivate')
 			.attr('type', 'checkbox')
 			.bind('click',{context: this}, function(ev) {
 				var self = ev.data.context;
@@ -104,7 +107,7 @@ var GameCommunication = Class.extend({
 					createPaneInputItem_password.hide();
 					
 			})
-			.appendTo(createPaneInputItem_isPassword);
+			.appendTo(createPaneInputItem_isPrivate);
 
 		var createPaneInputItem_password = $('<li />')
 			.hide()
@@ -131,7 +134,7 @@ var GameCommunication = Class.extend({
 				var game = new Game();
 				game.name = createPaneInputField_name.val();	
 				game.password = createPaneInputField_password.val();
-				game.isPassword = createPaneInputField_isPassword.is(":checked");
+				game.isPrivate = createPaneInputField_isPrivate.is(":checked");
 				self.createIn(game);
 			})
 			.appendTo(createPaneInputItem_submit);
@@ -141,6 +144,7 @@ var GameCommunication = Class.extend({
 		var controlPane = $('<div />')
 			.attr('id','game-control-pane')
 			.addClass('control-pane')
+			.addClass('game-page')
 			.appendTo($("body"));
 		this.controlPane = controlPane;
 		
@@ -177,6 +181,9 @@ var GameCommunication = Class.extend({
 	
 	receivePayload: function(payload) {
 		switch(payload.type) {
+			case COMMUNICATION_GAME_PAYLOAD_CONNECT:
+				this.connectOut(payload.data);
+				break;
 			case COMMUNICATION_GAME_PAYLOAD_CREATE:
 				this.createOut(payload.data);
 				break;
@@ -184,6 +191,13 @@ var GameCommunication = Class.extend({
 				this.joinOut(payload.data);
 				break;
 		}
+	},
+	
+	
+	joinIn: function(game, password) {
+		var join = new GameJoinInPayload(game);
+		join.password = password;
+		this.sendPayload(join.getPayload());
 	},
 	
 	joinOut: function(data) {
@@ -195,6 +209,12 @@ var GameCommunication = Class.extend({
 		player.allegiance = data.allegiance;
 		this.players[player.id] = player;
 		
+		if(player.id == this.playerId) {
+			// This user just joined a game
+			$(".lobby-page").hide();
+			$(".game-page").show();
+		}
+		
 		var output = $('<li />');
 		output.attr('id','player-' + player.id);
 		output.addClass('player');
@@ -203,16 +223,19 @@ var GameCommunication = Class.extend({
 		this.playerList.append(output);
 	},
 	
-	joinIn: function(game, password) {
-		var join = new GameJoinInPayload(game);
-		join.password = password;
-		this.sendPayload(join.getPayload());
-	},
 	
 	connectIn: function(name) {
 		var connect = new GameConnectInPayload(name);
 		this.sendPayload(connect.getPayload());
 	},
+	
+	connectOut: function(data) {
+		this.playerId = data.id;
+		this.playerName = data.name;
+		$(".lobby-page").show();
+		$(".game-page").hide();
+	},
+	
 	
 	createIn: function(game) {
 		var create = new GameCreateInPayload(game);
@@ -224,7 +247,7 @@ var GameCommunication = Class.extend({
 		game.id = data.id;
 		game.name = data.name;
 		game.players = data.players;
-		game.isPassword = data.isPassword;
+		game.isPrivate = data.isPrivate;
 		this.games[game.id] = game;
 		
 		var output = $('<li />')
@@ -233,23 +256,27 @@ var GameCommunication = Class.extend({
 			.data('game-id', game.id)
 			.bind('click', {context: this}, function(ev) {
 				var self = ev.data.context;
-				var gameId = $(this).data('game-id');
+				var $this = $(this);
+				var gameId = $this.data('game-id');
+
+				self.gameList.find(".active").removeClass("active");
 				self.activeGame = self.getGameById(gameId);
+				$this.addClass("active");
 			})
 			.appendTo(this.gameList);
 		game.render(output);
 	},
 	
 	
-	getPlayerById: function(id) {
-		if(id in this.players)
-			return this.players[id];
-		return null;
-	},
-	
 	getGameById: function(id) {
 		if(id in this.games)
 			return this.games[id];
+		return null;
+	},
+	
+	getPlayerById: function(id) {
+		if(id in this.players)
+			return this.players[id];
 		return null;
 	}
 	

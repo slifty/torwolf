@@ -7,6 +7,7 @@ var IRCCommunication = Class.extend({
 		var controlPane = $('<div />')
 			.attr('id','irc-control-pane')
 			.addClass('control-pane')
+			.addClass('game-page')
 			.appendTo($("body"));
 		this.controlPane = controlPane;
 		

@@ -38,7 +38,6 @@ app.get('/', page_routes.index);
 app.get('/about', page_routes.about);
 app.get('/play', page_routes.play);
 
-
 app.listen(3000, function() {
 	console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });
