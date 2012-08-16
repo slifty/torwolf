@@ -35,13 +35,12 @@ exports.COMMUNICATION_TARGET_TOR = "tor";
 exports.MESSAGE_IRC_SYSTEM_TYPE_JOIN = "join";
 exports.MESSAGE_IRC_SYSTEM_TYPE_LEAVE = "leave";
 
-// Player Allegiances
-exports.PLAYER_ALLEGIANCE_ACTIVIST = "A";
+// Player Attributes
 exports.PLAYER_ALLEGIANCE_GOVERNMENT = "G";
 exports.PLAYER_ALLEGIANCE_NEUTRAL = "N";
+exports.PLAYER_ALLEGIANCE_REBELLION = "R";
 exports.PLAYER_ALLEGIANCE_UNKNOWN = "U";
 
-// Player Roles
 exports.PLAYER_ROLE_ACTIVIST = "A";
 exports.PLAYER_ROLE_CITIZEN = "C";
 exports.PLAYER_ROLE_CITIZEN_ACTIVIST = "CA";
@@ -51,6 +50,11 @@ exports.PLAYER_ROLE_JOURNALIST = "J";
 exports.PLAYER_ROLE_SPY = "S";
 exports.PLAYER_ROLE_UNKNOWN = "U";
 
+exports.PLAYER_STATUS_ALIVE = "A";
+exports.PLAYER_STATUS_DEAD = "D";
+
+
 // Viewport Types
-exports.VIEWPORT_PLAYER_STORYTELLER = "S";
+exports.VIEWPORT_PLAYER_STORYTELLER_PEERPANE = "storyteller-peerpane";
+exports.VIEWPORT_PLAYER_STORYTELLER_PLAYERPANE = "storyteller-playerpane";
 exports.VIEWPORT_PLAYER_LOBBY = "L";

@@ -68,7 +68,7 @@ function start(data, socket) {
 		switch(player.role) {
 			case constants.PLAYER_ROLE_ACTIVIST:
 			case constants.PLAYER_ROLE_CITIZEN_ACTIVIST:
-				player.allegiance = constants.PLAYER_ALLEGIANCE_ACTIVIST;
+				player.allegiance = constants.PLAYER_ALLEGIANCE_REBELLION;
 				break;
 			case constants.PLAYER_ROLE_CITIZEN:
 			case constants.PLAYER_ROLE_EDITOR:

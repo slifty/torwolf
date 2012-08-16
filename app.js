@@ -9,8 +9,9 @@ var config = require('./config'),
 	page_routes = require('./routes/pages');
 
 var app = module.exports = express.createServer(),
+	game_routes = require('./game/communication'),
 	io = require('socket.io').listen(app),
-	game_routes = require('./game/communication');
+	fs = require('fs');
 
 
 // Configuration
@@ -45,13 +46,23 @@ app.listen(3000, function() {
 // Shared Content
 app.get("/constants.js", function(req, res) { res.sendfile('./constants.js'); });
 app.get("/payloads.js", function(req, res) { res.sendfile('./payloads.js'); });
-app.get("/locale/%language", function(req, res) { res.sendfile('./locales.' + req.params.language + '.js'); });
+app.get("/locales.js", function(req, res) { res.sendfile('./locales.js'); });
+app.get("/locales/:language", function(req, res) {
+	var language = req.param('language').replace(/[^a-zA-Z\-]/g, '');
+	fs.stat('./locales/' + language + '.js', function(err, stats) {
+		if(err == null) {
+			res.sendfile('./locales/' + req.param('language') + '.js');
+		} else {
+			res.sendfile('./locales/default.js');
+		}
+	});
+});
 
 
 
 // Sockets
 io.sockets.on('connection', function (socket) {
-	socket.locale = "en";
+	socket.locale = "default";
 
 	socket.on('locale', function (locale) {
 		socket.locale = locale;

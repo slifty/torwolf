@@ -139,7 +139,7 @@ exports.StorytellerJoinOutPayload = function(player) {
 			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_JOIN,
 			data: {
 				playerId: this.player.id,
-				alive: this.player.alive,
+				status: this.player.status,
 				name: this.player.name,
 				role: constants.PLAYER_ROLE_UNKNOWN,
 				allegiance: constants.PLAYER_ALLEGIANCE_UNKNOWN

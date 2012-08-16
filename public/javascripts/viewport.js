@@ -3,5 +3,4 @@ var Viewport = Class.extend({
 		this.output = output;
 		this.type = type;
 	}
-	
 });

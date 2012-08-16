@@ -17,7 +17,10 @@ exports.Game = function() {
 		constants.PLAYER_ROLE_EDITOR,
 		constants.PLAYER_ROLE_JOURNALIST,
 		constants.PLAYER_ROLE_SPY];*/
-	this.roles = [constants.PLAYER_ROLE_ACTIVIST];
+	this.roles = [
+		constants.PLAYER_ROLE_ACTIVIST,
+		constants.PLAYER_ROLE_SPY
+	];
 	this.secretCount = 3;
 	this.secrets = [];
 	
@@ -28,7 +31,7 @@ exports.Game = function() {
 }
 
 exports.Player = function() {
-	this.alive = true,
+	this.status = constants.PLAYER_STATUS_ALIVE,
 	this.allegiance = "";
 	this.id = uuid.v4();
 	this.name = "";

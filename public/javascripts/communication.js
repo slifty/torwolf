@@ -3,6 +3,8 @@ var Communication = Class.extend({
 		// Create a socket
 		this.socket = io.connect();
 		this.socket.on('message', this.receiveMessage);
+		this.playerId = "";
+		this.playerName = "";
 	},
 	
 	sendMessage: function(target, payload) {

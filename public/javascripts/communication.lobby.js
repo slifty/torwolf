@@ -2,8 +2,6 @@
 var LobbyCommunication = Class.extend({
 	
 	init: function() {
-		this.playerId = "";
-		this.playerName = "";
 		this.games = {};
 		this.activeGame = null;
 		
@@ -162,8 +160,8 @@ var LobbyCommunication = Class.extend({
 	},
 	
 	connectOut: function(data) {
-		this.playerId = data.playerId;
-		this.playerName = data.name;
+		COMMUNICATION.playerId = data.playerId;
+		COMMUNICATION.playerName = data.name;
 		$(".lobby-page").show();
 		$(".game-page").hide();
 	},
@@ -205,7 +203,7 @@ var LobbyCommunication = Class.extend({
 	},
 	
 	joinOut: function(data) {
-		if(data.playerId == this.playerId) {
+		if(data.playerId == COMMUNICATION.playerId) {
 			// This user just joined a game
 			$(".lobby-page").hide();
 			$(".game-page").show();

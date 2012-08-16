@@ -57,12 +57,24 @@ For the sake of simplicity, function and class names concerning communication ar
 
 "Out" means the message is going server->client ("out" of the server).
 
+Constants
+-------------
+If the value of a constant is in CAPITOL LETTERS it cannot be freely changed.  For example, constants related to player role ("A", "S", etc.) are used as indexes in the localization object to look up text related to those roles.
+
+Function Calls
+-------------
+Function calls should generally be on one line, except in the case of the server side's sendMessage, which should have each part on its own line.
+
 jQuery
 -------------
 Chain when possible
 	.because the code
 	.is easier
 	.to read
+
+Language
+-------------
+Torwolf has been built from the beginning to be localize (holy crap over-engineering).  Make sure that any language that will end up on a user's screen goes through the locale structure.
 
 Misc
 -------------
@@ -73,13 +85,6 @@ Variable Naming
 Variable names are camelCase.  This includes acronyms -- "ID" is "Id" and "URL" is "Url"
 An attribute can only be called "id" if it is the id of that object.  If it refers to the id of another object it should be "[objectType]Id" e.g. "gameId" or "playerId"
 
-Function Calls
--------------
-Function calls should generally be on one line, except in the case of the server side's sendMessage, which should have each part on its own line.
-
-Language
--------------
-Torwolf has been built from the beginning to be localize (holy crap over-engineering).  Make sure that any language that will end up on a user's screen goes through the locale structure.
 
 Licensing
 =============

@@ -73,7 +73,7 @@ var GameCommunication = Class.extend({
 	joinOut: function(data) {
 		var player = new Player();
 		player.id = data.playerId;
-		player.alive = data.alive;
+		player.status = data.status;
 		player.name = data.name;
 		player.role = data.role;
 		player.allegiance = data.allegiance;
@@ -83,9 +83,17 @@ var GameCommunication = Class.extend({
 			.attr('id','player-' + player.id)
 			.addClass('player')
 			.appendTo(this.playerList);
+			
+		if(player.id == COMMUNICATION.playerId)
+			output.addClass('you');
 		
-		var viewport = new Viewport(output, VIEWPORT_PLAYER_STORYTELLER);
+		var viewport = new Viewport(output, VIEWPORT_PLAYER_STORYTELLER_PEERPANE);
 		player.render(viewport);
+		
+		if(player.id == COMMUNICATION.playerId) {
+			var viewport = new Viewport(this.playerPane, VIEWPORT_PLAYER_STORYTELLER_PLAYERPANE);
+			player.render(viewport);
+		}
 	},
 	
 	roleOut: function(data) {
@@ -98,6 +106,7 @@ var GameCommunication = Class.extend({
 	},
 	
 	
+	
 	getPlayerById: function(id) {
 		if(id in this.players)
 			return this.players[id];
@@ -108,21 +117,4 @@ var GameCommunication = Class.extend({
 
 $(function() {
 	window.STORYTELLER_COMMUNICATION = new GameCommunication();
-	
-	// TEST
-	var test = {
-		target: COMMUNICATION_TARGET_STORYTELLER,
-		payload: {
-			type: COMMUNICATION_LOBBY_PAYLOAD_JOIN,
-			data: {
-				id: 1,
-				alive: true,
-				name: "player X",
-				role: PLAYER_ROLE_UNKNOWN,
-				allegiance: PLAYER_ALLEGIANCE_UNKNOWN
-			}
-		}
-	}
-	//window.COMMUNICATION.receiveMessage(test);
-	
 });
