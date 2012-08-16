@@ -1,6 +1,10 @@
 var InterviewMessage = Message.extend({
-	journalist: null,
-	subject: null,
-	quote: null,
-	allegiance: ""
+	init: function() {
+		this._super();
+		
+		this.journalist = null;
+		this.subject = null;
+		this.quote = null;
+		this.allegiance = null;
+	}
 });

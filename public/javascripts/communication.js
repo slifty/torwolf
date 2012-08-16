@@ -26,8 +26,11 @@ var Communication = Class.extend({
 			case COMMUNICATION_TARGET_EMAIL:
 				window.EMAIL_COMMUNICATION.receivePayload(message.payload);
 				break;
-			case COMMUNICATION_TARGET_GAME:
-				window.GAME_COMMUNICATION.receivePayload(message.payload);
+			case COMMUNICATION_TARGET_STORYTELLER:
+				window.STORYTELLER_COMMUNICATION.receivePayload(message.payload);
+				break;
+			case COMMUNICATION_TARGET_LOBBY:
+				window.LOBBY_COMMUNICATION.receivePayload(message.payload);
 				break;
 			case COMMUNICATION_TARGET_TOR:
 				window.TOR_COMMUNICATION.receivePayload(message.payload);

@@ -1,10 +1,11 @@
 var EmailCommunication = Class.extend({
-	ssl: false,
-	pgp_public: [],
-	pgp_private: [],
-	messages: [],
 	
 	init: function() {
+		this.ssl = false;
+		this.pgp_public = [];
+		this.pgp_private = [];
+		this.messages = [];
+		
 		var controlPane = $('<div />')
 			.attr('id','email-control-pane')
 			.addClass('control-pane')

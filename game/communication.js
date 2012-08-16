@@ -1,19 +1,20 @@
-var constants = require('../constants'),
-	payloads = require('../payloads'),
-	irc = require('./irc'),
+var irc = require('./irc'),
 	email = require('./email'),
-	game = require('./game'),
+	storyteller = require('./storyteller'),
+	lobby = require('./lobby'),
 	tor = require('./tor'),
 	newspaper = require('./newspaper'),
 	spy = require('./spy');
 
+var constants = require('../constants'),
+	payloads = require('../payloads');
+
 var sockets = {},
-	players = {};
+	players = {},
+	games = {};
 
 // Exports
 exports.receiveMessage = function(message, socket) {
-	console.log("In:");
-	console.log(message);
 	switch(message.target) {
 		case constants.COMMUNICATION_TARGET_IRC:
 			irc.receivePayload(message.payload, socket);
@@ -21,8 +22,11 @@ exports.receiveMessage = function(message, socket) {
 		case constants.COMMUNICATION_TARGET_EMAIL:
 			email.receivePayload(message.payload, socket);
 			break;
-		case constants.COMMUNICATION_TARGET_GAME:
-			game.receivePayload(message.payload, socket);
+		case constants.COMMUNICATION_TARGET_STORYTELLER:
+			storyteller.receivePayload(message.payload, socket);
+			break;
+		case constants.COMMUNICATION_TARGET_LOBBY:
+			lobby.receivePayload(message.payload, socket);
 			break;
 		case constants.COMMUNICATION_TARGET_TOR:
 			tor.receivePayload(message.payload, socket);
@@ -34,9 +38,6 @@ exports.receiveMessage = function(message, socket) {
 }
 
 exports.sendMessage = function(target, payload, sockets) {
-	console.log("Out:");
-	console.log(payload);
-
 	if(!(sockets instanceof Array)) sockets = [sockets];
 	var message = {
 			target: target,
@@ -52,10 +53,52 @@ exports.registerPlayer = function(player, socket) {
 	players[socket.id] = player;
 }
 
+exports.registerGame = function(game) {
+	games[game.id] = game;
+}
+
+exports.getGameById = function(gameId) {
+	return (gameId in games)?games[gameId]:null;
+}
+
+exports.getGames = function() {
+	var gameArr = [];
+	for(var x in games) gameArr.push(games[x]);
+	return gameArr;
+}
+
+exports.getPlayerById = function(playerId) {
+	var socket = exports.getSocketByPlayerId(playerId);
+	if(socket == null) return null;
+	return exports.getPlayerBySocketId(socket.id);
+}
+
 exports.getPlayerBySocketId = function(socketId) {
 	return (socketId in players)?players[socketId]:null;
 }
 
+exports.getPlayers = function() {
+	var playerArr = [];
+	for(var x in players) playerArr.push(players[x]);
+	return playerArr;
+}
+
 exports.getSocketByPlayerId = function(playerId) {
 	return (playerId in sockets)?sockets[playerId]:null;
+}
+
+exports.getSockets = function() {
+	var socketArr = [];
+	for(var x in sockets) socketArr.push(sockets[x]);
+	return socketArr;
+}
+
+exports.getSocketsByGameId = function(gameId) {
+	var game = exports.getGameById(gameId);
+	if(game == null) return null;
+	
+	var sockets = [];
+	for(var x in game.players)
+		sockets.push(exports.getSocketByPlayerId(game.players[x].id));
+	return sockets;
 }

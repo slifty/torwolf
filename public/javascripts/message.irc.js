@@ -1,6 +1,10 @@
 var IRCMessage = Message.extend({
-	destination: "",
-	sender: null,
+	init: function() {
+		this._super();
+		
+		this.destination = "";
+		this.sender = null;
+	},
 	
 	render: function(output) {
 		output.empty();

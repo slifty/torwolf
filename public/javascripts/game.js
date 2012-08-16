@@ -1,11 +1,11 @@
 var Game = Class.extend({
-	id: "",
-	name: "",
-	isPrivate: null,
-	password: "",
-	players: {},
 	
 	init: function() {
+		this.id = "";
+		this.name = "";
+		this.isPrivate = null;
+		this.password = "";
+		this.players = {};
 	},
 	
 	render: function(output) {

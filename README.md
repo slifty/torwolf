@@ -70,8 +70,16 @@ In situations where order is functionally irrelevant, lists of things should be 
 
 Variable Naming
 -------------
-Variable names are camelCase
-This includes acronyms -- "ID" is "Id" and "URL" is "Url"
+Variable names are camelCase.  This includes acronyms -- "ID" is "Id" and "URL" is "Url"
+An attribute can only be called "id" if it is the id of that object.  If it refers to the id of another object it should be "[objectType]Id" e.g. "gameId" or "playerId"
+
+Function Calls
+-------------
+Function calls should generally be on one line, except in the case of the server side's sendMessage, which should have each part on its own line.
+
+Language
+-------------
+Torwolf has been built from the beginning to be localize (holy crap over-engineering).  Make sure that any language that will end up on a user's screen goes through the locale structure.
 
 Licensing
 =============

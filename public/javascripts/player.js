@@ -1,28 +1,39 @@
-var Player = Class.extend({
-	id: "",
-	alive: true,
-	name: "",
-	role: "",
-	allegiance: "",
-	secrets: [],
-	
+var Player = Visible.extend({
 	init: function() {
+		this._super();
+		
+		this.alive = true;
+		this.allegiance = "";
+		this.id = "";
+		this.name = "";
+		this.role = "";
+		this.secrets = [];
 	},
 	
-	render: function(output) {
-		output.empty();
+	redraw: function() {
+		for(var x in this.viewports) {
+			var viewport = this.viewports[x];
+			var output = viewport.output;
+			
+			output.empty();
+			switch(viewport.type) {
+				case VIEWPORT_PLAYER_STORYTELLER:
+					var outputName = $('<div />')
+						.addClass('name')
+						.addClass('player-' + this.id)
+						.text(this.name)
+						.appendTo(output);
 		
-		var outputName = $('<div />');
-		outputName.addClass('name');
-		outputName.addClass('user-' + this.id);
-		outputName.text(this.name);
-		output.append(outputName);
-		
-		var outputId = $('<div />');
-		outputId.addClass('id');
-		outputId.addClass('user-' + this.id);
-		outputId.text(this.id);
-		output.append(outputId);
+					var outputId = $('<div />')
+						.addClass('id')
+						.addClass('player-' + this.id)
+						.text(this.id)
+						.appendTo(output);
+					break;
+				
+				case VIEWPORT_PLAYER_LOBBY:
+					break
+			}
+		}
 	}
-	
 });

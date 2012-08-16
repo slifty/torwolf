@@ -45,10 +45,18 @@ app.listen(3000, function() {
 // Shared Content
 app.get("/constants.js", function(req, res) { res.sendfile('./constants.js'); });
 app.get("/payloads.js", function(req, res) { res.sendfile('./payloads.js'); });
+app.get("/locale/%language", function(req, res) { res.sendfile('./locales.' + req.params.language + '.js'); });
+
 
 
 // Sockets
 io.sockets.on('connection', function (socket) {
+	socket.locale = "en";
+
+	socket.on('locale', function (locale) {
+		socket.locale = locale;
+	});
+	
 	socket.on('message', function (payload) {
 		game_routes.receiveMessage(payload, socket);
 	});

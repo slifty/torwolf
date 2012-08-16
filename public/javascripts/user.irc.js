@@ -1,5 +1,9 @@
 var IRCUser = User.extend({
-	alias: "",
+	init: function() {
+		this._super();
+		
+		this.alias = "";
+	},
 	
 	render: function(output) {
 		output.empty();

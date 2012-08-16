@@ -1,6 +1,10 @@
 var IRCActionMessage = Message.extend({
-	type: "",
-	target: null,
+	init: function () {
+		this._super();
+		
+		this.type = "";
+		this.target = null;
+	},
 	
 	render: function(output) {
 		output.empty();

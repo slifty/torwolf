@@ -1,9 +1,10 @@
 var IRCCommunication = Class.extend({
-	ssl: false,
-	users: {},
-	messages: [],
 	
 	init: function() {
+		this.ssl = false;
+		this.users = {};
+		this.messages = [];
+		
 		var controlPane = $('<div />')
 			.attr('id','irc-control-pane')
 			.addClass('control-pane')
@@ -67,6 +68,7 @@ var IRCCommunication = Class.extend({
 			.appendTo(toolPane);
 		this.toolSSL = toolSSL;
 	},
+	
 	
 	activateSSL: function() {
 		console.log("TODO: Implement activate IRC SSL");

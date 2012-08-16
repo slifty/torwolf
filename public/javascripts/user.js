@@ -1,8 +1,7 @@
 var User = Class.extend({
-	id: 0,
-	player: null,
-	
 	init: function() {
+		this.id = 0;
+		this.player = null;
 	},
 	
 	render: function(output) {

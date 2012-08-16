@@ -1,7 +1,8 @@
 var NewspaperMessage = Message.extend({
-	headline: "",
-	messages: [],
-	
 	init: function() {
+		this._super();
+		
+		this.headline = "";
+		this.messages = [];
 	}
 });

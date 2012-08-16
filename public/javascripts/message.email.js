@@ -1,11 +1,16 @@
 var EmailMessage = Message.extend({
-	subject: "",
-	to: [],
-	cc: [],
-	bcc: [],
-	from: "",
-	pgp: "",
-	viewed: false,
+	
+	init: function() {
+		this._super();
+		
+		this.subject = "";
+		this.to = [];
+		this.cc = [];
+		this.bcc = [];
+		this.from = "";
+		this.pgp = "";
+		this.viewed = false;
+	},
 	
 	render: function(output) {
 		output.empty();

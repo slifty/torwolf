@@ -17,39 +17,38 @@ exports.ErrorPayload = function(content) {
 	};
 };
 
-exports.GameConnectInPayload = function(name) {
-	var name = name;
+exports.LobbyConnectInPayload = function(name) {
+	this.name = name;
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_GAME_PAYLOAD_CONNECT,
+			type: constants.COMMUNICATION_LOBBY_PAYLOAD_CONNECT,
 			data: {
-				name: name
+				name: this.name
 			}
 		}
 	};
 };
 
-exports.GameConnectOutPayload = function(player) {
-	var id = player.id;
-	var name = player.name;
+exports.LobbyConnectOutPayload = function(player) {
+	this.player = player;
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_GAME_PAYLOAD_CONNECT,
+			type: constants.COMMUNICATION_LOBBY_PAYLOAD_CONNECT,
 			data: {
-				id: id,
-				name: player.name
+				playerId: this.player.id,
+				name: this.player.name
 			}
 		}
 	};
 };
 
-exports.GameCreateInPayload = function(game) {
+exports.LobbyCreateInPayload = function(game) {
 	this.name = game.name;
 	this.password = game.password;
 	this.isPrivate = game.isPrivate;
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_GAME_PAYLOAD_CREATE,
+			type: constants.COMMUNICATION_LOBBY_PAYLOAD_CREATE,
 			data: {
 				name: this.name,
 				password: this.password,
@@ -59,13 +58,13 @@ exports.GameCreateInPayload = function(game) {
 	};
 };
 
-exports.GameCreateOutPayload = function(game) {
+exports.LobbyCreateOutPayload = function(game) {
 	this.game = game;
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_GAME_PAYLOAD_CREATE,
+			type: constants.COMMUNICATION_LOBBY_PAYLOAD_CREATE,
 			data: {
-				id: this.game.id,
+				gameId: this.game.id,
 				isPrivate: this.game.isPrivate,
 				maxPlayers: this.game.maxPlayers,
 				name: this.game.name,
@@ -75,12 +74,12 @@ exports.GameCreateOutPayload = function(game) {
 	};
 }
 
-exports.GameJoinInPayload = function(game) {
+exports.LobbyJoinInPayload = function(game) {
 	this.game = game;
 	this.password = "";
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_GAME_PAYLOAD_JOIN,
+			type: constants.COMMUNICATION_LOBBY_PAYLOAD_JOIN,
 			data: {
 				gameId: this.game.id,
 				password: this.password
@@ -89,18 +88,94 @@ exports.GameJoinInPayload = function(game) {
 	};
 };
 
-exports.GameJoinOutPayload = function(player) {
+exports.LobbyJoinOutPayload = function(player, game) {
+	this.player = player;
+	this.game = game;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_LOBBY_PAYLOAD_JOIN,
+			data: {
+				playerId: this.player.id,
+				gameId: this.game.id
+			}
+		}
+	}
+}
+
+exports.StorytellerAllegianceInPayload = function() {
+}
+
+exports.StorytellerAllegianceOutPayload = function(player) {
 	this.player = player;
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_GAME_PAYLOAD_JOIN,
+			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_ALLEGIANCE,
 			data: {
-				id: player.id,
-				alive: player.alive,
-				name: player.name,
+				playerId: this.player.id,
+				allegiance: this.player.allegiance 
+			}
+		}
+	}
+}
+
+exports.StorytellerJoinInPayload = function(player, game) {
+	this.game = game;
+	this.player = player;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_JOIN,
+			data: {
+				gameId: this.game.id,
+				playerId: this.player.id
+			}
+		}
+	};
+};
+
+exports.StorytellerJoinOutPayload = function(player) {
+	this.player = player;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_JOIN,
+			data: {
+				playerId: this.player.id,
+				alive: this.player.alive,
+				name: this.player.name,
 				role: constants.PLAYER_ROLE_UNKNOWN,
 				allegiance: constants.PLAYER_ALLEGIANCE_UNKNOWN
 			}
 		}
 	}
+}
+
+exports.StorytellerRoleInPayload = function() {
+}
+
+exports.StorytellerRoleOutPayload = function(player) {
+	this.player = player;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_ROLE,
+			data: {
+				playerId: this.player.id,
+				role: this.player.role 
+			}
+		}
+	}
+}
+
+
+exports.StorytellerStartInPayload = function(game) {
+	this.game = game;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_START,
+			data: {
+				gameId: this.game.id 
+			}
+		}
+	}
+}
+
+exports.StorytellerStartOutPayload = function(game) {
 }
