@@ -48,11 +48,12 @@ During the round the following things happen:
 
 ==Communication==
 There are a few forms of communication
-- IRC: everyone can see it, everyone is in the room.  This is where people will end up sharing their email addresses.
-- Email: Including SSL and PGP.  Working out details now.
-- Tor: this is more of a layer on top of email.  If you use Tor then the agent doesn't know that YOU are doing something online, but rather knows that SOME tor user is doing something online.  If you just use the normal Tor settings then the agent knows if you are using Tor.
-- Tor Bridge: The editor can set up a tor bridge.  Anyone who knows the tor bridge address is then able to use tor invisibly (the agent won't know anything about what those users are doing at all, and all traces of communication will be hidden completely).  If the agent learns the address then this is no longer the case.
-
+- <b>IRC</b>: everyone can see it, everyone is in the room.  This is where people will end up sharing their email addresses.
+- <b>Email</b>: PGP and SSL are optionally enabled.
+- <b>SSL</b>: Sending email with SSL means the agent doesn't learn your email credentials (and therefore can't pretend they are you).  Reading email with SSL means the agent doesn't know you read an email.  SSL doesn't stop the agent from seeing the email content because of the fact that communication between SMTP servers isn't necessarily secure.
+- <b>PGP</b>: encrypts the content of your email.  The government knows who received it, but doesn't know the content.  If you have the public PGP key of someone you can send them a secure message.
+- <b>Tor</b>:  If you use Tor then you can create a new email address that the agent cannot directly associate with you.  The agent knows that SOME Tor user created it.  The agent also knows that you are a Tor user.
+- <b>Tor Bridge</b>: The editor can set up a Tor bridge.  Anyone who knows the address of the Tor bridge is able to use tor invisibly (the agent won't know anything about what those users are doing at all, and all traces of communication will be hidden completely).  If the agent learns the address then this is no longer the case.
 
 Help me turn this into a fun and balanced game!
 
