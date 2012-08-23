@@ -1,6 +1,8 @@
-var uuid = require('node-uuid');
+var util = require('util'),
+	uuid = require('node-uuid');
 
-var communication = require('./communication');
+var communication = require('./communication')
+	newspaper = require('./newspaper');
 
 var constants = require('../constants'),
 	locales = require('../locales'),
@@ -10,8 +12,7 @@ var constants = require('../constants'),
 // Functions
 function error(message, socket) {
 	var error = new payloads.ErrorPayload(message);
-	return communication.sendMessage(
-		constants.COMMUNICATION_TARGET_STORYTELLER,
+	return exports.sendPayload(
 		error.getPayload(),
 		socket);
 }
@@ -26,9 +27,9 @@ function join(data, socket) {
 	
 	// Tell the player who is in the game
 	for(var x in game.players) {
-		var join = new payloads.StorytellerJoinOutPayload(game.players[x]);
+		var joinOut = new payloads.StorytellerJoinOutPayload(game.players[x]);
 		exports.sendPayload(
-			join.getPayload(),
+			joinOut.getPayload(),
 			socket);
 	}
 	
@@ -43,9 +44,9 @@ function join(data, socket) {
 	
 	// If the game is full, start the game
 	if(Object.keys(game.players).length == game.roles.length) {
-		var start = new payloads.StorytellerStartInPayload(game);
+		var startOut = new payloads.StorytellerStartInPayload(game);
 		exports.receivePayload(
-			start.getPayload(),
+			startOut.getPayload(),
 			constants.COMMUNICATION_SOCKET_SERVER);
 	}
 }
@@ -82,28 +83,182 @@ function start(data, socket) {
 		}
 		
 		// Tell the player his role
-		var role = new payloads.StorytellerRoleOutPayload(player);
+		var roleOut = new payloads.StorytellerRoleOutPayload(player);
 		exports.sendPayload(
-			role.getPayload(),
+			roleOut.getPayload(),
 			communication.getSocketByPlayerId(player.id));
 		
 		// Tell the player his allegiance
-		var allegiance = new payloads.StorytellerAllegianceOutPayload(player);
+		var allegianceOut = new payloads.StorytellerAllegianceOutPayload(player);
 		exports.sendPayload(
-			allegiance.getPayload(),
+			allegianceOut.getPayload(),
 			communication.getSocketByPlayerId(player.id));
 		
-		// Announce the editor
-		if(player.role == constants.PLAYER_ROLE_EDITOR) {
-			exports.sendPayload(
-				role.getPayload(),
-				communication.getSocketsByGameId(game.id));
+		// Give the player his starting rumors
+		for(var x = 0; x < game.rumorCount; ++x) {
+			var rumor = game.generateRumor();
+			rumor.destinationId = player.id;
+			rumor.publicationStatus = constants.RUMOR_PUBLICATIONSTATUS_UNPUBLISHED;
+			rumor.sourceId = constants.RUMOR_SOURCE_SYSTEM;
+			rumor.truthStatus = (player.role == constants.PLAYER_ROLE_ACTIVIST)?constants.RUMOR_TRUTHSTATUS_TRUE:constants.RUMOR_TRUTHSTATUS_FALSE;
+			game.rumors[rumor.id] = rumor;
+			player.rumors.push(rumor);
 			
+			var rumorOut = new payloads.StorytellerRumorOutPayload(rumor);
+			rumorOut.sourceId = constants.RUMOR_SOURCE_SYSTEM;
+			rumorOut.truthStatus = rumor.truthStatus;
 			exports.sendPayload(
-				allegiance.getPayload(),
-				communication.getSocketsByGameId(game.id));
+				rumorOut.getPayload(),
+				communication.getSocketByPlayerId(player.id));
 		}
 	}
+	
+	// Start the next turn
+	return setTimeout(function() {
+		var heartbeatIn = new payloads.StorytellerHeartbeatInPayload(game);
+		heartbeatIn.count = 0;
+		
+		exports.receivePayload(
+			heartbeatIn.getPayload(),
+			constants.COMMUNICATION_SOCKET_SERVER);
+	}, constants.TICK_HEARTBEAT);
+}
+
+function heartbeat(data, socket) {
+	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
+		return error(locales[socket.locale].errors.storyteller.HEARTBEAT_SYSTEM, socket);
+	
+	var count = data.count;
+	var game = communication.getGameById(data.gameId);
+	
+	var heartbeatOut = new payloads.StorytellerHeartbeatOutPayload(count);
+	exports.sendPayload(
+		heartbeatOut.getPayload(),
+		communication.getSocketsByGameId(game.id));
+	
+	count += constants.TICK_HEARTBEAT;
+	
+	// Time for the next tick?
+	if(count >= game.turnLength) {
+		return setTimeout(function() {
+			var tickIn = new payloads.StorytellerTickInPayload(game);
+			tickIn.count = count;
+			exports.receivePayload(
+				tickIn.getPayload(),
+				constants.COMMUNICATION_SOCKET_SERVER);
+		}, constants.TICK_HEARTBEAT);
+		return tick(game);
+	}
+	
+	// Almost time for the next tick?
+	var remainingTime = game.turnLength - count;
+	if(remainingTime <= constants.TICK_WARNING
+	&& remainingTime > constants.TICK_WARNING - constants.TICK_HEARTBEAT) {
+		var announcementOut = new payloads.StorytellerAnnouncementOutPayload(
+			util.format(locales[game.locale].messages.storyteller.WARNING,
+				Math.floor(remainingTime / 1000),
+				(Math.floor(remainingTime / 1000) == 1)?locales[game.locale].messages.storyteller.WARNING_UNIT_SINGULAR:locales[game.locale].messages.storyteller.WARNING_UNIT_PLURAL
+			)
+		);
+		exports.sendPayload(
+			announcementOut.getPayload(),
+			communication.getSocketsByGameId(game.id));
+	}
+	
+	// Start the next heartbeat
+	return setTimeout(function() {
+		var heartbeatIn = new payloads.StorytellerHeartbeatInPayload(game);
+		heartbeatIn.count = count;
+		exports.receivePayload(
+			heartbeatIn.getPayload(),
+			constants.COMMUNICATION_SOCKET_SERVER);
+	}, constants.TICK_HEARTBEAT);
+}
+
+
+function tick(data, socket) {
+	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
+		return error(locales[socket.locale].errors.storyteller.TICK_SYSTEM, socket);
+	
+	var game = communication.getGameById(data.gameId);
+	
+	// Announce the end of the turn
+	var announcementOut = new payloads.StorytellerAnnouncementOutPayload(
+		util.format(locales[game.locale].messages.storyteller.ROUND_END,
+			game.round
+		)
+	);
+	
+	// Move to the next turn
+	game.round += 1;
+	
+	// Publish the newspaper
+	var newsRumor = newspaper.getRumorByGameId(game.id);
+	if(newsRumor == constants.RUMOR_EMPTY) {
+		var announcementOut = new payloads.StorytellerAnnouncementOutPayload(
+			locales[game.locale].messages.storyteller.NEWS_NOTHING
+		);
+	} else {
+		var announcementOut = new payloads.StorytellerAnnouncementOutPayload(
+			locales[game.locale].messages.storyteller.NEWS_SOMETHING
+		);
+	}
+	exports.sendPayload(
+		announcementOut.getPayload(),
+		communication.getSocketsByGameId(game.id));
+	
+	var publishIn = new payloads.NewspaperPublishInPayload(game);
+	newspaper.receivePayload(
+		publishIn.getPayload(),
+		constants.COMMUNICATION_SOCKET_SERVER);
+	
+	// Reveal the rumor's truth
+	if(newsRumor != constants.RUMOR_EMPTY) {
+		newsRumor.publicationStatus = constants.RUMOR_PUBLICATIONSTATUS_PUBLISHED;
+		var rumorOut = new payloads.StorytellerRumorOutPayload(newsRumor);
+		rumorOut.sourceId = constants.RUMOR_SOURCE_NEWSPAPER;
+		rumorOut.truthStatus = rumor.truthStatus;
+		exports.sendPayload(
+			rumorOut.getPayload(),
+			communication.getSocketByPlayerId(player.id));
+	}
+	
+	// Check for activist victory
+	var verifiedRumorCount = 0;
+	for(var x in game.rumors) {
+		if(game.rumors[x].publicationStatus == constants.RUMOR_PUBLICATIONSTATUS_PUBLISHED
+		&& game.rumors[x].truthStatus == constants.RUMOR_TRUTHSTATUS_TRUE)
+			verifiedRumorCount += 1;
+	}
+	
+	if(verifiedRumorCount >= game.rumorCount) {
+		var announcementOut = new payloads.StorytellerAnnouncementOutPayload(locales[game.locale].messages.storyteller.VICTORY_ACTIVISTS_MEDIA);
+		exports.sendPayload(
+			announcementOut.getPayload(),
+			communication.getSocketsByGameId(game.id));
+		
+		var announcementOut = new payloads.StorytellerAnnouncementOutPayload(locales[game.locale].messages.storyteller.GAMEOVER);
+		exports.sendPayload(
+			announcementOut.getPayload(),
+			communication.getSocketsByGameId(game.id));
+		return;
+	}
+	
+	// Start the next turn
+	return setTimeout(function() {
+		var heartbeatIn = new payloads.StorytellerHeartbeatInPayload(game);
+		heartbeatIn.count = 0;
+		
+		exports.receivePayload(
+			heartbeatIn.getPayload(),
+			constants.COMMUNICATION_SOCKET_SERVER);
+	}, constants.TICK_HEARTBEAT);
+}
+
+function gameOver(data, socket) {
+	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
+		return error(locales[socket.locale].errors.storyteller.GAMEOVER_SYSTEM, socket);
+	
 }
 
 
@@ -111,6 +266,12 @@ function start(data, socket) {
 exports.receivePayload = function(payload, socket) {
 	switch(payload.type) {
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_ALLEGIANCE:
+			break;
+		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_GAMEOVER:
+			gameOver(payload.data, socket);
+			break;
+		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_HEARTBEAT:
+			heartbeat(payload.data, socket);
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_JOIN:
 			join(payload.data, socket);
@@ -123,6 +284,9 @@ exports.receivePayload = function(payload, socket) {
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_START:
 			start(payload.data, socket);
+			break;
+		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_TICK:
+			tick(payload.data, socket);
 			break;
 	}
 };

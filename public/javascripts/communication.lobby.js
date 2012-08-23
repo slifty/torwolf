@@ -3,7 +3,7 @@ var LobbyCommunication = Class.extend({
 	
 	init: function() {
 		this.games = {};
-		this.activeGame = null;
+		this.activeGameId = "";
 		
 		var controlPane = $('<div />')
 			.attr('id','lobby-control-pane')
@@ -35,7 +35,7 @@ var LobbyCommunication = Class.extend({
 			.addClass('tool')
 			.bind('click',{context: this}, function(ev) {
 				var self = ev.data.context;
-				var game = self.activeGame;
+				var game = self.getGameById(self.activeGameId);
 				if(game == null)
 					return;
 				
@@ -189,7 +189,7 @@ var LobbyCommunication = Class.extend({
 				var gameId = $this.data('game-id');
 
 				self.gameList.find(".active").removeClass("active");
-				self.activeGame = self.getGameById(gameId);
+				self.activeGameId = gameId;
 				$this.addClass("active");
 			})
 			.appendTo(this.gameList);

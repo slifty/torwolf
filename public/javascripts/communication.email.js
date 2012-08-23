@@ -146,7 +146,7 @@ var EmailCommunication = Class.extend({
 		message.id = data.id;
 		message.content = data.content;
 		message.timestamp = window.GAME_COMMUNICATION.turn;
-		message.secrets = data.secrets;
+		message.rumors = data.rumors;
 		message.subject = data.subject;
 		message.from = data.from;
 		message.to = data.to;
@@ -174,7 +174,7 @@ $(function() {
 				id: 1,
 				subject: "Test Subject",
 				content: "test",
-				secrets: {},
+				rumors: {},
 				from: {
 					name: "Dan Schultz",
 					address: "slifty@torwolf.com"

@@ -3,8 +3,9 @@ var GameCommunication = Class.extend({
 	
 	init: function() {
 		this.turn = 0;
-		this.players = {};
 		this.messages = [];
+		this.players = {};
+		this.rumors = {};
 		
 		
 		// In-game console
@@ -27,18 +28,24 @@ var GameCommunication = Class.extend({
 			.addClass('output-pane')
 			.appendTo(controlPane);
 		this.peerPane = peerPane;
-
+		
 		var playerList = $('<ul />')
 			.attr('id','storyteller-player-list')
 			.addClass('player-list')
 			.appendTo(peerPane);
 		this.playerList = playerList;
 		
-		var secretsPane = $('<div />')
-			.attr('id','storyteller-secrets-pane')
+		var rumorPane = $('<div />')
+			.attr('id','storyteller-rumor-pane')
 			.addClass('output-pane')
 			.appendTo(controlPane);
-		this.secretsPane = secretsPane;
+		this.rumorPane = rumorPane;
+		
+		var rumorList = $('<ul />')
+			.attr('id','storyteller-rumor-list')
+			.addClass('rumor-list')
+			.appendTo(rumorPane);
+		this.rumorList = rumorList;
 		
 	},
 	
@@ -47,11 +54,20 @@ var GameCommunication = Class.extend({
 			case COMMUNICATION_STORYTELLER_PAYLOAD_ALLEGIANCE:
 				this.allegianceOut(payload.data);
 				break;
-			case COMMUNICATION_STORYTELLER_PAYLOAD_ROLE:
-				this.roleOut(payload.data);
+			case COMMUNICATION_STORYTELLER_PAYLOAD_ANNOUNCEMENT:
+				this.announcementOut(payload.data);
+				break;
+			case COMMUNICATION_STORYTELLER_PAYLOAD_HEARTBEAT:
+				this.heartbeatOut(payload.data);
 				break;
 			case COMMUNICATION_STORYTELLER_PAYLOAD_JOIN:
 				this.joinOut(payload.data);
+				break;
+			case COMMUNICATION_STORYTELLER_PAYLOAD_ROLE:
+				this.roleOut(payload.data);
+				break;
+			case COMMUNICATION_STORYTELLER_PAYLOAD_RUMOR:
+				this.rumorOut(payload.data);
 				break;
 			case COMMUNICATION_STORYTELLER_PAYLOAD_START:
 				this.startOut(payload.data);
@@ -70,6 +86,13 @@ var GameCommunication = Class.extend({
 		player.redraw();
 	},
 	
+	announcementOut: function(data) {
+	},
+
+	heartbeatOut: function(data) {
+		
+	},
+	
 	joinOut: function(data) {
 		var player = new Player();
 		player.id = data.playerId;
@@ -80,12 +103,7 @@ var GameCommunication = Class.extend({
 		this.players[player.id] = player;
 		
 		var output = $('<li />')
-			.attr('id','player-' + player.id)
-			.addClass('player')
 			.appendTo(this.playerList);
-			
-		if(player.id == COMMUNICATION.playerId)
-			output.addClass('you');
 		
 		var viewport = new Viewport(output, VIEWPORT_PLAYER_STORYTELLER_PEERPANE);
 		player.render(viewport);
@@ -102,15 +120,46 @@ var GameCommunication = Class.extend({
 		player.redraw();
 	},
 	
+	rumorOut: function(data) {
+		var rumor = this.getRumorById(data.rumorId);
+		
+		if(rumor == null) {
+			rumor = new Rumor();
+			rumor.id = data.rumorId;
+			rumor.text = data.text;
+			rumor.truthStatus = data.truthStatus;
+			rumor.publicationStatus = data.publicationStatus;
+			this.rumors[rumor.id] = rumor;
+			
+			var output = $('<li />')
+			.appendTo(this.rumorList);
+			
+			var viewport = new Viewport(output, VIEWPORT_RUMOR_STORYTELLER_RUMORPANE);
+			rumor.render(viewport);
+		}
+		
+		var rumorTransfer = new RumorTransfer();
+		rumorTransfer.rumor = rumor;
+		rumorTransfer.source = this.getPlayerById(data.sourceId);
+		rumorTransfer.destination = this.getPlayerById(data.destinationId);
+		rumor.transfers.push(rumorTransfer);
+		
+		rumor.truthStatus = data.truthStatus;
+		rumor.publicationStatus = data.publicationStatus;
+		
+		rumor.redraw();
+	},
+	
 	startOut: function(data) {
 	},
 	
 	
-	
 	getPlayerById: function(id) {
-		if(id in this.players)
-			return this.players[id];
-		return null;
+		return (id in this.players)?this.players[id]:null;
+	},
+	
+	getRumorById: function(id) {
+		return (id in this.rumors)?this.rumors[id]:null;
 	}
 	
 });

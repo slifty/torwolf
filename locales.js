@@ -6,9 +6,9 @@ if(typeof(window) != "undefined") {
 	$("head").append(script);
 	
 	if(!(LOCALE in localization))
-		localization[LOCALE] = localization["default"];
+		localization[LOCALE] = localization[window.LOCALE_DEFAULT];
 } else {
 	// Todo: include every file in locales/ dynamically
 	exports.localization = {};
-	exports["en"] = require("./locales/default.js").localization["default"];
+	exports["default"] = require("./locales/default.js").localization["default"];
 }

@@ -1,3 +1,3 @@
 var config = {
-	secret_count: 3
+	rumor_count: 3
 }

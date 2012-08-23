@@ -32,7 +32,6 @@ Setting up the client and backend
 		cp config.default.js config.js
 		vi config.js
 
-Please note that the brains for this (question generation) exists in a separate repository, location TBD.
 
 Starting the Server
 -------------
@@ -68,22 +67,35 @@ Function calls should generally be on one line, except in the case of the server
 jQuery
 -------------
 Chain when possible
+
 	.because the code
+
 	.is easier
+
 	.to read
 
 Language
 -------------
-Torwolf has been built from the beginning to be localize (holy crap over-engineering).  Make sure that any language that will end up on a user's screen goes through the locale structure.
+Torwolf has been built from the beginning to be localized (holy crap over-engineering).  Make sure that any language that will end up on a user's screen goes through the locale structure.
+
+To add a language:
+
+cp locales/default.js locales/LANGUAGE.js
+
+where LANGUAGE is the browser's language code (e.g. "en-US")
 
 Misc
 -------------
-In situations where order is functionally irrelevant, lists of things should be sorted alphabetically.  This means classes, constants, lists of lists (e.g. this), switch statements, variable declarations, etc.
+In situations where order is functionally irrelevant, lists of things should be sorted alphabetically.  This means classes, constants, lists of lists (e.g. this sentence), switch statements, variable declarations, etc.
 
 Variable Naming
 -------------
 Variable names are camelCase.  This includes acronyms -- "ID" is "Id" and "URL" is "Url"
 An attribute can only be called "id" if it is the id of that object.  If it refers to the id of another object it should be "[objectType]Id" e.g. "gameId" or "playerId"
+
+ViewPorts
+-------------
+Client side objects that have a visual element are rendered through ViewPorts.  ViewPorts should be given a DOM object with no frills attached -- classes, ids, attributes, etc. should all be assigned as part of the rendering logic not in the code that created the pane.
 
 
 Licensing

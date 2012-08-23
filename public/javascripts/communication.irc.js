@@ -101,7 +101,7 @@ var IRCCommunication = Class.extend({
 		message.id = data.id;
 		message.content = data.content;
 		message.timestamp = window.GAME_COMMUNICATION.turn;
-		message.secrets = data.secrets;
+		message.rumors = data.rumors;
 		message.sender = window.IRC_COMMUNICATION.getUserById(data.user);
 		if(message.sender == null) return;
 		this.messages.push(message);

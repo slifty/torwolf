@@ -13,6 +13,7 @@ var app = module.exports = express.createServer(),
 	io = require('socket.io').listen(app),
 	fs = require('fs');
 
+var constants = require('./constants');
 
 // Configuration
 
@@ -62,7 +63,7 @@ app.get("/locales/:language", function(req, res) {
 
 // Sockets
 io.sockets.on('connection', function (socket) {
-	socket.locale = "default";
+	socket.locale = constants.LOCALE_DEFAULT;
 
 	socket.on('locale', function (locale) {
 		socket.locale = locale;

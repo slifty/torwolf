@@ -14,17 +14,19 @@ function connect(data, socket) {
 	communication.registerPlayer(player, socket);
 	
 	// Tell the player that he has been recognized by the server
-	var connect = new payloads.LobbyConnectOutPayload(player);
+	var connectOut = new payloads.LobbyConnectOutPayload(player);
 	exports.sendPayload(
-		connect.getPayload(),
+		connectOut.getPayload(),
 		socket);
 	
 	// Tell the player about each available game
 	var games = communication.getGames();
 	for(var x in games) {
-		var create = new payloads.LobbyCreateOutPayload(games[x]);
+		var createOut = new payloads.LobbyCreateOutPayload(games[x]);
+		
+		console.log(createOut);
 		exports.sendPayload(
-			create.getPayload(),
+			createOut.getPayload(),
 			socket);
 	}
 	
@@ -46,10 +48,10 @@ function create(data, socket) {
 	communication.registerGame(game);
 	
 	// Announce the new game to the lobby
-	var create = new payloads.LobbyCreateOutPayload(game);
+	var createOut = new payloads.LobbyCreateOutPayload(game);
 	
 	return exports.sendPayload(
-		create.getPayload(),
+		createOut.getPayload(),
 		communication.getSockets());
 }
 
@@ -66,7 +68,7 @@ function join(data, socket) {
 	
 	if(game == null)
 		return error(locales[socket.locale].errors.lobby.JOIN_NONEXISTANT_GAME, socket);
-	if(player.activeGame != "")
+	if(player.activeGameId != "")
 		return error(locales[socket.locale].errors.lobby.JOIN_ALREADY_IN_GAME, socket);
 	if(game.isPrivate && game.password != data.password)
 		return error(locales[socket.locale].errors.lobby.JOIN_INCORRECT_PASSWORD, socket);
@@ -74,17 +76,16 @@ function join(data, socket) {
 		return error(locales[socket.locale].errors.lobby.JOIN_GAME_FULL	, socket);
 	
 	// Announce to the lobby that a game was joined
-	var join = new payloads.LobbyJoinOutPayload(player, game);
+	var joinOut = new payloads.LobbyJoinOutPayload(player, game);
 	exports.sendPayload(
-		join.getPayload(),
+		joinOut.getPayload(),
 		communication.getSockets());
 	
 	// Announce to the storyteller that a player joined
-	var join = new payloads.StorytellerJoinInPayload(player, game);
+	var joinIn = new payloads.StorytellerJoinInPayload(player, game);
 	storyteller.receivePayload(
-		join.getPayload(),
+		joinIn.getPayload(),
 		constants.COMMUNICATION_SOCKET_SERVER);
-	
 }
 
 

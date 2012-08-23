@@ -3,7 +3,7 @@ var Message = Class.extend({
 		this.id = 0;
 		this.content = "";
 		this.timestamp = 0;
-		this.secrets = [];
+		this.rumors = [];
 	},
 	
 	render: function(output) {

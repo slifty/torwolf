@@ -2,12 +2,12 @@ var Player = Visible.extend({
 	init: function() {
 		this._super();
 		
-		this.status = PLAYER_STATUS_ALIVE;
-		this.allegiance = PLAYER_ALLEGIANCE_UNKNOWN;
+		this.status = "";
+		this.allegiance = "";
 		this.id = "";
 		this.name = "";
-		this.role = PLAYER_ROLE_UNKNOWN;
-		this.secrets = [];
+		this.role = "";
+		this.rumors = [];
 	},
 	
 	redraw: function() {
@@ -15,14 +15,19 @@ var Player = Visible.extend({
 			var viewport = this.viewports[x];
 			var output = viewport.output;
 			
-			output.empty();
+			output.empty()
+				.addClass('player');
+				
+			if(this.id == COMMUNICATION.playerId)
+				output.addClass('you');
+			
 			switch(viewport.type) {
 				case VIEWPORT_PLAYER_STORYTELLER_PEERPANE:
 					var playerName = $('<div />')
 						.addClass('name')
 						.addClass('player-' + this.id)
 						.addClass('status-' + this.status)
-						.text(this.name + (this.id == COMMUNICATION.playerId)?"(" + localization[LOCALE].gui.player.YOU + ")":"")
+						.text(this.name + ((this.id == COMMUNICATION.playerId)?" (" + localization[LOCALE].gui.player.YOU + ")":""))
 						.appendTo(output);
 					
 					var playerId = $('<div />')
@@ -39,7 +44,7 @@ var Player = Visible.extend({
 					var playerRoleText = $('<div />')
 						.text(localization[LOCALE].gui.player.roleCode[this.role])
 						.appendTo(playerRole);
-						
+					
 					var playerRoleDetail = $('<div />')
 						.addClass('detail')
 						.text(localization[LOCALE].gui.player.role[this.role])

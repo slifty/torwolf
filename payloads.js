@@ -66,9 +66,13 @@ exports.LobbyCreateOutPayload = function(game) {
 			data: {
 				gameId: this.game.id,
 				isPrivate: this.game.isPrivate,
+				locale: this.game.locale,
 				maxPlayers: this.game.maxPlayers,
 				name: this.game.name,
-				players: this.game.players
+				players: this.game.players,
+				roles: this.game.roles,
+				rumorCount: this.game.rumorCount,
+				turnLength: this.game.turnLength
 			}
 		}
 	};
@@ -102,6 +106,36 @@ exports.LobbyJoinOutPayload = function(player, game) {
 	}
 }
 
+exports.NewspaperPublishInPayload = function(game) {
+	this.game = game
+	
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_NEWSPAPER_PAYLOAD_PUBLISH,
+			data: {
+				gameId: this.game.id
+			}
+		}
+	}
+}
+
+exports.NewspaperPublishOutPayload = function(rumor) {
+	this.rumor = rumor;
+	this.headline = "";
+	this.copy = "";
+	
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_NEWSPAPER_PAYLOAD_PUBLISH,
+			data: {
+				copy: this.copy,
+				headline: this.headline,
+				rumorId: this.rumor.id
+			}
+		}
+	}
+}
+
 exports.StorytellerAllegianceInPayload = function() {
 }
 
@@ -116,6 +150,48 @@ exports.StorytellerAllegianceOutPayload = function(player) {
 			}
 		}
 	}
+}
+
+exports.StorytellerAnnouncementInPayload = function() {
+}
+
+exports.StorytellerAnnouncementOutPayload = function(text) {
+	this.text = text;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_ANNOUNCEMENT,
+			data: {
+				text: this.text
+			}
+		}
+	}
+}
+
+exports.StorytellerHeartbeatInPayload = function(game) {
+	this.game = game;
+	this.count = 0;
+	
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_HEARTBEAT,
+			data: {
+				gameId: this.game.id,
+				count: this.count
+			}
+		}
+	};
+};
+
+exports.StorytellerHeartbeatOutPayload = function(count) {
+	this.count = count;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_HEARTBEAT,
+			data: {
+				count: this.count,
+			}
+		}
+	};
 }
 
 exports.StorytellerJoinInPayload = function(player, game) {
@@ -164,6 +240,29 @@ exports.StorytellerRoleOutPayload = function(player) {
 	}
 }
 
+exports.StorytellerRumorInPayload = function() {
+}
+
+exports.StorytellerRumorOutPayload = function(rumor) {
+	this.destinationId = "";
+	this.truthStatus = "";
+	this.rumor = rumor;
+	this.sourceId = "";
+	
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_RUMOR,
+			data: {
+				destinationId: this.destinationId,
+				publicationStatus: this.rumor.publicationStatus,
+				truthStatus: this.truthStatus,
+				rumorId: this.rumor.id,
+				sourceId: this.sourceId,
+				text: this.rumor.text
+			}
+		}
+	}
+}
 
 exports.StorytellerStartInPayload = function(game) {
 	this.game = game;
@@ -179,3 +278,29 @@ exports.StorytellerStartInPayload = function(game) {
 
 exports.StorytellerStartOutPayload = function(game) {
 }
+
+exports.StorytellerTickInPayload = function(game) {
+	this.game = game;
+	
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_TICK,
+			data: {
+				gameId: this.game.id,
+			}
+		}
+	};
+};
+
+exports.StorytellerTickOutPayload = function(round) {
+	this.round = round;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_TICK,
+			data: {
+				round: this.round
+			}
+		}
+	};
+}
+
