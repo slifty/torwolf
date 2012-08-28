@@ -29,7 +29,7 @@ var Communication = Class.extend({
 				window.EMAIL_COMMUNICATION.receivePayload(message.payload);
 				break;
 			case COMMUNICATION_TARGET_STORYTELLER:
-				window.STORYTELLER_COMMUNICATION.receivePayload(message.payload);
+				window.STORYTELLER.receivePayload(message.payload);
 				break;
 			case COMMUNICATION_TARGET_LOBBY:
 				window.LOBBY_COMMUNICATION.receivePayload(message.payload);

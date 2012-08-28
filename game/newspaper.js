@@ -3,12 +3,10 @@ var util = require('util'),
 
 var communication = require('./communication');
 
-var constants = require('../constants'),
+var classes = require('./classes'),
+	constants = require('../constants'),
 	locales = require('../locales'),
 	payloads = require('../payloads');
-	
-var past_investigations = {},
-	active_investigations = {};
 
 
 // Functions
@@ -24,63 +22,40 @@ function publish(data, socket) {
 		return error(locales[socket.locale].errors.newspaper.PUBLISH_SYSTEM, socket);
 	
 	var game = communication.getGameById(data.gameId);
-	var rumor = exports.getRumorByGameId(game.id);
 	
-	var publishOut = new payloads.NewspaperPublishOutPayload(rumor);
-	if(rumor == constants.RUMOR_EMPTY) {
-		publishOut.rumorId = constants.RUMOR_EMPTY;
-		publishOut.headline = locales[game.locale].messages.newspaper.NO_HEADLINE;
-		publishOut.copy = locales[game.locale].messages.newspaper.NO_COPY;
+	// Write the paper
+	var edition = new classes.NewspaperEdition();
+	if(Object.keys(game.activeInvestigations).length == 0) {
+		edition.headline = locales[game.locale].messages.newspaper.NO_HEADLINE;
+		edition.copy = locales[game.locale].messages.newspaper.NO_COPY;
 	} else {
-		publishOut.rumorID = rumor.id;
-		
-		// Generate the article
-		if(rumor.truthStatus == constants.RUMOR_TRUTHSTATUS_TRUE) {
-			publishOut.headline = locales[game.locale].messages.newspaper.TRUE_HEADLINES[Math.floor(Math.random() * locales[game.locale].messages.newspaper.TRUE_HEADLINES.length)].format(rumor.text);
-			publishOut.copy = locales[game.locale].messages.newspaper.TRUE_COPY[Math.floor(Math.random() * locales[game.locale].messages.newspaper.TRUE_COPY.length)].format(rumor.text);
-		} else {
-			publishOut.headline = locales[game.locale].messages.newspaper.FALSE_HEADLINES[Math.floor(Math.random() * locales[game.locale].messages.newspaper.FALSE_HEADLINES.length)].format(rumor.text);
-			publishOut.copy = locales[game.locale].messages.newspaper.FALSE_COPY[Math.floor(Math.random() * locales[game.locale].messages.newspaper.FALSE_COPY.length)].format(rumor.text);
+		for(var x in game.activeInvestigations) {
+			// Most of this is written so that eventually papers can contain multiple rumors.  Headlines / copy generation will need to be changed for that to happen, however.
+			var rumor = game.activeInvestigations[x];
+			edition.round = game.round;
+			edition.rumors.push(rumor);
+			
+			if(rumor.truthStatus == constants.RUMOR_TRUTHSTATUS_TRUE) {
+				edition.headline = util.format(locales[game.locale].messages.newspaper.TRUE_HEADLINES[Math.floor(Math.random() * locales[game.locale].messages.newspaper.TRUE_HEADLINES.length)], rumor.text);
+				edition.copy = util.format(locales[game.locale].messages.newspaper.TRUE_COPY[Math.floor(Math.random() * locales[game.locale].messages.newspaper.TRUE_COPY.length)], rumor.text);
+			} else {
+				edition.headline = util.format(locales[game.locale].messages.newspaper.FALSE_HEADLINES[Math.floor(Math.random() * locales[game.locale].messages.newspaper.FALSE_HEADLINES.length)], rumor.text);
+				edition.copy = util.format(locales[game.locale].messages.newspaper.FALSE_COPY[Math.floor(Math.random() * locales[game.locale].messages.newspaper.FALSE_COPY.length)], rumor.text);
+			}
 		}
 	}
 	
-	// Announce the publication
+	// Announce the paper
+	var publishOut = new payloads.NewspaperPublishOutPayload(edition);
 	exports.sendPayload(
 		publishOut.getPayload(),
 		communication.getSocketsByGameId(game.id));
 }
 
-function investigate(data, socket) {
-	var player = communication.getPlayerBySocketId(socket.id);
-	if(player == null)
-		return error(locales[socket.locale].errors.newspaper.INVESTIGATE_NOPLAYER, socket);
-	if(player.role != constants.PLAYER_ROLE_JOURNALIST)
-		return error(locales[socket.locale].errors.newspaper.INVESTIGATE_NOJOURNALIST, socket);
-	
-	var game = communication.getGameById(player.activeGameId);
-	if(game == null)
-		return error(locales[socket.locale].errors.newspaper.INVESTIGATE_NOGAME, socket);
-
-	var rumor = game.getRumorById(data.rumorId);
-	if(rumor == null)
-		return error(locales[socket.locale].errors.newspaper.INVESTIGATE_NORUMOR, socket);
-	if(rumor.id in past_investigations)
-		return error(locales[socket.locale].errors.newspaper.INVESTIGATE_OLDNEWS, socket);
-	
-	active_investigations[data.gameId] = rumor;
-}
-
 
 // Exports
-exports.getRumorByGameId = function(gameId) {
-	return (gameId in active_investigations)?active_investigations[gameId]:constants.RUMOR_EMPTY;
-}
-
 exports.receivePayload = function(payload, socket) {
 	switch(payload.type) {
-		case constants.COMMUNICATION_NEWSPAPER_PAYLOAD_INVESTIGATE:
-			investigate(payload.data, socket);
-			break;
 		case constants.COMMUNICATION_NEWSPAPER_PAYLOAD_PUBLISH:
 			publish(payload.data, socket);
 			break;

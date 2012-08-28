@@ -18,15 +18,15 @@ if(typeof(window) != "undefined") {
 			JOIN_NONEXISTANT_GAME: "The game you tried to join doesn't exist."
 		},
 		newspaper: {
+		},
+		storyteller: {
+			GAMEOVER_SYSTEM: "Only the system can end the game.",
+			HEARTBEAT_SYSTEM: "Only the system can trigger a heartbeat.",
 			INVESTIGATE_NOGAME: "You aren't connected to a game.",
 			INVESTIGATE_NOJOURNALIST: "Only the journalist may investigate rumors.",
 			INVESTIGATE_NOPLAYER: "You aren't a registered player on the server.",
 			INVESTIGATE_NORUMOR: "That rumor doesn't exist in this game.",
 			INVESTIGATE_OLDRUMOR: "That rumor has already been investigated.",
-		},
-		storyteller: {
-			GAMEOVER_SYSTEM: "Only the system can end the game.",
-			HEARTBEAT_SYSTEM: "Only the system can trigger a heartbeat.",
 			JOIN_LOBBY: "You can only join games through the lobby.",
 			START_SYSTEM: "Only the system can start a game.",
 			TICK_SYSTEM: "Only the system can trigger a tick.",
@@ -79,13 +79,23 @@ if(typeof(window) != "undefined") {
 			}
 		},
 		rumor: {
+			investigationStatus: {
+				C: "Complete",
+				I: "Investigating...",
+				N: "Not Investigating"
+			},
+			investigationStatusCode: {
+				C: "C",
+				I: "I",
+				N: "N"
+			},
 			publicationStatus: {
 				P: "Published",
-				U: "Unpublished",
+				U: "Unpublished"
 			},
 			publicationStatusCode: {
 				P: "P",
-				U: "U",
+				U: "U"
 			},
 			truthStatus: {
 				T: "True",
@@ -96,7 +106,9 @@ if(typeof(window) != "undefined") {
 				T: "T",
 				F: "F",
 				U: "U"
-			}
+			},
+			
+			INVESTIGATE: "Investigate"
 		}
 	};
 		
@@ -121,7 +133,7 @@ if(typeof(window) != "undefined") {
 				"No Merit to \'%s\'",
 				"\'%s\' Hoax Debunked"
 			],
-			FALSE_STORIES: [
+			FALSE_COPY: [
 				"It turns out that the popular rumor about \'%s\' isn't true.",
 			],
 			NO_HEADLINE: "Nothing was written about your country this month",
@@ -130,7 +142,7 @@ if(typeof(window) != "undefined") {
 				"BREAKING: Secret \'%s\' mission revealed",
 				"Verified reports of government-run \'%s\' project",
 			],
-			TRUE_STORIES: [
+			TRUE_COPY: [
 				"There are serious concerns about the welfare of the people due to the \'%s\' project.",
 			]
 		}

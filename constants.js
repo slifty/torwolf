@@ -15,7 +15,6 @@ exports.COMMUNICATION_LOBBY_PAYLOAD_CREATE = "create"; // Create a new game / a 
 exports.COMMUNICATION_LOBBY_PAYLOAD_ERROR = "error"; // Something went wrong
 exports.COMMUNICATION_LOBBY_PAYLOAD_JOIN = "join"; // Join a game from the lobby / Someone has joined a game from the lobby
 
-exports.COMMUNICATION_NEWSPAPER_PAYLOAD_INVESTIGATE = "investigate"; // look into an issue
 exports.COMMUNICATION_NEWSPAPER_PAYLOAD_PUBLISH = "publish"; // Print a paper / send a printed paper
 
 exports.COMMUNICATION_SOCKET_SERVER = "server"; // allows the server to communicate with itself
@@ -24,6 +23,7 @@ exports.COMMUNICATION_STORYTELLER_PAYLOAD_ALLEGIANCE = "allegiance"; // Change a
 exports.COMMUNICATION_STORYTELLER_PAYLOAD_ANNOUNCEMENT = "announcement"; // Make an announcement
 exports.COMMUNICATION_STORYTELLER_PAYLOAD_ERROR = "error"; // Something went wrong
 exports.COMMUNICATION_STORYTELLER_PAYLOAD_HEARTBEAT = "heartbeat"; // Trigger a heartbeat / announce a heartbeat
+exports.COMMUNICATION_STORYTELLER_PAYLOAD_INVESTIGATE = "investigate"; // look into an issue
 exports.COMMUNICATION_STORYTELLER_PAYLOAD_JOIN = "join"; // Join a game / someone has joined
 exports.COMMUNICATION_STORYTELLER_PAYLOAD_LEAVE = "leave"; // Leave a game / someone has left
 exports.COMMUNICATION_STORYTELLER_PAYLOAD_ROLE = "setrole"; // Specify role preference / Set role
@@ -62,7 +62,8 @@ exports.PLAYER_ROLE_UNKNOWN = "U";
 exports.PLAYER_STATUS_ALIVE = "A";
 exports.PLAYER_STATUS_DEAD = "D";
 
-exports.RUMOR_EMPTY = "nothing";
+exports.RUMOR_INVESTIGATIONSTATUS_INVESTIGATING = "I";
+exports.RUMOR_INVESTIGATIONSTATUS_NONE = "N";
 exports.RUMOR_TRUTHSTATUS_TRUE = "T";
 exports.RUMOR_TRUTHSTATUS_FALSE = "F";
 exports.RUMOR_TRUTHSTATUS_UNKNOWN = "U";
@@ -77,5 +78,5 @@ exports.TICK_HEARTBEAT = 1000; // How many milliseconds between each heartbeat
 // Viewport Types
 exports.VIEWPORT_PLAYER_STORYTELLER_PEERPANE = "storyteller-peerpane";
 exports.VIEWPORT_PLAYER_STORYTELLER_PLAYERPANE = "storyteller-playerpane";
-
 exports.VIEWPORT_RUMOR_STORYTELLER_RUMORPANE = "storyteller-rumorpane";
+exports.VIEWPORT_EDITION_NEWSPAPER_ARCHIVEPANE = "newspaper-archivepane";

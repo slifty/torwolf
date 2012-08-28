@@ -1,11 +1,12 @@
 // Object
-var GameCommunication = Class.extend({
+var Storyteller = Class.extend({
 	
 	init: function() {
 		this.turn = 0;
 		this.messages = [];
 		this.players = {};
 		this.rumors = {};
+		this.you = null;
 		
 		
 		// In-game console
@@ -72,11 +73,14 @@ var GameCommunication = Class.extend({
 			case COMMUNICATION_STORYTELLER_PAYLOAD_START:
 				this.startOut(payload.data);
 				break;
+			case COMMUNICATION_STORYTELLER_PAYLOAD_TICK:
+				this.tickOut(payload.data);
+				break;
 		}
 	},
 	
 	sendPayload: function(payload) {
-		COMMUNICATION.sendMessage(COMMUNICATION_TARGET_GAME, payload);
+		COMMUNICATION.sendMessage(COMMUNICATION_TARGET_STORYTELLER, payload);
 	},
 	
 	
@@ -90,7 +94,22 @@ var GameCommunication = Class.extend({
 	},
 
 	heartbeatOut: function(data) {
+		console.log("Todo - handle heartbeat announcements");
+	},
+	
+	investigateIn: function(rumorId) {
+		var rumor = this.getRumorById(rumorId);
 		
+		// Reset investigation statuses
+		for(var x in this.rumors) {
+			this.rumors[x].investigationStatus = RUMOR_INVESTIGATIONSTATUS_NONE;
+			this.rumors[x].redraw();
+		}
+		rumor.investigationStatus = RUMOR_INVESTIGATIONSTATUS_INVESTIGATING;
+		rumor.redraw();
+		
+		var investigateIn = new StorytellerInvestigateInPayload(rumor);
+		this.sendPayload(investigateIn.getPayload());
 	},
 	
 	joinOut: function(data) {
@@ -109,6 +128,7 @@ var GameCommunication = Class.extend({
 		player.render(viewport);
 		
 		if(player.id == COMMUNICATION.playerId) {
+			this.you = player;
 			var viewport = new Viewport(this.playerPane, VIEWPORT_PLAYER_STORYTELLER_PLAYERPANE);
 			player.render(viewport);
 		}
@@ -126,6 +146,7 @@ var GameCommunication = Class.extend({
 		if(rumor == null) {
 			rumor = new Rumor();
 			rumor.id = data.rumorId;
+			rumor.investigationStatus = RUMOR_INVESTIGATIONSTATUS_NONE;
 			rumor.text = data.text;
 			rumor.truthStatus = data.truthStatus;
 			rumor.publicationStatus = data.publicationStatus;
@@ -152,6 +173,17 @@ var GameCommunication = Class.extend({
 	
 	startOut: function(data) {
 	},
+
+	tickOut: function(data) {
+		console.log("Todo - handle tick announcements");
+		
+		// Reset investigation statuses
+		for(var x in this.rumors) {
+			this.rumors[x].investigationStatus = RUMOR_INVESTIGATIONSTATUS_NONE;
+			this.rumors[x].redraw();
+		}
+		
+	},
 	
 	
 	getPlayerById: function(id) {
@@ -165,5 +197,5 @@ var GameCommunication = Class.extend({
 });
 
 $(function() {
-	window.STORYTELLER_COMMUNICATION = new GameCommunication();
+	window.STORYTELLER = new Storyteller();
 });

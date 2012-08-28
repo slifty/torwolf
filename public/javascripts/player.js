@@ -16,6 +16,7 @@ var Player = Visible.extend({
 			var output = viewport.output;
 			
 			output.empty()
+				.removeClass()
 				.addClass('player');
 				
 			if(this.id == COMMUNICATION.playerId)

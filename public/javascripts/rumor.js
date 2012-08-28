@@ -3,6 +3,7 @@ var Rumor = Visible.extend({
 		this._super();
 		
 		this.id = "";
+		this.investigationStatus = "";
 		this.truthStatus = "";
 		this.publicationStatus = "";
 		this.text = "";
@@ -47,6 +48,30 @@ var Rumor = Visible.extend({
 						.addClass('truthStatusCode')
 						.text(localization[LOCALE].gui.rumor.truthStatusCode[this.truthStatus])
 						.appendTo(output);
+					
+					if(this.publicationStatus == RUMOR_PUBLICATIONSTATUS_UNPUBLISHED && STORYTELLER.you.role == PLAYER_ROLE_JOURNALIST) {
+						if(this.investigationStatus == RUMOR_INVESTIGATIONSTATUS_NONE) {
+							var investigateButton = $('<div />')
+								.addClass('investigateButton')
+								.addClass('button')
+								.text(localization[LOCALE].gui.rumor.INVESTIGATE)
+								.bind('click',{context: this}, function(ev) {
+									var self = ev.data.context;
+									STORYTELLER.investigateIn(self.id);
+								})
+								.appendTo(output);
+						}
+						
+						var investigationStatus = $('<div />')
+							.addClass('investigationStatus')
+							.text(localization[LOCALE].gui.rumor.investigationStatus[this.investigationStatus])
+							.appendTo(output);
+						var investigationStatusCode = $('<div />')
+							.addClass('investigationStatusCode')
+							.text(localization[LOCALE].gui.rumor.investigationStatusCode[this.investigationStatus])
+							.appendTo(output);
+					}
+					
 					break;
 			}
 		}

@@ -48,6 +48,17 @@ Starting the Server
 Code Conventions
 =============
 
+Architecture
+-------------
+Communication between modules is done through payloads.
+
+Communication between the client and server is done through messages.
+
+The only time you should be calling a module's method directly is if you are routing a payload, or if you are expecting a return value (e.g. "getGameById")
+
+If you have a method that should only be triggerable via a payload sent from the server (i.e. it is a server-to-server interaction such as tick()) you should use the constants.PAYLOAD_SOCKET_SERVER constant as the socket, and check for this condition early on.
+
+
 Communication Method and Class Naming
 -------------
 For the sake of simplicity, function and class names concerning communication are always from the perspective of the server, even in client code.
