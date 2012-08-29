@@ -42,7 +42,7 @@ var NewspaperCommunication = Class.extend({
 	
 	publishOut: function(data) {
 		var edition = new NewspaperMessage();
-		edition.id = data.playerId;
+		edition.id = data.editionId;
 		edition.copy = data.copy;
 		edition.headline = data.headline;
 		edition.round = data.round;

@@ -76,7 +76,9 @@ exports.TICK_WARNING = 10000; // Number of milliseconds warning to give before e
 exports.TICK_HEARTBEAT = 1000; // How many milliseconds between each heartbeat
 
 // Viewport Types
+exports.VIEWPORT_ANNOUNCEMENT_STORYTELLER_ANNOUNCEMENTPANE = "storyteller-announcementpane";
+exports.VIEWPORT_EDITION_NEWSPAPER_ARCHIVEPANE = "newspaper-archivepane";
+exports.VIEWPORT_GAME_LOBBY_GAMELIST = "lobby-gamelist";
 exports.VIEWPORT_PLAYER_STORYTELLER_PEERPANE = "storyteller-peerpane";
 exports.VIEWPORT_PLAYER_STORYTELLER_PLAYERPANE = "storyteller-playerpane";
 exports.VIEWPORT_RUMOR_STORYTELLER_RUMORPANE = "storyteller-rumorpane";
-exports.VIEWPORT_EDITION_NEWSPAPER_ARCHIVEPANE = "newspaper-archivepane";

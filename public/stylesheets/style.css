@@ -1,5 +1,9 @@
+* {
+	padding: 0px;
+	margin: 0px;
+}
+
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -9,16 +13,229 @@ a {
 
 
 /* Generic Control Pane */
-.control-pane {}
+.control-pane {
+	background: #fff;
+	border: 1px solid #000;
+	padding: 10px;
+}
 
 .output-pane {}
 
-.input-pane {}
+.button {
+	border: 1px solid #963;
+	cursor: pointer;
+	padding: 3px;
+}
 
-.tool-pane {}
+/* Attributes */
+.allegiance.allegiance-A {
+	color: #7F7;
+}
+.allegiance.allegiance-J {
+	color: #77F;
+}
+.allegiance.allegiance-S {
+	color: #F77;
+}
+.allegiance.allegiance-U {
+	color: #777;
+}
 
-.tool {
-	background-color: black;
-	height: 20px;
-	width: 20px;
+.role.role-A {
+	color: #7F7;
+}
+.role.role-C {
+	color: #777;
+}
+.role.role-CA {
+	color: #7FF;
+}
+.role.role-CS {
+	color: #FF7;
+}
+.role.role-J {
+	color: #77F;
+}
+.role.role-S {
+	color: #F77;
+}
+.role.role-U {
+	color: #777;
+}
+
+.status.status-A {
+}
+.status.status-D {
+}
+
+.player.status-D {
+	text-decoration: line-through;
+}
+
+/* Lobby */
+#lobby-control-pane {
+	width: 500px;
+}
+
+#lobby-game-list {
+	border: 1px solid #999;
+	height: 150px;
+	overflow: auto;
+}
+
+#lobby-game-list li.game {
+	cursor: pointer;
+	list-style: none;
+	padding: 3px;
+}
+
+#lobby-game-list li.game.active {
+	background: #ffffcc
+}
+
+#lobby-tool-pane {
+	margin-top: 10px;
+	height: 25px;
+}
+#lobby-tool-create {
+	width: 100px;
+	float: left;
+}
+#lobby-tool-join {
+	width: 100px;
+	float: right;
+}
+
+
+/* Storyteller */
+#storyteller-control-pane {
+	position: absolute;
+	right: 50px;
+	top: 50px;
+	width: 200px;
+}
+
+#storyteller-player-pane {
+	width: 200px;
+}
+#storyteller-player-pane div.allegiance {
+}
+#storyteller-player-pane div.avatar {
+	background: #fcc;
+	height: 100px;
+	margin: auto;
+	text-align: center;
+	width: 100px;
+}
+#storyteller-player-pane div.name {
+	text-align: center;
+}
+#storyteller-player-pane div.role {
+	font-size: 1.3em;
+}
+#storyteller-player-pane div.status {
+	font-size: .8em;
+	text-align: center;
+}
+
+
+#storyteller-peer-pane {}
+#storyteller-player-list {}
+#storyteller-player-list li.player {
+	clear: left;
+	height: 30px;
+	list-style: none;
+}
+#storyteller-player-list li.player .allegiance {
+	float: left;
+	font-size: .8em;
+	margin-left: 25px;
+	text-align: center;
+	width: 75px;
+}
+#storyteller-player-list li.player .allegianceCode {
+	display: none;
+	float: left;
+}
+#storyteller-player-list li.player .id {
+	display: none;
+	font-size: .5em;
+}
+#storyteller-player-list li.player .name {
+	float: left;
+	overflow: hidden;
+	width: 200px;
+}
+#storyteller-player-list li.player .role {
+	float: left;
+	font-size: .8em;
+	margin-left: 25px;
+	text-align: center;
+	width: 75px;
+}
+#storyteller-player-list li.player .roleCode {
+	display: none;
+	float: left;
+}
+
+#storyteller-announcement-pane {
+	background: #000;
+	height: 150px;
+	overflow: auto;
+	padding: 5px;
+}
+#storyteller-announcement-list {}
+#storyteller-announcement-list li.message {
+	color: #eee;
+	font-size: .8em;
+	list-style: none;
+	margin: 5px 0px;
+}
+
+#storyteller-rumor-pane {}
+#storyteller-rumor-list {}
+#storyteller-rumor-list li.rumor {
+	clear: left;
+	height: 70px;
+	list-style: none;
+}
+#storyteller-rumor-list li.rumor .investigateButton {
+	clear: left;
+	font-size: .8em;
+	width: 100px;
+	margin: 5px;
+}
+#storyteller-rumor-list li.rumor .investigationStatus {
+	float: left;
+	font-size: .8em;
+	margin: 5px;
+}
+#storyteller-rumor-list li.rumor .investigationStatusCode {
+	display: none;
+	float: left;
+	font-size: .8em;
+}
+#storyteller-rumor-list li.rumor .publicationStatus {
+	float: left;
+	font-size: .8em;
+	margin: 5px;
+}
+#storyteller-rumor-list li.rumor .publicationStatusCode {
+	display: none;
+	float: left;
+	font-size: .8em;
+}
+#storyteller-rumor-list li.rumor .text {
+	font-size: 1.2em;
+	width: 200px;
+}
+#storyteller-rumor-list li.rumor .truthStatus {
+	float: left;
+	font-size: .8em;
+	margin: 5px;
+}
+#storyteller-rumor-list li.rumor .truthStatusCode {
+	display: none;
+	float: left;
+	font-size: .8em;
 }

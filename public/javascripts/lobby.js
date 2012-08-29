@@ -18,21 +18,27 @@ var LobbyCommunication = Class.extend({
 			.appendTo(controlPane);
 		this.gameList = gameList;
 		
-		var lobbyInputPane = $('<div />')
-			.attr('id','lobby-input-pane')
-			.addClass('input-pane')
-			.appendTo(controlPane);
-		this.lobbyInputPane = lobbyInputPane;
-		
 		var lobbyToolPane = $('<div />')
 			.attr('id','lobby-tool-pane')
 			.addClass('tool-pane')
-			.appendTo(lobbyInputPane);
+			.appendTo(controlPane);
 		this.lobbyToolPane = lobbyToolPane;
+		
+		var toolCreate = $('<div />')
+			.attr('id','lobby-tool-create')
+			.addClass('button')
+			.text(localization[LOCALE].gui.lobby.CREATE)
+			.bind('click',{context: this}, function(ev) {
+				var self = ev.data.context;
+				self.createPane.fadeIn(500);
+			})
+			.appendTo(lobbyToolPane);
+		this.toolCreate = toolCreate;
 		
 		var toolJoin = $('<div />')
 			.attr('id','lobby-tool-join')
-			.addClass('tool')
+			.addClass('button')
+			.text(localization[LOCALE].gui.lobby.JOIN)
 			.bind('click',{context: this}, function(ev) {
 				var self = ev.data.context;
 				var game = self.getGameById(self.activeGameId);
@@ -40,22 +46,13 @@ var LobbyCommunication = Class.extend({
 					return;
 				
 				if(game.isPrivate)
-					var password = prompt("This game is private.  What's the password?","");
+					var password = prompt(localization[LOCALE].gui.lobby.PASSWORD_PROMPT,"");
 				
 				self.joinIn(game, password);
 			})
 			.appendTo(lobbyToolPane);
 		this.toolJoin = toolJoin;
 		
-		var toolCreate = $('<div />')
-			.attr('id','lobby-tool-create')
-			.addClass('tool')
-			.bind('click',{context: this}, function(ev) {
-				var self = ev.data.context;
-				self.createPane.fadeIn(500);
-			})
-			.appendTo(lobbyToolPane);
-		this.toolCreate = toolCreate;
 		
 		
 		// Creation pane
@@ -77,7 +74,7 @@ var LobbyCommunication = Class.extend({
 			.appendTo(createPaneInputs);
 		var createPaneInputLabel_name = $('<label />')
 			.attr('for', 'lobby-game-create-name')
-			.text('Name:')
+			.text(localization[LOCALE].gui.lobby.create.NAME)
 			.appendTo(createPaneInputItem_name);
 		var createPaneInputField_name = $('<input />')
 			.attr('id', 'lobby-game-create-name')
@@ -89,7 +86,7 @@ var LobbyCommunication = Class.extend({
 		var createPaneInputLabel_isPrivate = $('<label />')
 			.attr('for', 'lobby-game-create-isPrivate')
 			.addClass('checkbox')
-			.text('Private')
+			.text(localization[LOCALE].gui.lobby.create.ISPRIVATE)
 			.appendTo(createPaneInputItem_isPrivate);
 		var createPaneInputField_isPrivate = $('<input />')
 			.attr('id', 'lobby-game-create-isPrivate')
@@ -109,7 +106,7 @@ var LobbyCommunication = Class.extend({
 			.appendTo(createPaneInputs);
 		var createPaneInputLabel_password = $('<label />')
 			.attr('for', 'lobby-game-create-password')
-			.text('Password:')
+			.text(localization[LOCALE].gui.lobby.create.PASSWORD)
 			.appendTo(createPaneInputItem_password);
 		var createPaneInputField_password = $('<input />')
 			.attr('id', 'lobby-game-create-password')
@@ -172,6 +169,8 @@ var LobbyCommunication = Class.extend({
 	},
 	
 	createOut: function(data) {
+		var anngameouncement = new Game();
+		
 		var game = new Game();
 		game.id = data.gameId;
 		game.name = data.name;
@@ -180,20 +179,20 @@ var LobbyCommunication = Class.extend({
 		this.games[game.id] = game;
 		
 		var output = $('<li />')
-			.attr('id','game-' + game.id)
-			.addClass('game')
 			.data('game-id', game.id)
 			.bind('click', {context: this}, function(ev) {
 				var self = ev.data.context;
 				var $this = $(this);
 				var gameId = $this.data('game-id');
-
+				
 				self.gameList.find(".active").removeClass("active");
 				self.activeGameId = gameId;
 				$this.addClass("active");
 			})
 			.appendTo(this.gameList);
-		game.render(output);
+		
+		var viewport = new Viewport(output, VIEWPORT_GAME_LOBBY_GAMELIST);
+		game.render(viewport);
 	},
 	
 	joinIn: function(game, password) {

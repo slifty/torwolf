@@ -50,9 +50,16 @@ function create(data, socket) {
 	// Announce the new game to the lobby
 	var createOut = new payloads.LobbyCreateOutPayload(game);
 	
-	return exports.sendPayload(
+	exports.sendPayload(
 		createOut.getPayload(),
 		communication.getSockets());
+	
+	// Add the creator to the game
+	var joinIn = new payloads.LobbyJoinInPayload(game);
+	joinIn.password = game.password;
+	exports.receivePayload(
+		joinIn.getPayload(),
+		socket);
 }
 
 function error(message, socket) {

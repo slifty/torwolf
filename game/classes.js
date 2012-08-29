@@ -24,16 +24,16 @@ exports.Game = function() {
 		constants.PLAYER_ROLE_SPY];*/
 	this.roles = [
 		constants.PLAYER_ROLE_JOURNALIST,
-		constants.PLAYER_ROLE_SPY,
+		
 	];
 	this.round = 0;
 	this.rumors = {};
 	this.rumorCount = 3;
-	this.turnLength = 5 * 1000; //2 * 60 * 1000; // Turn length in Miliseconds
+	this.tickLength = 5 * 1000; //2 * 60 * 1000; // Tick length in Miliseconds
 	this.usedWords = [];
 	
 	
-	this.popRole = function() {
+	this.popRole = function() { // Generate a random role
 		if(this.roles.length == 0) return null;
 		return this.roles.splice(Math.floor(Math.random() * this.roles.length), 1)[0];
 	};

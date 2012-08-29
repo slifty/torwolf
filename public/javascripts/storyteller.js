@@ -24,6 +24,18 @@ var Storyteller = Class.extend({
 			.appendTo(controlPane);
 		this.playerPane = playerPane;
 		
+		var announcementPane = $('<div />')
+			.attr('id','storyteller-announcement-pane')
+			.addClass('output-pane')
+			.appendTo(controlPane);
+		this.announcementPane = announcementPane;
+		
+		var announcementList = $('<ul />')
+			.attr('id','storyteller-announcement-list')
+			.addClass('message-list')
+			.appendTo(announcementPane);
+		this.announcementList = announcementList;
+		
 		var peerPane = $('<div />')
 			.attr('id','storyteller-peer-pane')
 			.addClass('output-pane')
@@ -91,6 +103,15 @@ var Storyteller = Class.extend({
 	},
 	
 	announcementOut: function(data) {
+		var announcement = new StorytellerMessage();
+		announcement.text = data.text;
+		this.messages.push(announcement);
+		
+		var output = $('<li />')
+			.appendTo(this.announcementList);
+		
+		var viewport = new Viewport(output, VIEWPORT_ANNOUNCEMENT_STORYTELLER_ANNOUNCEMENTPANE);
+		announcement.render(viewport);
 	},
 
 	heartbeatOut: function(data) {

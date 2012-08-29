@@ -36,7 +36,17 @@ if(typeof(window) != "undefined") {
 	exports.localization[locale]["gui"] = {
 		lobby: {
 			CREATE: "Create",
-			JOIN: "Join"
+			JOIN: "Join",
+			PASSWORD_PROMPT: "This game is private.  What's the password?",
+			
+			badges: {
+				PRIVATE: "Private"
+			},
+			create: {
+				ISPRIVATE: "Private",
+				NAME: "Name:",
+				PASSWORD: "Password"
+			},
 		},
 		player: {
 			YOU: "You",

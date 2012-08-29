@@ -177,7 +177,7 @@ function heartbeat(data, socket) {
 	count += constants.TICK_HEARTBEAT;
 	
 	// Time for the next tick?
-	if(count >= game.turnLength) {
+	if(count >= game.tickLength) {
 		return setTimeout(function() {
 			var tickIn = new payloads.StorytellerTickInPayload(game);
 			tickIn.count = count;
@@ -189,7 +189,7 @@ function heartbeat(data, socket) {
 	}
 	
 	// Almost time for the next tick?
-	var remainingTime = game.turnLength - count;
+	var remainingTime = game.tickLength - count;
 	if(remainingTime <= constants.TICK_WARNING
 	&& remainingTime > constants.TICK_WARNING - constants.TICK_HEARTBEAT) {
 		var announcementOut = new payloads.StorytellerAnnouncementOutPayload(
@@ -225,6 +225,9 @@ function tick(data, socket) {
 			game.round
 		)
 	);
+	exports.sendPayload(
+		announcementOut.getPayload(),
+		communication.getSocketsByGameId(game.id));
 	
 	// Publish the newspaper
 	if(Object.keys(game.activeInvestigations).length === 0) {
@@ -288,7 +291,17 @@ function tick(data, socket) {
 	exports.sendPayload(
 		tickOut.getPayload(),
 		communication.getSocketsByGameId(game.id));
-
+	
+	// Announce the beginning of the turn
+	var announcementOut = new payloads.StorytellerAnnouncementOutPayload(
+		util.format(locales[game.locale].messages.storyteller.ROUND_BEGIN,
+			game.round
+		)
+	);
+	exports.sendPayload(
+		announcementOut.getPayload(),
+		communication.getSocketsByGameId(game.id));
+	
 	return setTimeout(function() {
 		var heartbeatIn = new payloads.StorytellerHeartbeatInPayload(game);
 		heartbeatIn.count = 0;

@@ -72,7 +72,7 @@ exports.LobbyCreateOutPayload = function(game) {
 				players: this.game.players,
 				roles: this.game.roles,
 				rumorCount: this.game.rumorCount,
-				turnLength: this.game.turnLength
+				tickLength: this.game.tickLength
 			}
 		}
 	};
@@ -131,6 +131,7 @@ exports.NewspaperPublishOutPayload = function(edition) {
 			type: constants.COMMUNICATION_NEWSPAPER_PAYLOAD_PUBLISH,
 			data: {
 				copy: this.edition.copy,
+				editionId: this.edition.id,
 				headline: this.edition.headline,
 				round: this.edition.round,
 				rumorIds: rumorIds

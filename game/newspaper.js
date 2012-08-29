@@ -25,6 +25,8 @@ function publish(data, socket) {
 	
 	// Write the paper
 	var edition = new classes.NewspaperEdition();
+	edition.round = game.round;
+
 	if(Object.keys(game.activeInvestigations).length == 0) {
 		edition.headline = locales[game.locale].messages.newspaper.NO_HEADLINE;
 		edition.copy = locales[game.locale].messages.newspaper.NO_COPY;
@@ -32,7 +34,6 @@ function publish(data, socket) {
 		for(var x in game.activeInvestigations) {
 			// Most of this is written so that eventually papers can contain multiple rumors.  Headlines / copy generation will need to be changed for that to happen, however.
 			var rumor = game.activeInvestigations[x];
-			edition.round = game.round;
 			edition.rumors.push(rumor);
 			
 			if(rumor.truthStatus == constants.RUMOR_TRUTHSTATUS_TRUE) {
