@@ -1,8 +1,10 @@
-var StorytellerMessage = Visible.extend({
+var IrcUser = Visible.extend({
 	init: function() {
 		this._super();
 		
-		this.text = "";
+		this.alias = "";
+		this.id = "";
+		this.player = null;
 	},
 	
 	redraw: function() {
@@ -12,17 +14,17 @@ var StorytellerMessage = Visible.extend({
 			
 			output.empty()
 				.removeClass()
-				.addClass('message');
+				.addClass('user');
 			
 			switch(viewport.type) {
-				case VIEWPORT_STORYTELLER_ANNOUNCEMENT_ANNOUNCEMENTPANE:
-					var announcementCopy = $('<div />')
-						.addClass('text')
-						.text(this.text)
+				case VIEWPORT_IRC_USER_USERLIST:
+					var userName = $('<div />')
+						.addClass('name')
+						.text(this.alias)
 						.appendTo(output);
 					
 					break;
-				}
+			}
 		}
 	}
 });

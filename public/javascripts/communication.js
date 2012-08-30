@@ -23,7 +23,7 @@ var Communication = Class.extend({
 		var communicationTarget = message.target;
 		switch(message.target) {
 			case COMMUNICATION_TARGET_IRC:
-				window.IRC_COMMUNICATION.receivePayload(message.payload);
+				window.IRC.receivePayload(message.payload);
 				break;
 			case COMMUNICATION_TARGET_EMAIL:
 				window.EMAIL_COMMUNICATION.receivePayload(message.payload);

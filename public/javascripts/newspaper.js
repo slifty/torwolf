@@ -9,7 +9,7 @@ var NewspaperCommunication = Class.extend({
 		var controlPane = $('<div />')
 			.attr('id','newspaper-control-pane')
 			.addClass('control-pane')
-			.addClass('game-page')
+			.addClass('incommunicado')
 			.appendTo($("body"));
 		this.controlPane = controlPane;
 		
@@ -51,7 +51,7 @@ var NewspaperCommunication = Class.extend({
 		var output = $('<li />')
 			.appendTo(this.editionList);
 		
-		var viewport = new Viewport(output, VIEWPORT_EDITION_NEWSPAPER_ARCHIVEPANE);
+		var viewport = new Viewport(output, VIEWPORT_NEWSPAPER_EDITION_ARCHIVEPANE);
 		edition.render(viewport);
 	}
 	

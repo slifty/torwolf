@@ -13,7 +13,7 @@ var Storyteller = Class.extend({
 		var controlPane = $('<div />')
 			.attr('id','storyteller-control-pane')
 			.addClass('control-pane')
-			.addClass('game-page')
+			.addClass('incommunicado')
 			.appendTo($("body"));
 		this.controlPane = controlPane;
 		
@@ -110,7 +110,7 @@ var Storyteller = Class.extend({
 		var output = $('<li />')
 			.appendTo(this.announcementList);
 		
-		var viewport = new Viewport(output, VIEWPORT_ANNOUNCEMENT_STORYTELLER_ANNOUNCEMENTPANE);
+		var viewport = new Viewport(output, VIEWPORT_STORYTELLER_ANNOUNCEMENT_ANNOUNCEMENTPANE);
 		announcement.render(viewport);
 	},
 
@@ -145,12 +145,12 @@ var Storyteller = Class.extend({
 		var output = $('<li />')
 			.appendTo(this.playerList);
 		
-		var viewport = new Viewport(output, VIEWPORT_PLAYER_STORYTELLER_PEERPANE);
+		var viewport = new Viewport(output, VIEWPORT_STORYTELLER_PLAYER_PEERPANE);
 		player.render(viewport);
 		
 		if(player.id == COMMUNICATION.playerId) {
 			this.you = player;
-			var viewport = new Viewport(this.playerPane, VIEWPORT_PLAYER_STORYTELLER_PLAYERPANE);
+			var viewport = new Viewport(this.playerPane, VIEWPORT_STORYTELLER_PLAYER_PLAYERPANE);
 			player.render(viewport);
 		}
 	},
@@ -176,7 +176,7 @@ var Storyteller = Class.extend({
 			var output = $('<li />')
 			.appendTo(this.rumorList);
 			
-			var viewport = new Viewport(output, VIEWPORT_RUMOR_STORYTELLER_RUMORPANE);
+			var viewport = new Viewport(output, VIEWPORT_STORYTELLER_RUMOR_RUMORPANE);
 			rumor.render(viewport);
 		}
 		

@@ -1,6 +1,7 @@
 * {
 	padding: 0px;
 	margin: 0px;
+	white-space: pre-wrap;
 }
 
 body {
@@ -72,6 +73,63 @@ a {
 	text-decoration: line-through;
 }
 
+/* IRC */
+#irc-control-pane {
+	position: absolute;
+	top: 50px;
+	right: 300px;
+}
+
+#irc-message-list {
+	border: 1px solid #000;
+	height: 300px;
+	float: left;
+	overflow: auto;
+	width: 400px;
+}
+#irc-message-list li.message {
+	font-family: courier;
+	font-size: .9em;
+	list-style: none;
+	margin: 5px;
+}
+#irc-message-list li.message .alias {
+	float: left;
+}
+#irc-message-list li.message .text {
+	margin-left: 20px;
+	overflow: hidden;
+}
+
+#irc-user-list {
+	float: left;
+	height: 300px;
+	padding: 0px 5px;
+	width: 100px;
+}
+#irc-user-list li.user {
+	list-style: none;
+	margin-bottom: 5px;
+}
+
+#irc-input-pane {
+	padding: 5px 0px;
+	height: 25px;
+	clear: left;
+}
+#irc-input-textfield {
+	float: left;
+	height:25px;
+	margin-right: 5px;
+	padding: 5px;
+	width: 250px;
+}
+#irc-input-submit {
+	width: 70px;
+	float: left;
+}
+
+
 /* Lobby */
 #lobby-control-pane {
 	width: 500px;
@@ -137,7 +195,6 @@ a {
 	font-size: .8em;
 	text-align: center;
 }
-
 
 #storyteller-peer-pane {}
 #storyteller-player-list {}

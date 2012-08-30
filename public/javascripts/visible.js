@@ -10,11 +10,21 @@ var Visible = Class.extend({
 	
 	redraw: function() {
 		for(var x in this.viewports) {
-			var viewport = viewports[x];
+			var viewport = this.viewports[x];
 			var output = viewport.output;
 			
 			output.empty();
 		}
+	},
+	
+	remove: function() {
+		for(var x in this.viewports) {
+			var viewport = this.viewports[x];
+			var output = viewport.output;
+			
+			output.remove();
+		}
+		this.viewports = [];
 	}
 	
 });

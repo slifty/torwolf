@@ -24,7 +24,7 @@ var Rumor = Visible.extend({
 				.addClass('publicationStatus-' + this.publicationStatus);
 				
 			switch(viewport.type) {
-				case VIEWPORT_RUMOR_STORYTELLER_RUMORPANE:
+				case VIEWPORT_STORYTELLER_RUMOR_RUMORPANE:
 					var rumorText = $('<div />')
 						.addClass('text')
 						.text(this.text)

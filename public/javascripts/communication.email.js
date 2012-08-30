@@ -164,7 +164,7 @@ var EmailCommunication = Class.extend({
 });
 
 $(function() {
-	window.EMAIL_COMMUNICATION = new EmailCommunication();
+	//window.EMAIL_COMMUNICATION = new EmailCommunication();
 	
 	var test = {
 		target: COMMUNICATION_TARGET_EMAIL,

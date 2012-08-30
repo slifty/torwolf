@@ -1,7 +1,8 @@
 var util = require('util'),
 	uuid = require('node-uuid');
 
-var communication = require('./communication')
+var communication = require('./communication'),
+	irc = require('./irc'),
 	newspaper = require('./newspaper');
 
 var classes = require('./classes'),
@@ -73,12 +74,18 @@ function join(data, socket) {
 	// Add the player to the game
 	game.players[player.id] = player;
 	player.activeGameId = game.id;
-
+	
 	// Announce the entrance of the player
-	var join = new payloads.StorytellerJoinOutPayload(player);
+	var joinOut = new payloads.StorytellerJoinOutPayload(player);
 	exports.sendPayload(
-		join.getPayload(),
+		joinOut.getPayload(),
 		communication.getSocketsByGameId(game.id));
+	
+	// Have them join IRC
+	var joinIn = new payloads.IrcJoinInPayload(player.name);
+	irc.receivePayload(
+		joinIn.getPayload(),
+		socket);
 	
 	// If the game is full, start the game
 	if(Object.keys(game.players).length == game.roles.length) {

@@ -48,6 +48,9 @@ if(typeof(window) != "undefined") {
 				PASSWORD: "Password"
 			},
 		},
+		irc: {
+			SEND: "Send",
+		},
 		player: {
 			YOU: "You",
 			
@@ -123,6 +126,10 @@ if(typeof(window) != "undefined") {
 	};
 		
 	exports.localization[locale]["messages"] = {
+		irc: {
+			JOINED: "has joined the channel.",
+			LEFT: "has left the channel.",
+		},
 		storyteller: {
 			GAMEOVER: "The game is over.",
 			KILL: "%s walks up to %s, takes out his gun, and shoots.  It is not a pretty scene",

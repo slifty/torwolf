@@ -120,7 +120,7 @@ var LobbyCommunication = Class.extend({
 			.attr('id', 'lobby-game-create-submit')
 			.addClass('button')
 			.addClass('submit')
-			.text("Create")
+			.text(localization[LOCALE].gui.lobby.CREATE)
 			.bind('click',{context: this}, function(ev) {
 				var self = ev.data.context;
 				var game = new Game();
@@ -159,8 +159,8 @@ var LobbyCommunication = Class.extend({
 	connectOut: function(data) {
 		COMMUNICATION.playerId = data.playerId;
 		COMMUNICATION.playerName = data.name;
-		$(".lobby-page").show();
-		$(".game-page").hide();
+		$(".lobby").show();
+		$(".incommunicado").hide();
 	},
 	
 	createIn: function(game) {
@@ -191,7 +191,7 @@ var LobbyCommunication = Class.extend({
 			})
 			.appendTo(this.gameList);
 		
-		var viewport = new Viewport(output, VIEWPORT_GAME_LOBBY_GAMELIST);
+		var viewport = new Viewport(output, VIEWPORT_LOBBY_GAME_GAMELIST);
 		game.render(viewport);
 	},
 	
@@ -204,8 +204,8 @@ var LobbyCommunication = Class.extend({
 	joinOut: function(data) {
 		if(data.playerId == COMMUNICATION.playerId) {
 			// This user just joined a game
-			$(".lobby-page").hide();
-			$(".game-page").show();
+			$(".lobby").hide();
+			$(".incommunicado").show();
 		}
 	},
 	

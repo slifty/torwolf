@@ -17,6 +17,60 @@ exports.ErrorPayload = function(content) {
 	};
 };
 
+exports.IrcBroadcastInPayload = function(text) {
+	this.text = text;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_IRC_PAYLOAD_BROADCAST,
+			data: {
+				text: this.text
+			}
+		}
+	};
+};
+
+exports.IrcBroadcastOutPayload = function(message) {
+	this.message = message;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_IRC_PAYLOAD_BROADCAST,
+			data: {
+				messageId: this.message.id,
+				text: this.message.text,
+				type: this.message.type,
+				userId: this.message.userId
+			}
+		}
+	};
+};
+
+exports.IrcJoinInPayload = function(alias) {
+	this.alias = alias;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_IRC_PAYLOAD_JOIN,
+			data: {
+				alias: this.alias
+			}
+		}
+	};
+};
+
+exports.IrcJoinOutPayload = function(user) {
+	this.user = user;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_IRC_PAYLOAD_JOIN,
+			data: {
+				playerId: this.user.player.id,
+				userId: this.user.id,
+				alias: this.user.alias,
+			}
+		}
+	};
+};
+
+
 exports.LobbyConnectInPayload = function(name) {
 	this.name = name;
 	this.getPayload = function() {

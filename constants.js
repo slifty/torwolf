@@ -9,7 +9,6 @@ exports.COMMUNICATION_IRC_PAYLOAD_BROADCAST = "broadcast";
 exports.COMMUNICATION_IRC_PAYLOAD_JOIN = "join";
 exports.COMMUNICATION_IRC_PAYLOAD_LEAVE = "leave";
 
-
 exports.COMMUNICATION_LOBBY_PAYLOAD_CONNECT = "connect" // Connect to the lobby / you have connected
 exports.COMMUNICATION_LOBBY_PAYLOAD_CREATE = "create"; // Create a new game / a new game was created
 exports.COMMUNICATION_LOBBY_PAYLOAD_ERROR = "error"; // Something went wrong
@@ -40,9 +39,9 @@ exports.COMMUNICATION_TARGET_TOR = "tor";
 
 exports.LOCALE_DEFAULT = "default";
 
-// Message Types
-exports.MESSAGE_IRC_SYSTEM_TYPE_JOIN = "join";
-exports.MESSAGE_IRC_SYSTEM_TYPE_LEAVE = "leave";
+exports.IRC_MESSAGE_TYPE_ACTION = "A";
+exports.IRC_MESSAGE_TYPE_BROADCAST = "B";
+exports.IRC_MESSAGE_TYPE_SYSTEM = "S";
 
 // Player Attributes
 exports.PLAYER_ALLEGIANCE_GOVERNMENT = "G";
@@ -76,9 +75,11 @@ exports.TICK_WARNING = 10000; // Number of milliseconds warning to give before e
 exports.TICK_HEARTBEAT = 1000; // How many milliseconds between each heartbeat
 
 // Viewport Types
-exports.VIEWPORT_ANNOUNCEMENT_STORYTELLER_ANNOUNCEMENTPANE = "storyteller-announcementpane";
-exports.VIEWPORT_EDITION_NEWSPAPER_ARCHIVEPANE = "newspaper-archivepane";
-exports.VIEWPORT_GAME_LOBBY_GAMELIST = "lobby-gamelist";
-exports.VIEWPORT_PLAYER_STORYTELLER_PEERPANE = "storyteller-peerpane";
-exports.VIEWPORT_PLAYER_STORYTELLER_PLAYERPANE = "storyteller-playerpane";
-exports.VIEWPORT_RUMOR_STORYTELLER_RUMORPANE = "storyteller-rumorpane";
+exports.VIEWPORT_IRC_MESSAGE_MESSAGELIST = "irc-message-list";
+exports.VIEWPORT_IRC_USER_USERLIST = "irc-user-list";
+exports.VIEWPORT_LOBBY_GAME_GAMELIST = "lobby-gamelist";
+exports.VIEWPORT_NEWSPAPER_EDITION_ARCHIVEPANE = "newspaper-archivepane";
+exports.VIEWPORT_STORYTELLER_ANNOUNCEMENT_ANNOUNCEMENTPANE = "storyteller-announcementpane";
+exports.VIEWPORT_STORYTELLER_PLAYER_PEERPANE = "storyteller-peerpane";
+exports.VIEWPORT_STORYTELLER_PLAYER_PLAYERPANE = "storyteller-playerpane";
+exports.VIEWPORT_STORYTELLER_RUMOR_RUMORPANE = "storyteller-rumorpane";

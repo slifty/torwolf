@@ -24,7 +24,7 @@ exports.Game = function() {
 		constants.PLAYER_ROLE_SPY];*/
 	this.roles = [
 		constants.PLAYER_ROLE_JOURNALIST,
-		
+		constants.PLAYER_ROLE_SPY
 	];
 	this.round = 0;
 	this.rumors = {};
@@ -65,6 +65,19 @@ exports.Game = function() {
 		return (rumorId in this.rumors)?this.rumors[rumorId]:null;
 	}
 
+}
+
+exports.IrcMessage = function () {
+	this.id = uuid.v4();
+	this.text = "";
+	this.type = "";
+	this.user = null;
+}
+
+exports.IrcUser = function() {
+	this.id = uuid.v4();
+	this.alias = "";
+	this.player = null;
 }
 
 exports.NewspaperEdition = function () {
