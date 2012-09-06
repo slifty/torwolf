@@ -3,7 +3,8 @@ if(typeof(window) != "undefined") {
 } else {
 }
 
-exports.COMMUNICATION_EMAIL_PAYLOAD_EMAIL = "email";
+exports.COMMUNICATION_EMAIL_PAYLOAD_REGISTER = "register";
+exports.COMMUNICATION_EMAIL_PAYLOAD_SEND = "send";
 
 exports.COMMUNICATION_IRC_PAYLOAD_BROADCAST = "broadcast";
 exports.COMMUNICATION_IRC_PAYLOAD_JOIN = "join";
@@ -75,6 +76,10 @@ exports.TICK_WARNING = 10000; // Number of milliseconds warning to give before e
 exports.TICK_HEARTBEAT = 1000; // How many milliseconds between each heartbeat
 
 // Viewport Types
+exports.VIEWPORT_EMAIL_ACCOUNT_ACCOUNTLIST = "email-account-accountlist";
+exports.VIEWPORT_EMAIL_ACCOUNT_ADDRESSLIST = "email-account-addresslist";
+exports.VIEWPORT_EMAIL_ACCOUNT_FROM = "email-input-from";
+exports.VIEWPORT_EMAIL_MESSAGE_MESSAGELIST = "email-message-list"
 exports.VIEWPORT_IRC_MESSAGE_MESSAGELIST = "irc-message-list";
 exports.VIEWPORT_IRC_USER_USERLIST = "irc-user-list";
 exports.VIEWPORT_LOBBY_GAME_GAMELIST = "lobby-gamelist";

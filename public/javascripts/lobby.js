@@ -1,5 +1,5 @@
 // Object
-var LobbyCommunication = Class.extend({
+var Lobby = Class.extend({
 	
 	init: function() {
 		this.games = {};
@@ -218,6 +218,6 @@ var LobbyCommunication = Class.extend({
 });
 
 $(function() {
-	window.LOBBY_COMMUNICATION = new LobbyCommunication();
-	window.LOBBY_COMMUNICATION.connectIn("slifty");
+	window.LOBBY = new Lobby();
+	window.LOBBY.connectIn("slifty");
 });

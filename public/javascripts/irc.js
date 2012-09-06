@@ -60,28 +60,6 @@ var Irc = Class.extend({
 			.appendTo(controlPane);
 		this.toolPane = toolPane;
 		
-		var toolSSL = $('<div />')
-			.attr('id','irc-tool-ssl')
-			.addClass('tool')
-			.bind('click',{context: this}, function(ev) {
-				var self = ev.data.context;
-				if(self.ssl)
-					self.deactivateSSL();
-				else
-					self.activateSSL();
-			})
-			.appendTo(toolPane);
-		this.toolSSL = toolSSL;
-	},
-	
-	
-	activateSSL: function() {
-		console.log("TODO: Implement activate IRC SSL");
-		this.ssl = true;
-	},
-	deactivateSSL: function() {
-		console.log("TODO: Implement deactivate IRC SSL");
-		this.ssl = false;
 	},
 	
 	sendPayload: function(payload) {
@@ -122,6 +100,7 @@ var Irc = Class.extend({
 		var viewport = new Viewport(output, VIEWPORT_IRC_MESSAGE_MESSAGELIST);
 		message.render(viewport);
 	},
+	
 	joinOut: function(data) {
 		var user = new IrcUser();
 		user.id = data.id;
@@ -136,6 +115,7 @@ var Irc = Class.extend({
 		var viewport = new Viewport(output, VIEWPORT_IRC_USER_USERLIST);
 		user.render(viewport);
 	},
+	
 	leaveOut: function(data) {
 		var user = this.getUserById(data.id);
 		if(user == null) return;

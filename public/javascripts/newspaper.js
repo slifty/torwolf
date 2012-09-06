@@ -1,5 +1,5 @@
 // Object
-var NewspaperCommunication = Class.extend({
+var Newspaper = Class.extend({
 	
 	init: function() {
 		this.messages = [];
@@ -58,5 +58,5 @@ var NewspaperCommunication = Class.extend({
 });
 
 $(function() {
-	window.NEWSPAPER_COMMUNICATION = new NewspaperCommunication();
+	window.NEWSPAPER = new Newspaper();
 });

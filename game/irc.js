@@ -1,5 +1,4 @@
-var util = require('util'),
-	uuid = require('node-uuid');
+var util = require('util');
 
 var communication = require('./communication');
 

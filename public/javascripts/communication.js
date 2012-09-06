@@ -26,19 +26,19 @@ var Communication = Class.extend({
 				window.IRC.receivePayload(message.payload);
 				break;
 			case COMMUNICATION_TARGET_EMAIL:
-				window.EMAIL_COMMUNICATION.receivePayload(message.payload);
+				window.EMAIL.receivePayload(message.payload);
 				break;
 			case COMMUNICATION_TARGET_STORYTELLER:
 				window.STORYTELLER.receivePayload(message.payload);
 				break;
 			case COMMUNICATION_TARGET_LOBBY:
-				window.LOBBY_COMMUNICATION.receivePayload(message.payload);
+				window.LOBBY.receivePayload(message.payload);
 				break;
 			case COMMUNICATION_TARGET_TOR:
 				window.TOR_COMMUNICATION.receivePayload(message.payload);
 				break;
 			case COMMUNICATION_TARGET_NEWSPAPER:
-				window.NEWSPAPER_COMMUNICATION.receivePayload(message.payload);
+				window.NEWSPAPER.receivePayload(message.payload);
 				break;
 		}
 	}

@@ -5,6 +5,75 @@ if(typeof(window) != "undefined") {
 	constants = require('./constants');
 }
 
+exports.EmailRegisterInPayload = function(account) {
+	this.account = account;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_EMAIL_PAYLOAD_REGISTER,
+			data: {
+				address: this.account.address
+			}
+		}
+	};
+};
+
+exports.EmailRegisterOutPayload = function(account) {
+	this.account = account;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_EMAIL_PAYLOAD_REGISTER,
+			data: {
+				accountId: this.account.id,
+				address: this.account.address,
+				playerId: (this.account.player == null)?'':this.account.player.id
+			}
+		}
+	};
+};
+
+exports.EmailSendInPayload = function(message) {
+	this.message = message;
+	
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_EMAIL_PAYLOAD_SEND,
+			data: {
+				bccAddresses: this.message.bccAddresses,
+				body: this.message.body,
+				ccAddresses: this.message.ccAddresses,
+				fromAddress: this.message.fromAddress,
+				subject: this.message.subject,
+				toAddresses: this.message.toAddresses
+			}
+		}
+	};
+};
+
+exports.EmailSendOutPayload = function(message) {
+	this.message = message;
+	
+	this.getPayload = function() {
+		var ccAddresses = [];
+		var toAddresses = [];
+		for(var x in message.cc)
+			ccAddresses.push(message.cc[x].address);
+		for(var x in message.to)
+			toAddresses.push(message.to[x].address);
+		
+		return {
+			type: constants.COMMUNICATION_EMAIL_PAYLOAD_SEND,
+			data: {
+				body: this.message.body,
+				ccAddresses: ccAddresses,
+				fromAddress: this.message.from.address,
+				subject: this.message.subject,
+				toAddresses: toAddresses
+			}
+		}
+	};
+};
+
+
 exports.ErrorPayload = function(content) {
 	this.content = content;
 	this.getPayload = function() {
@@ -69,7 +138,6 @@ exports.IrcJoinOutPayload = function(user) {
 		}
 	};
 };
-
 
 exports.LobbyConnectInPayload = function(name) {
 	this.name = name;
