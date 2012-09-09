@@ -3,11 +3,16 @@ if(typeof(window) != "undefined") {
 } else {
 }
 
+exports.ALIAS_EXISTS = 0;
+exports.ALIAS_NOT_FOUND = 1;
+
 exports.COMMUNICATION_EMAIL_PAYLOAD_EMAIL = "email";
 
-exports.COMMUNICATION_IRC_PAYLOAD_BROADCAST = "broadcast";
+exports.COMMUNICATION_IRC_PAYLOAD_CONNECT = "connect";
+exports.COMMUNICATION_IRC_PAYLOAD_MESSAGE = "message";
 exports.COMMUNICATION_IRC_PAYLOAD_JOIN = "join";
 exports.COMMUNICATION_IRC_PAYLOAD_LEAVE = "leave";
+exports.COMMUNICATION_IRC_PAYLOAD_SWITCH_NICK = "switch nick";
 
 exports.COMMUNICATION_LOBBY_PAYLOAD_CONNECT = "connect" // Connect to the lobby / you have connected
 exports.COMMUNICATION_LOBBY_PAYLOAD_CREATE = "create"; // Create a new game / a new game was created
@@ -37,10 +42,13 @@ exports.COMMUNICATION_TARGET_LOBBY = "lobby";
 exports.COMMUNICATION_TARGET_NEWSPAPER = "newspaper";
 exports.COMMUNICATION_TARGET_TOR = "tor";
 
+exports.FAILURE = 0;
+
 exports.LOCALE_DEFAULT = "default";
 
 exports.IRC_MESSAGE_TYPE_ACTION = "A";
-exports.IRC_MESSAGE_TYPE_BROADCAST = "B";
+exports.IRC_MESSAGE_TYPE_MESSAGE = "M";
+exports.IRC_MESSAGE_TYPE_SWITCHED_NICK = "N";
 exports.IRC_MESSAGE_TYPE_SYSTEM = "S";
 
 // Player Attributes
@@ -70,6 +78,8 @@ exports.RUMOR_PUBLICATIONSTATUS_PUBLISHED = "P";
 exports.RUMOR_PUBLICATIONSTATUS_UNPUBLISHED = "U";
 exports.RUMOR_SOURCE_SYSTEM = "S";
 exports.RUMOR_SOURCE_NEWSPAPER = "N";
+
+exports.SUCCESS = 1;
 
 exports.TICK_WARNING = 10000; // Number of milliseconds warning to give before ending the turn
 exports.TICK_HEARTBEAT = 1000; // How many milliseconds between each heartbeat

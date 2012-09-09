@@ -34,7 +34,7 @@ var IrcMessage = Visible.extend({
 								.text(this.text)
 								.appendTo(output);
 							break;
-						case IRC_MESSAGE_TYPE_BROADCAST:
+						case IRC_MESSAGE_TYPE_MESSAGE:
 							var messageAlias = $('<div />')
 								.addClass('alias')
 								.text('<' + this.sender.alias + '> ')
@@ -48,7 +48,6 @@ var IrcMessage = Visible.extend({
 						case IRC_MESSAGE_TYPE_SYSTEM:
 							var messageAlias = $('<div />')
 								.addClass('alias')
-								.text('+ ' + this.sender.alias + ' ')
 								.appendTo(output);
 							
 							var messageContent = $('<div />')

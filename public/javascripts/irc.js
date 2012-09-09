@@ -49,7 +49,7 @@ var Irc = Class.extend({
 				var self = ev.data.context;
 				var text = self.inputTextField.val();
 				self.inputTextField.val('');
-				self.broadcastIn(text);
+				self.messageIn(text);
 			})
 			.appendTo(inputPane);
 		this.inputSubmit = inputSubmit;
@@ -89,8 +89,11 @@ var Irc = Class.extend({
 	},
 	receivePayload: function(payload) {
 		switch(payload.type) {
-			case COMMUNICATION_IRC_PAYLOAD_BROADCAST:
-				this.broadcastOut(payload.data);
+			case COMMUNICATION_IRC_PAYLOAD_CONNECT: 
+				this.messageOut(payload.data);
+				break;
+			case COMMUNICATION_IRC_PAYLOAD_MESSAGE:
+				this.messageOut(payload.data);
 				break;
 			case COMMUNICATION_IRC_PAYLOAD_JOIN:
 				this.joinOut(payload.data);
@@ -98,22 +101,30 @@ var Irc = Class.extend({
 			case COMMUNICATION_IRC_PAYLOAD_LEAVE:
 				this.leaveOut(payload.data);
 				break;
+			case COMMUNICATION_IRC_PAYLOAD_SWITCH_NICK: 
+				this.switchNick(payload.data);
+				break;
+			default: 
+				break; 
 		}
 	},
 	
-	broadcastIn: function(text) {
-		var broadcastIn = new IrcBroadcastInPayload(text);
-		this.sendPayload(broadcastIn.getPayload());
+	messageIn: function(text) {
+		var messageIn = new IrcMessageInPayload(text);
+		this.sendPayload(messageIn.getPayload());
 	},
 	
-	broadcastOut: function(data) {
+	messageOut: function(data) {
 		var message = new IrcMessage();
 		message.text = data.text;
 		message.id = data.messageId;
 		message.sender = window.IRC.getUserById(data.userId);
 		message.type = data.type;
 
-		if(message.sender == null) return;
+		if(message.sender == null) {
+			console.log("Error in messageOut - message.sender is null");
+			return;
+		}
 		this.messages.push(message);
 		
 		var output = $('<li />')
@@ -124,10 +135,13 @@ var Irc = Class.extend({
 	},
 	joinOut: function(data) {
 		var user = new IrcUser();
-		user.id = data.id;
+		user.id = data.userId;
 		user.alias = data.alias;
 		user.player = window.STORYTELLER.getPlayerById(data.playerId);
-		if(user.player == null) return;
+		if(user.player == null) {
+			console.log("Error in joinOut - user.player is null");
+			return;
+		}
 		this.users[user.id] = user;
 		
 		var output = $('<li />')

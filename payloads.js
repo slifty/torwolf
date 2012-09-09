@@ -3,6 +3,7 @@ if(typeof(window) != "undefined") {
 	var constants = window;
 } else {
 	constants = require('./constants');
+	locales = require('./locales/default.js');
 }
 
 exports.ErrorPayload = function(content) {
@@ -17,11 +18,28 @@ exports.ErrorPayload = function(content) {
 	};
 };
 
-exports.IrcBroadcastInPayload = function(text) {
+exports.IrcConnectOutPayload = function(message, user) {
+	this.message = message;
+	this.user =  user;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_IRC_PAYLOAD_CONNECT,
+			data: {
+				messageId: this.message.id,
+				playerId: this.user.player.id,
+				text: this.message.text,
+				type: this.message.type,
+				userId: this.user.id
+			}
+		}
+	};
+};
+
+exports.IrcMessageInPayload = function(text) {
 	this.text = text;
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_IRC_PAYLOAD_BROADCAST,
+			type: constants.COMMUNICATION_IRC_PAYLOAD_MESSAGE,
 			data: {
 				text: this.text
 			}
@@ -29,16 +47,16 @@ exports.IrcBroadcastInPayload = function(text) {
 	};
 };
 
-exports.IrcBroadcastOutPayload = function(message) {
+exports.IrcMessageOutPayload = function(message) {
 	this.message = message;
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_IRC_PAYLOAD_BROADCAST,
+			type: constants.COMMUNICATION_IRC_PAYLOAD_MESSAGE,
 			data: {
 				messageId: this.message.id,
 				text: this.message.text,
 				type: this.message.type,
-				userId: this.message.userId
+				userId: this.message.user.id
 			}
 		}
 	};
