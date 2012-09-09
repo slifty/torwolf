@@ -7,6 +7,7 @@ var EmailMessage = Visible.extend({
 		this.ccAddresses = [];
 		this.fromAddress = "";
 		this.id = "";
+		this.rumorIds = [];
 		this.subject = "";
 		this.toAddresses = [];
 		this.viewed = false;

@@ -1,6 +1,7 @@
 var util = require('util');
 
-var communication = require('./communication');
+var communication = require('./communication'),
+	storyteller =  require('./storyteller');
 
 var classes = require('./classes'),
 	constants = require('../constants'),
@@ -72,6 +73,25 @@ function send(data, socket) {
 		}
 		message.to.push(account);
 		sockets.push(communication.getSocketByPlayerId(account.player.id));
+	}
+	
+	// Distribute rumors
+	for(var x in data.rumorIds) {
+		var rumor = storyteller.getRumorById(data.rumorIds[x]);
+		
+		for(var y in sockets) {
+			var destinationPlayer = communication.getPlayerBySocketId(sockets[y].id);
+			var rumorIn = new payloads.StorytellerRumorInPayload(rumor);
+		
+			destinationPlayer.rumors[rumor.id] = rumor;
+			rumorIn.sourceId = player.id;
+			rumorIn.truthStatus = rumor.getPlayerTruthStatus(destinationPlayer);
+			rumorIn.destinationId = destinationPlayer.id;
+			
+			storyteller.receivePayload(
+				rumorIn.getPayload(),
+				constants.COMMUNICATION_SOCKET_SERVER);
+		}
 	}
 	
 	// Actually send the mail

@@ -40,12 +40,12 @@ exports.Game = function() {
 		constants.PLAYER_ROLE_SPY];*/
 	this.roles = [
 		constants.PLAYER_ROLE_JOURNALIST,
-		constants.PLAYER_ROLE_SPY
+		constants.PLAYER_ROLE_ACTIVIST
 	];
 	this.round = 0;
 	this.rumors = {};
 	this.rumorCount = 3;
-	this.tickLength = 5 * 1000; //2 * 60 * 1000; // Tick length in Miliseconds
+	this.tickLength = 60 * 1000; //2 * 60 * 1000; // Tick length in Miliseconds
 	this.usedWords = [];
 	
 	
@@ -73,6 +73,7 @@ exports.Game = function() {
 			rumorText += ((x==0)?"":" ") + word;
 		}
 		
+		rumor.gameId = this.id;
 		rumor.text = rumorText;
 		return rumor;
 	}
@@ -110,17 +111,26 @@ exports.Player = function() {
 	this.id = uuid.v4();
 	this.name = "";
 	this.role = "";
-	this.rumors = [];
+	this.rumors = {};
 	this.status = constants.PLAYER_STATUS_ALIVE;
+	
+	this.getRumorById = function(rumorId) {
+		return (rumorId in this.rumors)?this.rumors[rumorId]:null;
+	}
 }
 
 exports.Rumor = function() {
+	this.gameId = "";
 	this.id = uuid.v4();
 	this.truthStatus = "",
 	this.publicationStatus = "";
 	this.sourceId = "";
 	this.text = "";
 	this.transfers = [];
+	
+	this.getPlayerTruthStatus = function(player) {
+		return (this.publicationStatus == constants.RUMOR_PUBLICATIONSTATUS_PUBLISHED || this.sourceId == player.id)?this.truthStatus:constants.RUMOR_TRUTHSTATUS_UNKNOWN;
+	}
 	
 	this.randomWord = function() {
 		var x = Math.floor(Math.random() * words.words.length);

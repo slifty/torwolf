@@ -42,6 +42,7 @@ exports.EmailSendInPayload = function(message) {
 				body: this.message.body,
 				ccAddresses: this.message.ccAddresses,
 				fromAddress: this.message.fromAddress,
+				rumorIds: this.message.rumorIds,
 				subject: this.message.subject,
 				toAddresses: this.message.toAddresses
 			}
@@ -78,13 +79,14 @@ exports.ErrorPayload = function(content) {
 	this.content = content;
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_GAME_PAYLOAD_ERROR,
+			type: constants.COMMUNICATION_GENERAL_PAYLOAD_ERROR,
 			data: {
 				content: this.content
 			}
 		}
 	};
 };
+
 
 exports.IrcBroadcastInPayload = function(text) {
 	this.text = text;
@@ -138,6 +140,7 @@ exports.IrcJoinOutPayload = function(user) {
 		}
 	};
 };
+
 
 exports.LobbyConnectInPayload = function(name) {
 	this.name = name;
@@ -228,6 +231,7 @@ exports.LobbyJoinOutPayload = function(player, game) {
 	}
 }
 
+
 exports.NewspaperPublishInPayload = function(game) {
 	this.game = game
 	
@@ -261,6 +265,7 @@ exports.NewspaperPublishOutPayload = function(edition) {
 		}
 	}
 }
+
 
 exports.StorytellerAllegianceInPayload = function() {
 }
@@ -381,14 +386,31 @@ exports.StorytellerRoleOutPayload = function(player) {
 	}
 }
 
-exports.StorytellerRumorInPayload = function() {
+exports.StorytellerRumorInPayload = function(rumor) {
+	this.destinationId = "";
+	this.rumor = rumor;
+	this.sourceId = "";
+	this.truthStatus = "";
+	
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_RUMOR,
+			data: {
+				destinationId: this.destinationId,
+				rumorId: this.rumor.id,
+				sourceId: this.sourceId,
+				truthStatus: this.truthStatus
+			}
+		}
+	}
+	
 }
 
 exports.StorytellerRumorOutPayload = function(rumor) {
 	this.destinationId = "";
-	this.truthStatus = "";
 	this.rumor = rumor;
 	this.sourceId = "";
+	this.truthStatus = "";
 	
 	this.getPayload = function() {
 		return {
@@ -396,10 +418,10 @@ exports.StorytellerRumorOutPayload = function(rumor) {
 			data: {
 				destinationId: this.destinationId,
 				publicationStatus: this.rumor.publicationStatus,
-				truthStatus: this.truthStatus,
 				rumorId: this.rumor.id,
 				sourceId: this.sourceId,
-				text: this.rumor.text
+				text: this.rumor.text,
+				truthStatus: this.truthStatus
 			}
 		}
 	}
@@ -440,6 +462,97 @@ exports.StorytellerTickOutPayload = function(game) {
 			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_TICK,
 			data: {
 				round: this.game.round
+			}
+		}
+	};
+}
+
+
+exports.TorBridgeInPayload = function() {
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_TOR_PAYLOAD_BRIDGE,
+			data: {
+			}
+		}
+	};
+};
+
+exports.TorBridgeOutPayload = function() {
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_TOR_PAYLOAD_BRIDGE,
+			data: {
+			}
+		}
+	};
+}
+
+exports.TorConnectInPayload = function() {
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_TOR_PAYLOAD_CONNECT,
+			data: {
+			}
+		}
+	};
+};
+
+exports.TorConnectOutPayload = function() {
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_TOR_PAYLOAD_CONNECT,
+			data: {
+			}
+		}
+	};
+}
+
+exports.TorDisconnectInPayload = function() {
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_TOR_PAYLOAD_DISCONNECT,
+			data: {
+			}
+		}
+	};
+};
+
+exports.TorDisconnectOutPayload = function() {
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_TOR_PAYLOAD_DISCONNECT,
+			data: {
+			}
+		}
+	};
+}
+
+exports.TorRouteInPayload = function(message) {
+	this.message = message;
+	this.bridgeId = "";
+	
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_TOR_PAYLOAD_ROUTE,
+			data: {
+				bridgeId: this.bridgeId,
+				message: this.message
+			}
+		}
+	};
+};
+
+exports.TorRouteOutPayload = function(message) {
+	this.message = message;
+	this.bridgeId = "";
+	
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_TOR_PAYLOAD_ROUTE,
+			data: {
+				bridgeId: this.bridgeId,
+				message: this.message
 			}
 		}
 	};

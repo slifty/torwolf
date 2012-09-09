@@ -15,6 +15,7 @@ var sockets = {},
 
 // Exports
 exports.receiveMessage = function(message, socket) {
+	message.payload.isTor = message.payload.isTor?true:false; // Temporary.
 	switch(message.target) {
 		case constants.COMMUNICATION_TARGET_IRC:
 			irc.receivePayload(message.payload, socket);

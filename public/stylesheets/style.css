@@ -76,7 +76,7 @@ a {
 /* Email */
 #email-control-pane {
 	position: absolute;
-	top: 50px;
+	top: 150px;
 	right: 885px;
 	width: 500px;
 }
@@ -420,4 +420,15 @@ a {
 	display: none;
 	float: left;
 	font-size: .8em;
+}
+
+
+/* Tor */
+
+#tor-control-pane {
+	position: absolute;
+	top: 50px;
+	height: 75px;
+	right: 885px;
+	width: 500px;
 }

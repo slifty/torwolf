@@ -9,6 +9,8 @@ var classes = require('./classes'),
 	locales = require('../locales'),
 	payloads = require('../payloads');
 
+var rumors = {};
+
 
 // Functions
 function end(data, socket) {
@@ -146,14 +148,16 @@ function start(data, socket) {
 			rumor.sourceId = constants.RUMOR_SOURCE_SYSTEM;
 			rumor.truthStatus = (player.role == constants.PLAYER_ROLE_ACTIVIST)?constants.RUMOR_TRUTHSTATUS_TRUE:constants.RUMOR_TRUTHSTATUS_FALSE;
 			game.rumors[rumor.id] = rumor;
-			player.rumors.push(rumor);
+			player.rumors[rumor.id] = rumor;
+			rumors[rumor.id] = rumor;
 			
-			var rumorOut = new payloads.StorytellerRumorOutPayload(rumor);
-			rumorOut.sourceId = constants.RUMOR_SOURCE_SYSTEM;
-			rumorOut.truthStatus = rumor.truthStatus;
-			exports.sendPayload(
-				rumorOut.getPayload(),
-				communication.getSocketByPlayerId(player.id));
+			var rumorIn = new payloads.StorytellerRumorInPayload(rumor);
+			rumorIn.destinationId = player.id;
+			rumorIn.sourceId = player.id;
+			rumorIn.truthStatus = rumor.truthStatus;
+			exports.receivePayload(
+				rumorIn.getPayload(),
+				constants.COMMUNICATION_SOCKET_SERVER);
 		}
 	}
 	
@@ -217,6 +221,32 @@ function heartbeat(data, socket) {
 			heartbeatIn.getPayload(),
 			constants.COMMUNICATION_SOCKET_SERVER);
 	}, constants.TICK_HEARTBEAT);
+}
+
+function rumor(data, socket) {
+	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
+		return error(locales[socket.locale].errors.storyteller.RUMOR_SYSTEM, socket);
+	
+	var player = communication.getPlayerById(data.sourceId)
+	if(player == null)
+		return; // There isn't anywhere to send an error, so don't bother
+	
+	socket = communication.getSocketByPlayerId(data.sourceId)
+	if(player.getRumorById(data.rumorId) == null)
+		return error(locales[socket.locale].errors.storyteller.RUMOR_INVALID_SOURCE, socket);
+	
+	var rumor = exports.getRumorById(data.rumorId);
+	if(rumor == null)
+		return error(locales[socket.locale].errors.storyteller.RUMOR_INVALID_RUMOR, socket);
+	
+	var rumorOut = new payloads.StorytellerRumorOutPayload(rumor);
+	rumorOut.sourceId = data.sourceId;
+	rumorOut.truthStatus = data.truthStatus;
+	
+	var socket = communication.getSocketByPlayerId(data.destinationId);
+	exports.sendPayload(
+		rumorOut.getPayload(),
+		socket);
 }
 
 function tick(data, socket) {
@@ -319,7 +349,14 @@ function tick(data, socket) {
 }
 
 
+
+
 // Exports
+exports.getRumorById = function(rumorId) {
+	return (rumorId in rumors)?rumors[rumorId]:null;
+}
+
+
 exports.receivePayload = function(payload, socket) {
 	switch(payload.type) {
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_ALLEGIANCE:
@@ -341,6 +378,9 @@ exports.receivePayload = function(payload, socket) {
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_READY:
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_ROLE:
+			break;
+		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_RUMOR:
+			rumor(payload.data, socket);
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_START:
 			start(payload.data, socket);

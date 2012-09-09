@@ -112,6 +112,13 @@ Misc
 -------------
 In situations where order is functionally irrelevant, lists of things should be sorted alphabetically.  This means classes, constants, lists of lists (e.g. this sentence), switch statements, variable declarations, etc.
 
+Payloads and Payload handlers
+-------------
+Payload handlers should avoid having too much logic except for validation and routing when actually processing the payload data.  For example this means that the target of a message should be included in the payload itself rather than being assumed to be a broadcast.
+
+Payloads should not contain full objects, but should contain object attributes and object Ids.  This means the client and the server will store their own version of the object with common Ids.
+
+
 Variable Naming
 -------------
 Variable names are camelCase.  This includes acronyms -- "ID" is "Id" and "URL" is "Url"

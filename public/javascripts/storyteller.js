@@ -115,7 +115,7 @@ var Storyteller = Class.extend({
 	},
 
 	heartbeatOut: function(data) {
-		console.log("Todo - handle heartbeat announcements");
+		// Todo - handle heartbeat announcements
 	},
 	
 	investigateIn: function(rumorId) {

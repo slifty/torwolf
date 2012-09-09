@@ -51,6 +51,39 @@ There are a few forms of communication
 - <b>PGP</b>: encrypts the content of your email.  The government knows who received it, but doesn't know the content.  If you have the public PGP key of someone you can send them a secure message.
 - <b>Tor</b>:  If you use Tor then you can create a new email address that the agent cannot directly associate with you.  The agent knows that SOME Tor user created it.  The agent also knows that you are a Tor user.
 
+==Agent Snooping==
+The goal is to simulate the way the real world works.  There are a few places where this is difficult because there is a disparity between what is technically possible and what is realistically possible in the real world.  It boils down to this: The game involves 8 players, the world has 8 billion.
+
+For example, in a world of 8 players it is technically possible to tell not only who is using Tor, but when they send out messages.  In a land of 8 billion you wouldn't be tracked so closely unless there was reason to.  In a real world land of 8 you could wiretap everyone with minimal cost.
+
+It is possible that the agent should only be allowed to wiretap one person at a time to get the explicit details on them?
+
+This section describes what COULD be tracked by an agent.  It will be pruned down to what we are actually going to track as we think it through.
+
+KEY:
++ means the agent gets this information regardless of wiretapping
+* means the agent gets this information only when wiretapped
+- means it is a way for the user to fight against the agent
+? means I'm not sure if it fits
+
+===In Tor===
++ The agent knows who has enabled Tor.
+- ... unless a player is using a private Tor bridge, in which case the agent know nothing.
+* ... unless the player is wiretapped, in which case the agent learns the address of the private tor bridge.
+?* The agent knows when a user's Tor node has sent a message.
+
+===In Email (Without Tor)===
++ The agent can read the content of all emails.
+- If the sender uses PGP encryption the agent will still see the content, but it will be encrypted content (and therefore useless).
++ The agent can therefore tell when a specific account has sent an email.
++ The agent can also therefore view the destination (to, from, cc, bcc) of all emails.
++ The agent knows which email accounts a player is accessing
+- ... unless the player is using SSL or Tor.
++ The agent knows when a user is using SSL.
+- ... unless the player is using Tor.
+* The agent knows when an email has been sent using SSL.
+
+
 Help me turn this into a fun and balanced game!
 
 ==Possible Setups==

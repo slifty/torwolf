@@ -35,12 +35,19 @@ var Communication = Class.extend({
 				window.LOBBY.receivePayload(message.payload);
 				break;
 			case COMMUNICATION_TARGET_TOR:
-				window.TOR_COMMUNICATION.receivePayload(message.payload);
+				window.TOR.receivePayload(message.payload);
 				break;
 			case COMMUNICATION_TARGET_NEWSPAPER:
 				window.NEWSPAPER.receivePayload(message.payload);
 				break;
 		}
+	},
+	
+	routeMessage: function(target, payload) {
+		this.receiveMessage({
+			target: target,
+			payload: payload
+		});
 	}
 });
 

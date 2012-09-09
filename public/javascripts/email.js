@@ -4,6 +4,7 @@ var Email = Class.extend({
 		this.accounts = [];
 		this.addressBook = [];
 		this.messages = [];
+		this.proxy = COMMUNICATION_PROXY_NONE;
 		
 		var controlPane = $('<div />')
 			.attr('id','email-control-pane')
@@ -52,6 +53,15 @@ var Email = Class.extend({
 		var tabAddressesLink = $('<a />')
 			.attr('href', '#email-address-list')
 			.text(localization[LOCALE].gui.email.tabs.ADDRESSES)
+			.appendTo(tabAddresses);
+		
+		var tabAddresses = $('<li />')
+			.attr('id', 'email-tab-settings')
+			.addClass('tab')
+			.appendTo(tabs);
+		var tabAddressesLink = $('<a />')
+			.attr('href', '#email-settings')
+			.text(localization[LOCALE].gui.email.tabs.SETTINGS)
 			.appendTo(tabAddresses);
 		
 		
@@ -175,6 +185,86 @@ var Email = Class.extend({
 			.appendTo(sendPaneInputItem_subject);
 		this.inputSubject = sendPaneInputField_subject;
 		
+		var sendPaneInputItem_attachRumor = $('<li />')
+			.appendTo(sendPaneInputs);
+		var sendPaneInputList_rumors = $('<ul />')
+			.attr('id', 'email-send-rumors')
+			.appendTo(sendPaneInputItem_attachRumor);
+		this.rumors = sendPaneInputList_rumors;
+		var sendPaneInputLink_attachRumor = $('<a />')
+			.text(localization[LOCALE].gui.email.ATTACH_RUMOR)
+			.bind('click',{context: this}, function(ev) {
+				var self = ev.data.context;
+				var rumors = STORYTELLER.rumors;
+				
+				var addRumorForm = $("<form />")
+					.attr('id','email-send-addrumor-form');
+				
+				var addRumorInputs = $('<ul />')
+					.appendTo(addRumorForm);
+				var addRumorInputItem_rumor = $('<li />')
+					.appendTo(addRumorInputs);
+				var addRumorInputLabel_rumor = $('<label />')
+					.attr('for', 'email-addrumor-rumor')
+					.text(localization[LOCALE].gui.email.RUMOR)
+					.appendTo(addRumorInputItem_rumor);
+				var addRumorInputField_rumor = $('<select />')
+					.attr('id', 'email-addrumor-rumor')
+					.appendTo(addRumorInputItem_rumor);
+				
+				for(var x in rumors) {
+					var rumorItem = $("<option />")
+						.text(rumors[x].text)
+						.attr('value', rumors[x].id)
+						.appendTo(addRumorInputField_rumor);
+				}
+				
+				addRumorForm.dialog({
+					buttons: [
+						{
+							text: "Cancel",
+							click: function() {
+								$(this).dialog("close");
+							}
+						},
+						{
+							text: "Add",
+							click: function() {
+								var rumorId = addRumorInputField_rumor.val();
+								var rumor = STORYTELLER.getRumorById(rumorId);
+								var rumorItem = $('<li />')
+									.appendTo(sendPaneInputList_rumors);
+								var rumorItemText = $('<div />')
+									.addClass('rumor')
+									.text(rumor.text)
+									.appendTo(rumorItem);
+								var rumorHiddenField = $('<input />')
+									.attr('type', 'hidden')
+									.attr('class', 'rumorId')
+									.val(rumorId)
+									.appendTo(rumorItem);
+								var rumorRemove = $('<div />')
+									.addClass('button')
+									.addClass('remove')
+									.text(localization[LOCALE].gui.email.REMOVE)
+									.bind('click',{context: this}, function(ev) {
+										var self = ev.data.context;
+										rumorItem.remove();
+									})
+									.appendTo(rumorItem);
+								$(this).dialog("close");
+							}
+						}
+					],
+					draggable: false,
+					modal: true,
+					resizable: false,
+					title: localization[LOCALE].gui.email.ATTACH_RUMOR
+				});
+			})
+			.appendTo(sendPaneInputItem_attachRumor);
+		this.attachRumor = sendPaneInputLink_attachRumor;
+		
 		var sendPaneInputItem_body = $('<li />')
 			.appendTo(sendPaneInputs);
 		var sendPaneInputField_body = $('<textarea />')
@@ -193,13 +283,20 @@ var Email = Class.extend({
 				var self = ev.data.context;
 				
 				var message = new EmailMessage();
-				message.body = inputBody.val();
-				message.fromAddress = inputFrom.val();
-				message.subject = inputSubject.val();
+				message.body = self.inputBody.val();
+				message.fromAddress = self.inputFrom.val();
+				message.subject = self.inputSubject.val();
 				
-				message.bccAddresses = $.map(inputBCC.val().split(","), $.trim);
-				message.ccAddresses = $.map(inputCC.val().split(","), $.trim);
-				message.toAddresses = $.map(inputTo.val().split(","), $.trim);
+				message.bccAddresses = $.map(self.inputBcc.val().split(","), $.trim).filter(function(a) { return (a == "")?0:1; });
+				message.ccAddresses = $.map(self.inputCc.val().split(","), $.trim).filter(function(a) { return (a == "")?0:1; });
+				message.toAddresses = $.map(self.inputTo.val().split(","), $.trim).filter(function(a) { return (a == "")?0:1; });
+				
+				message.rumorIds = [];
+				$("#email-send-rumors input.rumorId").each(function(index, rumorInput) {
+					var rumorInput = $(rumorInput);
+					if(message.rumorIds.indexOf(rumorInput.val) === -1)
+						message.rumorIds.push(rumorInput.val());
+				})
 				
 				// TODO -- remove empty addresses from all three arrays
 				
@@ -214,13 +311,50 @@ var Email = Class.extend({
 			.attr('id','email-address-list')
 			.appendTo(controlPane);
 		this.addressList = addressList;
+				
 		
+		// Settings
+		var settingsPane = $('<div />')
+			.attr('id','email-settings')
+			.appendTo(controlPane);
+		this.settingsPane = settingsPane;
+		
+		var proxySettingsForm = $('<form />')
+			.attr('id','email-settings-proxy-form')
+			.appendTo(settingsPane);
+		
+		var proxySettingsInputs = $('<ul />')
+			.appendTo(proxySettingsForm);
+		
+		var proxySettingsItem_tor = $('<li />')
+			.appendTo(proxySettingsInputs);
+		var proxySettingsInputLabel_tor = $('<label />')
+			.attr('for', 'email-settings-tor')
+			.addClass('checkbox')
+			.text(localization[LOCALE].gui.email.TOR)
+			.appendTo(proxySettingsItem_tor);
+		var proxySettingsField_tor = $('<input />')
+			.attr('id', 'email-settings-tor')
+			.attr('type', 'checkbox')
+			.bind('click',{context: this}, function(ev) {
+				var self = ev.data.context;
+				self.proxy = proxySettingsField_tor.is(":checked")?COMMUNICATION_PROXY_TOR:COMMUNICATION_PROXY_NONE;
+			})
+			.appendTo(proxySettingsItem_tor);
+		this.inputTor = proxySettingsField_tor;
+		
+		
+		// Set things up
 		controlPane.tabs();
 		
 	},
 	
 	sendPayload: function(payload) {
-		COMMUNICATION.sendMessage(COMMUNICATION_TARGET_EMAIL, payload);
+		if(this.proxy == COMMUNICATION_PROXY_TOR) {
+			TOR.routeIn(COMMUNICATION_TARGET_EMAIL, payload);
+		} else {
+			COMMUNICATION.sendMessage(COMMUNICATION_TARGET_EMAIL, payload);
+		}
 	},
 	receivePayload: function(payload) {
 		switch(payload.type) {

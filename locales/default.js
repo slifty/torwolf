@@ -31,9 +31,15 @@ if(typeof(window) != "undefined") {
 			INVESTIGATE_NOPLAYER: "You aren't a registered player on the server.",
 			INVESTIGATE_NORUMOR: "That rumor doesn't exist in this game.",
 			INVESTIGATE_OLDRUMOR: "That rumor has already been investigated.",
+			RUMOR_INVALID_RUMOR: "The specified rumor does not exist.",
+			RUMOR_INVALID_SOURCE: "The specified player does not know that rumor.",
+			RUMOR_SYSTEM: "Only the system can decide when rumors are spread.",
 			JOIN_LOBBY: "You can only join games through the lobby.",
 			START_SYSTEM: "Only the system can start a game.",
 			TICK_SYSTEM: "Only the system can trigger a tick.",
+		},
+		tor: {
+			DISABLED: "Your proxy has not been properly configured."
 		}
 	};
 	
@@ -57,17 +63,22 @@ if(typeof(window) != "undefined") {
 				ACCOUNT: 'Accounts',
 				ADDRESSES: 'Address Book',
 				COMPOSE: 'Compose',
-				INBOX: 'Inbox'
+				INBOX: 'Inbox',
+				SETTINGS: 'Settings'
 			},
 			
 			ADDRESS: "Address",
+			ATTACH_RUMOR: "Attach a rumor",
 			BCC: "Bcc",
 			CC: "Cc",
 			CREATE: "Create Account",
 			FROM: "From",
+			REMOVE: "Remove",
+			RUMOR: "Rumor",
 			SEND: "Send",
 			SUBJECT: "Subject",
-			TO: "To"
+			TO: "To",
+			TOR: "Use Tor"
 		},
 		irc: {
 			SEND: "Send",
@@ -143,6 +154,10 @@ if(typeof(window) != "undefined") {
 			},
 			
 			INVESTIGATE: "Investigate"
+		},
+		tor: {
+			ACTIVATE: "Activate Tor",
+			DEACTIVATE: "Deactivate Tor"
 		}
 	};
 		
