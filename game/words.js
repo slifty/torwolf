@@ -243,4 +243,8 @@ exports.words = [
 	"wrapped","write","writer","writing","written","wrong","wrote","yard",
 	"year","yellow","yes","yesterday","yet","you","young","younger",
 	"your","yourself","youth","zero","zoo"
-]
+];
+
+exports.articles = [];
+exports.nouns = [];
+exports.verbs = [];

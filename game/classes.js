@@ -4,6 +4,22 @@ var constants = require('../constants'),
 	locales = require('../locales'),
 	words = require('./words');
 
+exports.EmailAccount = function() {
+	this.address = "";
+	this.id = uuid.v4();
+	this.player = null;
+}
+
+exports.EmailMessage = function() {
+	this.bcc = [];
+	this.body = "";
+	this.cc = [];
+	this.from = null;
+	this.id = uuid.v4();
+	this.subject = "";
+	this.to = [];
+}
+
 exports.Game = function() {
 	this.activeInvestigations = [];
 	this.id = uuid.v4();

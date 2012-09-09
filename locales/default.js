@@ -9,6 +9,10 @@ if(typeof(window) != "undefined") {
 	exports.localization[locale] = {};
 	
 	exports.localization[locale]["errors"] = {
+		email: {
+			ADDRESS_EMPTY: "you cannot create an empty email address",
+			ADDRESS_TAKEN: "an account by that name already exists"
+		},
 		lobby: {
 			CREATE_NAME_BLANK: "Your game name cannot be blank.",
 			CREATE_PASSWORD_BLANK: "You cannot have a private game without a password.",
@@ -47,6 +51,23 @@ if(typeof(window) != "undefined") {
 				NAME: "Name:",
 				PASSWORD: "Password"
 			},
+		},
+		email: {
+			tabs: {
+				ACCOUNT: 'Accounts',
+				ADDRESSES: 'Address Book',
+				COMPOSE: 'Compose',
+				INBOX: 'Inbox'
+			},
+			
+			ADDRESS: "Address",
+			BCC: "Bcc",
+			CC: "Cc",
+			CREATE: "Create Account",
+			FROM: "From",
+			SEND: "Send",
+			SUBJECT: "Subject",
+			TO: "To"
 		},
 		irc: {
 			SEND: "Send",

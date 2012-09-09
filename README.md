@@ -85,7 +85,7 @@ Chain when possible
 
 	.to read
 
-Language
+Language and Localization
 -------------
 Torwolf has been built from the beginning to be localized (holy crap over-engineering).  Make sure that any language that will end up on a user's screen goes through the locale structure.
 
@@ -94,6 +94,19 @@ To add a language:
 cp locales/default.js locales/LANGUAGE.js
 
 where LANGUAGE is the browser's language code (e.g. "en-US")
+
+Note that the language files contain directories.  Generally if a node in the directory contains a string it should be UPPER CASE, if it is just a branch it should be camelCase.
+
+For example...
+
+	exports.dict = {
+		branch: {
+			LEAF_A: "leaf a",
+			LEAF_B: "leaf b"
+		},
+		LEAF_C: "leaf c"
+	}
+
 
 Misc
 -------------

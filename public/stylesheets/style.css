@@ -73,11 +73,138 @@ a {
 	text-decoration: line-through;
 }
 
-/* IRC */
+/* Email */
+#email-control-pane {
+	position: absolute;
+	top: 50px;
+	right: 885px;
+	width: 500px;
+}
+
+#email-account-list {}
+
+#email-address-list {}
+
+#email-message-list {
+	border: 1px solid #000;
+	height: 200px;
+	overflow: auto;
+}
+#email-message-list li.message {
+	list-style: none;
+	margin: 5px;
+}
+#email-message-list li.message .short {
+	clear: left;
+}
+#email-message-list li.message.unread .short {
+	font-weight: bold;
+}
+#email-message-list li.message .short .from {
+	float: left;
+	width: 100px;
+}
+#email-message-list li.message .short .subject {
+	margin-left: 150px;
+}
+
+#email-message-list li.message .long {
+	clear: left;
+}
+#email-message-list li.message .label {
+	clear: left;
+	float: left;
+	font-weight: bold;
+	width: 50px;
+}
+#email-message-list li.message .label::after {
+	content: ":"
+}
+
+#email-message-list li.message .long .bcc-list {
+}
+#email-message-list li.message .long .bcc-list li.bcc {
+	background: #aaa;
+	list-style: none;
+	float: left;
+	margin: 5px 0px
+}
+
+#email-message-list li.message .long .cc-list {
+}
+#email-message-list li.message .long .cc-list li.cc {
+	background: #aaa;
+	list-style: none;
+	float: left;
+	margin: 5px 0px
+}
+
+#email-message-list li.message .long .to-list {
+}
+#email-message-list li.message .long .to-list li.to {
+	background: #aaa;
+	list-style: none;
+	float: left;
+	margin: 5px 0px
+}
+
+#email-message-list li.message .long .bcc-list {
+}
+#email-message-list li.message .long .bcc-list li.bcc {
+	background: #aaa;
+	list-style: none;
+	float: left;
+	margin: 5px 0px
+}
+#email-message-list li.message .long  {
+}
+#email-message-list li.message .cc-list li.cc {
+	background: #aaa;
+	list-style: none;
+	float: left;
+	margin: 5px 0px
+}
+#email-message-list li.message .long .body {
+	clear: left;
+}
+#email-message-list li.message .long .subject {
+	clear: left;
+}
+
+
+#email-send-pane {
+	
+}
+#email-send-pane-form li {
+	list-style: none;
+	margin: 5px 0px;
+	
+}
+#email-send-pane-form label {
+	cursor: pointer;
+	float: left;
+	font-weight: bold;
+	width: 100px;
+}
+#email-send-pane-form label::after {
+	content: ':';
+}
+#email-send-body {
+	height: 150px;
+	width: 100%;
+}
+#email-send-submit {
+	text-align: center;
+	width: 100px;
+}
+
+
+/* Irc */
 #irc-control-pane {
 	position: absolute;
 	top: 50px;
 	right: 300px;
+	width: 535px;
 }
 
 #irc-message-list {
@@ -140,13 +267,11 @@ a {
 	height: 150px;
 	overflow: auto;
 }
-
 #lobby-game-list li.game {
 	cursor: pointer;
 	list-style: none;
 	padding: 3px;
 }
-
 #lobby-game-list li.game.active {
 	background: #ffffcc
 }
