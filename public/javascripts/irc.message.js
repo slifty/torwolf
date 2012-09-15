@@ -39,7 +39,7 @@ var IrcMessage = Visible.extend({
 								.addClass('alias')
 								.text('<' + this.sender.alias + '> ')
 								.appendTo(output);
-					
+
 							var messageContent = $('<div />')
 								.addClass('text')
 								.text(this.text)

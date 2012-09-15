@@ -57,7 +57,7 @@ function join(data, socket) {
 	
 	user.player = player;
 	users[player.id] = user;
-	user.alias = data.alias +users.indexOf(player.id);
+	user.alias = data.alias + player.id;
 
 	// Announce this player
 	var joinOut = new payloads.IrcJoinOutPayload(user);
