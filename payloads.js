@@ -151,10 +151,24 @@ exports.IrcJoinOutPayload = function(user) {
 			data: {
 				playerId: this.user.player.id,
 				userId: this.user.id,
-				alias: this.user.alias,
+				alias: this.user.alias
 			}
 		}
 	};
+};
+
+exports.IrcAliasSwitchOutPayload = function(message) { 
+	this.message = message;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_IRC_PAYLOAD_SWITCH_ALIAS,
+			data: {
+				text: this.message.text,
+				userId: this.message.user.id
+				
+			}
+		}
+	}
 };
 
 exports.LobbyConnectInPayload = function(name) {

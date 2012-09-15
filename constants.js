@@ -14,7 +14,7 @@ exports.COMMUNICATION_IRC_PAYLOAD_CONNECT = "connect";
 exports.COMMUNICATION_IRC_PAYLOAD_MESSAGE = "message";
 exports.COMMUNICATION_IRC_PAYLOAD_JOIN = "join";
 exports.COMMUNICATION_IRC_PAYLOAD_LEAVE = "leave";
-exports.COMMUNICATION_IRC_PAYLOAD_SWITCH_NICK = "switch nick";
+exports.COMMUNICATION_IRC_PAYLOAD_SWITCH_ALIAS = "switch alias";
 
 exports.COMMUNICATION_LOBBY_PAYLOAD_CONNECT = "connect" // Connect to the lobby / you have connected
 exports.COMMUNICATION_LOBBY_PAYLOAD_CREATE = "create"; // Create a new game / a new game was created
@@ -83,8 +83,8 @@ exports.RUMOR_SOURCE_NEWSPAPER = "N";
 
 exports.SUCCESS = 1;
 
-exports.TICK_WARNING = 10000; // Number of milliseconds warning to give before ending the turn
-exports.TICK_HEARTBEAT = 1000; // How many milliseconds between each heartbeat
+exports.TICK_WARNING = 50000; // Number of milliseconds warning to give before ending the turn
+exports.TICK_HEARTBEAT = 10000; // How many milliseconds between each heartbeat
 
 // Viewport Types
 exports.VIEWPORT_EMAIL_ACCOUNT_ACCOUNTLIST = "email-account-accountlist";

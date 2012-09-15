@@ -148,6 +148,7 @@ if(typeof(window) != "undefined") {
 		
 	exports.localization[locale]["messages"] = {
 		irc: {
+			ALIAS_EXISTS: "The alias %s is already taken.",
 			CONNECT: "- Connecting to IRC... Connected. \n\n- MOTD for irc.torwolf.net:\n\n" +
 			"- Welcome to the torwolf IRC server! Thank you to Dry_Bones for hosting this server, and now, " +
 			"a message from Dry_Bones: \n\n- Greetings, denizens of the torwolf IRC"  +
@@ -158,9 +159,9 @@ if(typeof(window) != "undefined") {
 			"us to make Mario Party game after Mario Party game. Thanks for your " + 
 			"support, slifty! And thank you everyone for using torwolf IRC. \n\n" + 
 			"Joined Channel #MarioParty. ", 
-			JOINED: "has joined the channel.",
+			JOINED: "%s has joined the channel.",
 			LEFT: "has left the channel.",
-			SWITCH_NICK: "is now known as %s.",
+			SWITCH_ALIAS: "%s is now known as %s.",
 		},
 		storyteller: {
 			GAMEOVER: "The game is over.",

@@ -79,8 +79,8 @@ var Irc = Class.extend({
 			case COMMUNICATION_IRC_PAYLOAD_LEAVE:
 				this.leaveOut(payload.data);
 				break;
-			case COMMUNICATION_IRC_PAYLOAD_SWITCH_NICK: 
-				this.switchNick(payload.data);
+			case COMMUNICATION_IRC_PAYLOAD_SWITCH_ALIAS: 
+				this.switchAliasOut(payload.data);
 				break;
 			default: 
 				break; 
@@ -110,6 +110,25 @@ var Irc = Class.extend({
 		
 		var viewport = new Viewport(output, VIEWPORT_IRC_MESSAGE_MESSAGELIST);
 		message.render(viewport);
+		
+		this.messageList.scrollTop(this.messageList.height());
+	},
+	
+	switchAliasOut: function(data) {
+		var user = window.IRC.getUserById(data.userId);
+		user.remove(); 
+		
+		$("#" + user.alias).remove();
+		
+		user.alias = data.text;
+		
+		var output = $('<li />')
+			.appendTo(this.userList)
+			.remove(".name");
+	
+		var viewport = new Viewport(output, VIEWPORT_IRC_USER_USERLIST);
+		user.render(viewport);
+
 	},
 	
 	joinOut: function(data) {

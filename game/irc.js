@@ -45,7 +45,7 @@ function message(data, socket) {
 		message.text = text;
 		message.type = constants.IRC_MESSAGE_TYPE_MESSAGE;
 		message.user = user;
-		sendMessage(message, communication.getSocketsByGameId(game.id));
+		sendMessage(message, communication.getSocketsByGameId(game.id), payloads.IrcMessageOutPayload);
 	}
 	
 }
@@ -55,10 +55,10 @@ function join(data, socket) {
 	var game = communication.getGameById(player.activeGameId);
 	var user = new classes.IrcUser();
 	
-	user.alias = data.alias;
 	user.player = player;
 	users[player.id] = user;
-	console.log(users[player.id]);
+	user.alias = data.alias +users.indexOf(player.id);
+
 	// Announce this player
 	var joinOut = new payloads.IrcJoinOutPayload(user);
 	exports.sendPayload(
@@ -77,7 +77,7 @@ function join(data, socket) {
 	
 	// Broadcast the join
 	var message = new classes.IrcMessage();
-	message.text = '+ ' + user.alias + ' ' + locales[game.locale].messages.irc.JOINED;
+	message.text = util.format(locales[game.locale].messages.irc.JOINED, user.alias);
 	message.type = constants.IRC_MESSAGE_TYPE_SYSTEM;
 	message.user = user;
 	
@@ -90,11 +90,11 @@ function join(data, socket) {
 	
 	// Tell the player who is already in the channel
 	var players = game.players;
-	for(var x in players) {
-		if(players[x].id == player.id)
+	for(var playerId in players) {
+		if(players[playerId].id == player.id)
 			continue;
 		
-		var joinOut = new payloads.IrcJoinOutPayload(user);
+		var joinOut = new payloads.IrcJoinOutPayload(users[playerId]);
 		exports.sendPayload(
 			joinOut.getPayload(),
 			socket);
@@ -124,14 +124,14 @@ Return: SUCCESS if successful.
 
 */
 
-function sendMessage(message, socketList) {
+function sendMessage(message, socketList, payloadFunction) {
 	// Clean the message
 	message.text = message.text.trim();
 	if(message.text === '')
 		return;
 	
 	// Send the message
-	var messageOut = new payloads.IrcMessageOutPayload(message);
+	var messageOut = new payloadFunction(message);
 	exports.sendPayload(
 		messageOut.getPayload(),
 		socketList);
@@ -156,12 +156,33 @@ function switchAlias(newAlias, game, message, user) {
 	message.user = user;
 	
 	if(verifyAlias(newAlias)) {
+		
+		var message = new classes.IrcMessage();
+		message.text = util.format(locales[game.locale].messages.irc.SWITCH_ALIAS, 
+			users[user.player.id].alias, newAlias);
+		message.type = constants.IRC_MESSAGE_TYPE_SYSTEM;
+		message.user = user;
+	
+		var messageOut = new payloads.IrcMessageOutPayload(message);
+		exports.sendPayload(
+			messageOut.getPayload(),
+			communication.getSocketsByGameId(game.id));
+			
 		message.text = newAlias;
-		return sendMessage(message, communication.getSocketsByGameId(game.id));
+		users[user.player.id].alias = newAlias;
+		sendMessage(message, communication.getSocketsByGameId(game.id), payloads.IrcAliasSwitchOutPayload);
 	}
 	else {
-		message.text = constants.ALIAS_EXISTS;
-		return sendMessage(message, communication.getSocketByPlayerId(user.player.id));
+		var message = new classes.IrcMessage();
+		message.text = util.format(locales[game.locale].messages.irc.ALIAS_EXISTS, newAlias);
+		message.type = constants.IRC_MESSAGE_TYPE_SYSTEM;
+		message.user = user;
+	
+		var messageOut = new payloads.IrcMessageOutPayload(message);
+		exports.sendPayload(
+			messageOut.getPayload(),
+			communication.getSocketByPlayerId(user.player.id));
+			
 	}
 	
 	
@@ -177,12 +198,15 @@ Return: ALIAS_EXISTS if alias is not in this IRC channel, and ALIAS_NOT_FOUND if
 
 function verifyAlias(alias) {
 	//find if alias exists and return appropriately
-	for(var user in this.users) {
-		if(user.alias == alias) {
+	var doesAliasExist = constants.ALIAS_NOT_FOUND;
+	console.log(users);
+	
+	for(userId in users) {
+		if(users[userId].alias === alias) {
 			return constants.ALIAS_EXISTS;
 		}
 	}
-	return constants.ALIAS_NOT_FOUND;
+	return doesAliasExist;
 }
 
 // Exports
