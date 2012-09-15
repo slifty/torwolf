@@ -87,9 +87,9 @@ exports.ErrorPayload = function(content) {
 	};
 };
 
-exports.IrcConnectOutPayload = function(message, user) {
+exports.IrcConnectOutPayload = function(message) {
 	this.message = message;
-	this.user =  user;
+	this.user =  message.user;
 	this.getPayload = function() {
 		return {
 			type: constants.COMMUNICATION_IRC_PAYLOAD_CONNECT,

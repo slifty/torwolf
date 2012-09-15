@@ -114,6 +114,13 @@ var Irc = Class.extend({
 		this.messageList.scrollTop(this.messageList.height());
 	},
 	
+	/**
+		Input: data - The data of the message sent over the socket
+		
+		Removes the current user list viewport, removes the old alias from the user list, 
+		adds the new user to the user list, and refreshes the viewport.
+	*/
+	
 	switchAliasOut: function(data) {
 		var user = window.IRC.getUserById(data.userId);
 		user.remove(); 
