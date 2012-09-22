@@ -92,7 +92,7 @@ exports.IrcMessage = function () {
 
 exports.IrcUser = function() {
 	this.id = uuid.v4();
-	this.alias = "";
+	this.nick = "";
 	this.player = null;
 }
 

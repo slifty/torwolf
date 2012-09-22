@@ -221,13 +221,16 @@ a {
 	margin: 5px;
 	overflow: visible;
 }
-#irc-message-list li.message .alias {
+#irc-message-list li.message .nick {
 	float: left;
 }
 #irc-message-list li.message .text {
 	margin-left: 20px;
 }
-
+#irc-message-list li.message .errorText {
+	color: red;
+	margin-left: 20px;
+}
 #irc-user-list {
 	float: left;
 	height: 300px;

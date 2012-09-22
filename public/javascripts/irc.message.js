@@ -24,9 +24,9 @@ var IrcMessage = Visible.extend({
 				case VIEWPORT_IRC_MESSAGE_MESSAGELIST:
 					switch(this.type) {
 						case IRC_MESSAGE_TYPE_ACTION:
-							var messageAlias = $('<div />')
-								.addClass('alias')
-								.text('* ' + this.sender.alias + ' ')
+							var messageNick = $('<div />')
+								.addClass('nick')
+								.text('* ' + this.sender.nick + ' ')
 								.appendTo(output);
 							
 							var messageContent = $('<div />')
@@ -35,9 +35,9 @@ var IrcMessage = Visible.extend({
 								.appendTo(output);
 							break;
 						case IRC_MESSAGE_TYPE_MESSAGE:
-							var messageAlias = $('<div />')
-								.addClass('alias')
-								.text('<' + this.sender.alias + '> ')
+							var messageNick = $('<div />')
+								.addClass('nick')
+								.text('<' + this.sender.nick + '> ')
 								.appendTo(output);
 
 							var messageContent = $('<div />')
@@ -46,8 +46,8 @@ var IrcMessage = Visible.extend({
 								.appendTo(output);
 							break;
 						case IRC_MESSAGE_TYPE_SYSTEM:
-							var messageAlias = $('<div />')
-								.addClass('alias')
+							var messageNick = $('<div />')
+								.addClass('nick')
 								.text('+ ')
 								.appendTo(output);
 							

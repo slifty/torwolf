@@ -13,6 +13,9 @@ if(typeof(window) != "undefined") {
 			ADDRESS_EMPTY: "you cannot create an empty email address",
 			ADDRESS_TAKEN: "an account by that name already exists"
 		},
+		irc: {
+			NICKEXISTS: "The nick %s is already taken."
+		},
 		lobby: {
 			CREATE_NAME_BLANK: "Your game name cannot be blank.",
 			CREATE_PASSWORD_BLANK: "You cannot have a private game without a password.",
@@ -148,20 +151,20 @@ if(typeof(window) != "undefined") {
 		
 	exports.localization[locale]["messages"] = {
 		irc: {
-			ALIAS_EXISTS: "The alias %s is already taken.",
-			CONNECT: "- Connecting to IRC... Connected. \n\n- MOTD for irc.torwolf.net:\n\n" +
-			"- Welcome to the torwolf IRC server! Thank you to Dry_Bones for hosting this server, and now, " +
-			"a message from Dry_Bones: \n\n- Greetings, denizens of the torwolf IRC"  +
+			CONNECTING: "Connecting to IRC... ",
+			CONNECTED: "Connected.",
+			JOINED: "%s has joined the channel.",
+			LEFT: "has left the channel.",
+			MOTD: "MOTD for irc.torwolf.net: Welcome to the torwolf IRC server! " + 
+			"Thank you to Dry_Bones for hosting this server, and now, " +
+			"a message from Dry_Bones: Greetings, denizens of the torwolf IRC"  +
 			"server. Today, I want to tell you about a special fan of the Mario " + 
 			"Party series. Not many people purchase our games, let alone pre-order " +
 			"them, but a certain fan, slifty, pre-ordered Mario Party 9 many months " + 
 			"before it came out! That's the kind of fan dedication that motivates " +
 			"us to make Mario Party game after Mario Party game. Thanks for your " + 
-			"support, slifty! And thank you everyone for using torwolf IRC. \n\n" + 
-			"Joined Channel #MarioParty. ", 
-			JOINED: "%s has joined the channel.",
-			LEFT: "has left the channel.",
-			SWITCH_ALIAS: "%s is now known as %s.",
+			"support, slifty! And thank you everyone for using torwolf IRC.",
+			SWITCHNICK: "%s is now known as %s.",
 		},
 		storyteller: {
 			GAMEOVER: "The game is over.",

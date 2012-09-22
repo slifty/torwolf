@@ -70,6 +70,9 @@ var Irc = Class.extend({
 			case COMMUNICATION_IRC_PAYLOAD_CONNECT: 
 				this.messageOut(payload.data);
 				break;
+			case COMMUNICATION_IRC_PAYLOAD_ERROR:
+				this.errorOut(payload.data);
+				break;
 			case COMMUNICATION_IRC_PAYLOAD_MESSAGE:
 				this.messageOut(payload.data);
 				break;
@@ -80,11 +83,27 @@ var Irc = Class.extend({
 				this.leaveOut(payload.data);
 				break;
 			case COMMUNICATION_IRC_PAYLOAD_NICK: 
-				this.switchAliasOut(payload.data);
+				this.switchNickOut(payload.data);
 				break;
 			default: 
 				break; 
 		}
+	},
+	
+	errorOut: function(data) {
+		var errorMessage = new IrcErrorMessage();
+		errorMessage.text = data.content.text;
+		errorMessage.type = IRC_MESSAGE_TYPE_ERROR;
+		
+		this.messages.push(errorMessage);
+		
+		var output = $('<li />')
+			.appendTo(this.messageList);
+			
+		var viewport = new Viewport(output, VIEWPORT_IRC_MESSAGE_MESSAGELIST);
+		errorMessage.render(viewport);
+		
+		this.messageList.scrollTop(this.messageList.height());
 	},
 	
 	messageIn: function(text) {
@@ -117,17 +136,17 @@ var Irc = Class.extend({
 	/**
 		Input: data - The data of the message sent over the socket
 		
-		Removes the current user list viewport, removes the old alias from the user list, 
-		adds the new user to the user list, and refreshes the viewport.
+		Removes the current user list viewport, removes the old nick from the user list, 
+		adds the new nick to the user list, and refreshes the viewport.
 	*/
 	
-	switchAliasOut: function(data) {
+	switchNickOut: function(data) {
 		var user = window.IRC.getUserById(data.userId);
 		user.remove(); 
 		
-		$("#" + user.alias).remove();
+		$("#" + user.nick).remove();
 		
-		user.alias = data.text;
+		user.nick = data.newNick;
 		
 		var output = $('<li />')
 			.appendTo(this.userList)
@@ -135,13 +154,12 @@ var Irc = Class.extend({
 	
 		var viewport = new Viewport(output, VIEWPORT_IRC_USER_USERLIST);
 		user.render(viewport);
-
 	},
 	
 	joinOut: function(data) {
 		var user = new IrcUser();
 		user.id = data.userId;
-		user.alias = data.alias;
+		user.nick = data.nick;
 		user.player = window.STORYTELLER.getPlayerById(data.playerId);
 		if(user.player == null) {
 			console.log("Error in joinOut - user.player is null");

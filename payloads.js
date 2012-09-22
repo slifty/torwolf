@@ -79,7 +79,7 @@ exports.ErrorPayload = function(content) {
 	this.content = content;
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_GAME_PAYLOAD_ERROR,
+			type: content.type,
 			data: {
 				content: this.content
 			}
@@ -131,13 +131,13 @@ exports.IrcMessageOutPayload = function(message) {
 	};
 };
 
-exports.IrcJoinInPayload = function(alias) {
-	this.alias = alias;
+exports.IrcJoinInPayload = function(nick) {
+	this.nick = nick;
 	this.getPayload = function() {
 		return {
 			type: constants.COMMUNICATION_IRC_PAYLOAD_JOIN,
 			data: {
-				alias: this.alias
+				nick: this.nick
 			}
 		}
 	};
@@ -151,21 +151,20 @@ exports.IrcJoinOutPayload = function(user) {
 			data: {
 				playerId: this.user.player.id,
 				userId: this.user.id,
-				alias: this.user.alias
+				nick: this.user.nick
 			}
 		}
 	};
 };
 
-exports.IrcAliasSwitchOutPayload = function(message) { 
-	this.message = message;
+exports.IrcNickOutPayload = function(user) { 
+	this.user = user;
 	this.getPayload = function() {
 		return {
 			type: constants.COMMUNICATION_IRC_PAYLOAD_NICK,
 			data: {
-				text: this.message.text,
-				userId: this.message.user.id
-				
+				newNick: this.user.nick,
+				userId: this.user.id
 			}
 		}
 	}

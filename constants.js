@@ -3,18 +3,16 @@ if(typeof(window) != "undefined") {
 } else {
 }
 
-exports.ALIAS_EXISTS = 0;
-exports.ALIAS_NOT_FOUND = 1;
-
 exports.COMMUNICATION_EMAIL_PAYLOAD_EMAIL = "email";
 exports.COMMUNICATION_EMAIL_PAYLOAD_REGISTER = "register";
 exports.COMMUNICATION_EMAIL_PAYLOAD_SEND = "send";
 
 exports.COMMUNICATION_IRC_PAYLOAD_CONNECT = "connect";
+exports.COMMUNICATION_IRC_PAYLOAD_ERROR = "error";
 exports.COMMUNICATION_IRC_PAYLOAD_MESSAGE = "message";
 exports.COMMUNICATION_IRC_PAYLOAD_JOIN = "join";
 exports.COMMUNICATION_IRC_PAYLOAD_LEAVE = "leave";
-exports.COMMUNICATION_IRC_PAYLOAD_NICK = "switch alias";
+exports.COMMUNICATION_IRC_PAYLOAD_NICK = "switch nick";
 
 exports.COMMUNICATION_LOBBY_PAYLOAD_CONNECT = "connect" // Connect to the lobby / you have connected
 exports.COMMUNICATION_LOBBY_PAYLOAD_CREATE = "create"; // Create a new game / a new game was created
@@ -49,6 +47,7 @@ exports.FAILURE = 0;
 exports.LOCALE_DEFAULT = "default";
 
 exports.IRC_MESSAGE_TYPE_ACTION = "A";
+exports.IRC_MESSAGE_TYPE_ERROR = "E";
 exports.IRC_MESSAGE_TYPE_MESSAGE = "M";
 exports.IRC_MESSAGE_TYPE_NICK = "N";
 exports.IRC_MESSAGE_TYPE_SYSTEM = "S";
