@@ -161,7 +161,7 @@ exports.IrcAliasSwitchOutPayload = function(message) {
 	this.message = message;
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_IRC_PAYLOAD_SWITCH_ALIAS,
+			type: constants.COMMUNICATION_IRC_PAYLOAD_NICK,
 			data: {
 				text: this.message.text,
 				userId: this.message.user.id

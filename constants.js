@@ -14,7 +14,7 @@ exports.COMMUNICATION_IRC_PAYLOAD_CONNECT = "connect";
 exports.COMMUNICATION_IRC_PAYLOAD_MESSAGE = "message";
 exports.COMMUNICATION_IRC_PAYLOAD_JOIN = "join";
 exports.COMMUNICATION_IRC_PAYLOAD_LEAVE = "leave";
-exports.COMMUNICATION_IRC_PAYLOAD_SWITCH_ALIAS = "switch alias";
+exports.COMMUNICATION_IRC_PAYLOAD_NICK = "switch alias";
 
 exports.COMMUNICATION_LOBBY_PAYLOAD_CONNECT = "connect" // Connect to the lobby / you have connected
 exports.COMMUNICATION_LOBBY_PAYLOAD_CREATE = "create"; // Create a new game / a new game was created
@@ -50,7 +50,7 @@ exports.LOCALE_DEFAULT = "default";
 
 exports.IRC_MESSAGE_TYPE_ACTION = "A";
 exports.IRC_MESSAGE_TYPE_MESSAGE = "M";
-exports.IRC_MESSAGE_TYPE_SWITCHED_NICK = "N";
+exports.IRC_MESSAGE_TYPE_NICK = "N";
 exports.IRC_MESSAGE_TYPE_SYSTEM = "S";
 
 // Player Attributes

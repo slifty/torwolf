@@ -17,7 +17,7 @@ function error(message, socket) {
 		socket);
 }
 
-function message(data, socket) {
+function handleMessage(data, socket) {
 	var player = communication.getPlayerBySocketId(socket.id);
 	var game = communication.getGameById(player.activeGameId);
 	var user = exports.getUserByPlayerId(player.id);
@@ -30,12 +30,13 @@ function message(data, socket) {
 		var action = actionPieces[1];
 		switch(action) {
 			case 'me':
-				performAction(actionPieces[2], game, user);
+				processAction(actionPieces[2], socket);
 				break;
 			case 'msg':
+				processMsg(actionPieces[2], socket);
 				break;
 			case 'nick':
-				switchAlias(game, actionPieces[2], user);
+				processNick(actionPieces[2], socket);
 				break;
 			default:
 				break;
@@ -50,7 +51,7 @@ function message(data, socket) {
 	
 }
 
-function join(data, socket) {
+function handleJoin(data, socket) {
 	var player = communication.getPlayerBySocketId(socket.id);
 	var game = communication.getGameById(player.activeGameId);
 	var user = new classes.IrcUser();
@@ -95,7 +96,7 @@ function join(data, socket) {
 
 }
 
-function leave(data, socket) {
+function handleLeave(data, socket) {
 }
 
 /*
@@ -108,12 +109,28 @@ Creates and sends a message to all clients in the game that the action has been 
 
 */
 
-function performAction(action, game, user) {
+function processAction(action, socket) {	
+	var player = communication.getPlayerBySocketId(socket.id);
+	var game = communication.getGameById(player.activeGameId);
+	var user = exports.getUserByPlayerId(player.id);
 	var message = new classes.IrcMessage();
+
 	message.text = action;
 	message.type = constants.IRC_MESSAGE_TYPE_ACTION;
 	message.user = user;
 	sendMessage(message, communication.getSocketsByGameId(game.id), payloads.IrcMessageOutPayload);
+}
+
+/*
+
+Stub for handling personal messages.
+
+*/
+
+function processMsg(data, socket) {
+	//data will include both target and the actual message - I think it should be parsed here, so the parameters for 
+	//processing messages are more consistent.
+	return;
 }
 
 /*
@@ -145,23 +162,26 @@ function sendMessage(message, socketList, payloadFunction) {
 
 /*
 Input:	game - This IRC instance's game
-		newAlias - The alias that will attempt to be switched to
-		user - The user initiating the alias change request
+		newNick - The nick that will attempt to be switched to
+		user - The user initiating the nick change request
 		
 
-Attempts to change a user's alias. If it is successful, all clients will be notified of
+Attempts to change a user's nick. If it is successful, all clients will be notified of
 the change. If it fails, only the client that initiated the change will be notified. 
 
 Return: SUCCESS if successful, NICK_EXISTS if failure.
 
 */
 
-function switchAlias(game, newAlias, user) {
+function processNick(newNick, socket) {
+	var player = communication.getPlayerBySocketId(socket.id);
+	var game = communication.getGameById(player.activeGameId);
+	var user = exports.getUserByPlayerId(player.id);
 	
-	if(verifyAlias(newAlias) == constants.ALIAS_NOT_FOUND) {
+	if(getUserByNick(newNick) == null) {
 		var message = new classes.IrcMessage();
 		message.text = util.format(locales[game.locale].messages.irc.SWITCH_ALIAS, 
-			users[user.player.id].alias, newAlias);
+			users[user.player.id].alias, newNick);
 		message.type = constants.IRC_MESSAGE_TYPE_SYSTEM;
 		message.user = user;
 		
@@ -169,14 +189,14 @@ function switchAlias(game, newAlias, user) {
 			
 		var message = new classes.IrcMessage();	
 		message.type = constants.IRC_MESSAGE_TYPE_SWITCH_NICK;
-		message.text = newAlias;
+		message.text = newNick;
 		message.user = user;
-		users[user.player.id].alias = newAlias;
+		users[user.player.id].alias = newNick;
 		sendMessage(message, communication.getSocketsByGameId(game.id), payloads.IrcAliasSwitchOutPayload);
 	}
 	else {
 		var message = new classes.IrcMessage();
-		message.text = util.format(locales[game.locale].messages.irc.ALIAS_EXISTS, newAlias);
+		message.text = util.format(locales[game.locale].messages.irc.ALIAS_EXISTS, newNick);
 		message.type = constants.IRC_MESSAGE_TYPE_SYSTEM;
 		message.user = user;
 	
@@ -187,20 +207,21 @@ function switchAlias(game, newAlias, user) {
 }
 
 /*
-Input:	alias - An alias
+Input:	nick - A nick
 
-Scans the users in this IRC instance, to check if the alias already exists
+Scans the users in this IRC instance; if a user is found with the given nick, it is returned. Otherwise, 
+null is returned.
 
-Return: ALIAS_EXISTS if alias is not in this IRC channel, and ALIAS_NOT_FOUND if the alias is not found. 
+Return: A user if one exists with a certain nick in this IRC instance, else, null. 
 */
 
-function verifyAlias(alias) {
+function getUserByNick(nick) {
 	for(userId in users) {
-		if(users[userId].alias === alias) {
-			return constants.ALIAS_EXISTS;
+		if(users[userId].alias === nick) {
+			return users[userId];
 		}
 	}
-	return constants.ALIAS_NOT_FOUND;
+	return null;
 }
 
 // Exports
@@ -211,13 +232,13 @@ exports.getUserByPlayerId = function(playerId) {
 exports.receivePayload = function(payload, socket) {
 	switch(payload.type) {
 		case constants.COMMUNICATION_IRC_PAYLOAD_MESSAGE:
-			message(payload.data, socket);
+			handleMessage(payload.data, socket);
 			break;
 		case constants.COMMUNICATION_IRC_PAYLOAD_JOIN:
-			join(payload.data, socket);
+			handleJoin(payload.data, socket);
 			break;
 		case constants.COMMUNICATION_IRC_PAYLOAD_LEAVE:
-			leave(payload.data, socket);
+			handleLeave(payload.data, socket);
 			break;
 		default: 
 			break;		

@@ -79,7 +79,7 @@ var Irc = Class.extend({
 			case COMMUNICATION_IRC_PAYLOAD_LEAVE:
 				this.leaveOut(payload.data);
 				break;
-			case COMMUNICATION_IRC_PAYLOAD_SWITCH_ALIAS: 
+			case COMMUNICATION_IRC_PAYLOAD_NICK: 
 				this.switchAliasOut(payload.data);
 				break;
 			default: 
