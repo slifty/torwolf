@@ -49,7 +49,7 @@ var Irc = Class.extend({
 				var self = ev.data.context;
 				var text = self.inputTextField.val();
 				self.inputTextField.val('');
-				self.broadcastIn(text);
+				self.messageIn(text);
 			})
 			.appendTo(inputPane);
 		this.inputSubmit = inputSubmit;
@@ -67,8 +67,14 @@ var Irc = Class.extend({
 	},
 	receivePayload: function(payload) {
 		switch(payload.type) {
-			case COMMUNICATION_IRC_PAYLOAD_BROADCAST:
-				this.broadcastOut(payload.data);
+			case COMMUNICATION_IRC_PAYLOAD_CONNECT: 
+				this.messageOut(payload.data);
+				break;
+			case COMMUNICATION_IRC_PAYLOAD_ERROR:
+				this.errorOut(payload.data);
+				break;
+			case COMMUNICATION_IRC_PAYLOAD_MESSAGE:
+				this.messageOut(payload.data);
 				break;
 			case COMMUNICATION_IRC_PAYLOAD_JOIN:
 				this.joinOut(payload.data);
@@ -76,22 +82,46 @@ var Irc = Class.extend({
 			case COMMUNICATION_IRC_PAYLOAD_LEAVE:
 				this.leaveOut(payload.data);
 				break;
+			case COMMUNICATION_IRC_PAYLOAD_NICK: 
+				this.switchNickOut(payload.data);
+				break;
+			default: 
+				break; 
 		}
 	},
 	
-	broadcastIn: function(text) {
-		var broadcastIn = new IrcBroadcastInPayload(text);
-		this.sendPayload(broadcastIn.getPayload());
+	errorOut: function(data) {
+		var errorMessage = new IrcErrorMessage();
+		errorMessage.text = data.content.text;
+		errorMessage.type = IRC_MESSAGE_TYPE_ERROR;
+		
+		this.messages.push(errorMessage);
+		
+		var output = $('<li />')
+			.appendTo(this.messageList);
+			
+		var viewport = new Viewport(output, VIEWPORT_IRC_MESSAGE_MESSAGELIST);
+		errorMessage.render(viewport);
+		
+		this.messageList.scrollTop(this.messageList.height());
 	},
 	
-	broadcastOut: function(data) {
+	messageIn: function(text) {
+		var messageIn = new IrcMessageInPayload(text);
+		this.sendPayload(messageIn.getPayload());
+	},
+	
+	messageOut: function(data) {
 		var message = new IrcMessage();
 		message.text = data.text;
 		message.id = data.messageId;
 		message.sender = window.IRC.getUserById(data.userId);
 		message.type = data.type;
 
-		if(message.sender == null) return;
+		if(message.sender == null) {
+			console.log("Error in messageOut - message.sender is null");
+			return;
+		}
 		this.messages.push(message);
 		
 		var output = $('<li />')
@@ -99,14 +129,42 @@ var Irc = Class.extend({
 		
 		var viewport = new Viewport(output, VIEWPORT_IRC_MESSAGE_MESSAGELIST);
 		message.render(viewport);
+		
+		this.messageList.scrollTop(this.messageList.height());
+	},
+	
+	/**
+		Input: data - The data of the message sent over the socket
+		
+		Removes the current user list viewport, removes the old nick from the user list, 
+		adds the new nick to the user list, and refreshes the viewport.
+	*/
+	
+	switchNickOut: function(data) {
+		var user = window.IRC.getUserById(data.userId);
+		user.remove(); 
+		
+		$("#" + user.nick).remove();
+		
+		user.nick = data.newNick;
+		
+		var output = $('<li />')
+			.appendTo(this.userList)
+			.remove(".name");
+	
+		var viewport = new Viewport(output, VIEWPORT_IRC_USER_USERLIST);
+		user.render(viewport);
 	},
 	
 	joinOut: function(data) {
 		var user = new IrcUser();
-		user.id = data.id;
-		user.alias = data.alias;
+		user.id = data.userId;
+		user.nick = data.nick;
 		user.player = window.STORYTELLER.getPlayerById(data.playerId);
-		if(user.player == null) return;
+		if(user.player == null) {
+			console.log("Error in joinOut - user.player is null");
+			return;
+		}
 		this.users[user.id] = user;
 		
 		var output = $('<li />')
