@@ -198,7 +198,6 @@ function processNick(newNick, socket) {
 		//send an error message to the client
 		var nickExistsMessage = new classes.IrcMessage();
 		nickExistsMessage.text = util.format(locales[game.locale].errors.irc.NICKEXISTS, newNick);
-		nickExistsMessage.type = constants.IRC_MESSAGE_TYPE_ERROR;
 		nickExistsMessage.user = user;
 		error(nickExistsMessage, communication.getSocketByPlayerId(user.player.id));		
 	}
