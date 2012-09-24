@@ -144,7 +144,7 @@ var Irc = Class.extend({
 		var user = window.IRC.getUserById(data.userId);
 		user.remove(); 
 		
-		$("#" + user.nick).remove();
+		$(".user" + user.nick).remove();
 		
 		user.nick = data.nick;
 		
