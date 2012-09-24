@@ -1,8 +1,7 @@
-var IrcErrorMessage = Visible.extend({
+var IrcError = Visible.extend({
 	init: function() {
 		this._super();
 		
-		this.type = "";
 		this.text = "";
 	},
 	
@@ -17,16 +16,10 @@ var IrcErrorMessage = Visible.extend({
 				
 			switch(viewport.type) {
 				case VIEWPORT_IRC_MESSAGE_MESSAGELIST:
-					switch(this.type) {
-						case IRC_MESSAGE_TYPE_ERROR: 
-						var messageContent = $('<div />')
-							.addClass('errorText')
-							.text(this.text)
-							.appendTo(output)
-						break;
-					}
-				break;
-				
+					var messageContent = $('<div />')
+						.addClass('errorText')
+						.text(this.text)
+						.appendTo(output);	
 				default:
 				break;
 			}
