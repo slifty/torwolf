@@ -79,8 +79,8 @@ function handleJoin(data, socket) {
 	
 	// Broadcast the join
 	var message = new classes.IrcMessage();
-	message.text = util.format(locales[game.locale].messages.irc.JOINED, user.nick);
-	message.type = constants.IRC_MESSAGE_TYPE_SYSTEM;
+	message.text = locales[game.locale].messages.irc.JOINED;
+	message.type = constants.IRC_MESSAGE_TYPE_JOINED;
 	message.user = user;
 	
 	var broadcastJoinOut = new payloads.IrcMessageOutPayload(message);
