@@ -146,7 +146,7 @@ var Irc = Class.extend({
 		
 		$("#" + user.nick).remove();
 		
-		user.nick = data.newNick;
+		user.nick = data.nick;
 		
 		var output = $('<li />')
 			.appendTo(this.userList)
