@@ -62,6 +62,17 @@ exports.getGameById = function(gameId) {
 	return (gameId in games)?games[gameId]:null;
 }
 
+exports.getGameByPlayerId = function(playerId) {
+	var player = exports.getPlayerById(playerId);
+	return exports.getGameById(player.activeGameId);
+}
+
+exports.getGameBySocketId = function(socketId) {
+	var player = exports.getPlayerBySocketId(socketId);
+	return exports.getGameById(player.activeGameId);
+}
+
+
 exports.getGames = function() {
 	var gameArr = [];
 	for(var x in games) gameArr.push(games[x]);

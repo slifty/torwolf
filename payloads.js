@@ -267,6 +267,50 @@ exports.NewspaperPublishOutPayload = function(edition) {
 }
 
 
+exports.SnooperMessageInPayload = function(target, payload, socket) {
+	this.payload = payload;
+	this.socket = socket;
+	this.target = target;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_EVENT,
+			data: {
+				payload: this.payload,
+				socket: this.socket,
+				target: this.target
+			}
+		}
+	}
+}
+
+exports.SnooperMessageOutPayload = function(target, payload) {
+	this.payload = payload;
+	this.target = target;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_EVENT,
+			data: {
+				payload: payload,
+				target: target
+			}
+		}
+	}
+}
+
+exports.SnooperWiretapInPayload = function() {
+}
+
+exports.SnooperWiretapOutPayload = function() {
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_WIRETAP,
+			data: {
+			}
+		}
+	}
+}
+
+
 exports.StorytellerAllegianceInPayload = function() {
 }
 

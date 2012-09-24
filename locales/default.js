@@ -23,6 +23,9 @@ if(typeof(window) != "undefined") {
 		},
 		newspaper: {
 		},
+		snooper: {
+			SNOOP_SYSTEM: "Only the system can snoop a message."
+		},
 		storyteller: {
 			GAMEOVER_SYSTEM: "Only the system can end the game.",
 			HEARTBEAT_SYSTEM: "Only the system can trigger a heartbeat.",

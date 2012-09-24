@@ -122,7 +122,7 @@ exports.Player = function() {
 exports.Rumor = function() {
 	this.gameId = "";
 	this.id = uuid.v4();
-	this.truthStatus = "",
+	this.truthStatus = "";
 	this.publicationStatus = "";
 	this.sourceId = "";
 	this.text = "";
@@ -136,4 +136,11 @@ exports.Rumor = function() {
 		var x = Math.floor(Math.random() * words.words.length);
 		return words.words[x];
 	}
+}
+
+exports.SnooperMessage = function() {
+	this.id = uuid.v4();
+	this.payload = null;
+	this.socket = null;
+	this.target = "";
 }

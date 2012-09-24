@@ -116,6 +116,9 @@ exports.receivePayload = function(payload, socket) {
 			send(payload.data, socket);
 			break;
 	}
+	
+	// Snooper
+	var messageIn = new payloads.SnooperMessageInPayload(constants.COMMUNICATION_TARGET_EMAIL, payload, socket);
 };
 
 exports.sendPayload = function(payload, sockets) {

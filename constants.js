@@ -24,6 +24,9 @@ exports.COMMUNICATION_PROXY_TOR = "tor";
 exports.COMMUNICATION_SOCKET_SERVER = "server"; // allows the server to communicate with itself
 exports.COMMUNICATION_SOCKET_TOR = "tor"; // allows tor to send anonymous messages
 
+exports.COMMUNICATION_SNOOPER_PAYLOAD_MESSAGE = "message"; // Snoop a message / Send a snooped message
+exports.COMMUNICATION_SNOOPER_PAYLOAD_WIRETAP = "wiretap"; // Trigger a wiretap / Confirm a wiretap
+
 exports.COMMUNICATION_STORYTELLER_PAYLOAD_ALLEGIANCE = "allegiance"; // Change allegiance / Set allegiance
 exports.COMMUNICATION_STORYTELLER_PAYLOAD_ANNOUNCEMENT = "announcement"; // Make an announcement
 exports.COMMUNICATION_STORYTELLER_PAYLOAD_HEARTBEAT = "heartbeat"; // Trigger a heartbeat / announce a heartbeat
@@ -39,6 +42,7 @@ exports.COMMUNICATION_TARGET_EMAIL = "email";
 exports.COMMUNICATION_TARGET_IRC = "irc";
 exports.COMMUNICATION_TARGET_LOBBY = "lobby";
 exports.COMMUNICATION_TARGET_NEWSPAPER = "newspaper";
+exports.COMMUNICATION_TARGET_SNOOPER = "snooper";
 exports.COMMUNICATION_TARGET_STORYTELLER = "storyteller";
 exports.COMMUNICATION_TARGET_TOR = "tor";
 
