@@ -4,7 +4,7 @@ var irc = require('./irc'),
 	lobby = require('./lobby'),
 	tor = require('./tor'),
 	newspaper = require('./newspaper'),
-	spy = require('./spy');
+	snooper = require('./snooper');
 
 var constants = require('../constants'),
 	payloads = require('../payloads');
@@ -28,6 +28,9 @@ exports.receiveMessage = function(message, socket) {
 			break;
 		case constants.COMMUNICATION_TARGET_LOBBY:
 			lobby.receivePayload(message.payload, socket);
+			break;
+		case constants.COMMUNICATION_TARGET_SNOOPER:
+			snooper.receivePayload(message.payload, socket);
 			break;
 		case constants.COMMUNICATION_TARGET_TOR:
 			tor.receivePayload(message.payload, socket);

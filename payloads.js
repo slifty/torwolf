@@ -302,7 +302,7 @@ exports.SnooperMessageInPayload = function(target, payload, socket) {
 	this.target = target;
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_EVENT,
+			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_MESSAGE,
 			data: {
 				payload: this.payload,
 				socket: this.socket,
@@ -317,7 +317,7 @@ exports.SnooperMessageOutPayload = function(target, payload) {
 	this.target = target;
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_EVENT,
+			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_MESSAGE,
 			data: {
 				payload: payload,
 				target: target

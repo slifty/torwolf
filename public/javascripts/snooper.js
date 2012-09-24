@@ -6,7 +6,7 @@ var Snooper = Class.extend({
 		var controlPane = $('<div />')
 			.attr('id','snooper-control-pane')
 			.addClass('control-pane')
-			.addClass('incommunicado-agent')
+			.addClass('incommunicado')
 			.appendTo($("body"));
 		this.controlPane = controlPane;
 		
@@ -14,7 +14,7 @@ var Snooper = Class.extend({
 			.attr('id','snooper-message-list')
 			.addClass('messages')
 			.appendTo(controlPane);
-		this.eventList = eventList;
+		this.messageList = messageList;
 	},
 	
 	sendPayload: function(payload) {

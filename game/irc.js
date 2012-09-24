@@ -1,6 +1,7 @@
 var util = require('util');
 
-var communication = require('./communication');
+var communication = require('./communication')
+	snooper = require('./snooper');
 
 var classes = require('./classes'),
 	constants = require('../constants'),
@@ -19,6 +20,13 @@ function error(message, socket) {
 		socket);
 }
 
+function snoop(payload, socket) {
+	var messageIn = new payloads.SnooperMessageInPayload(constants.COMMUNICATION_TARGET_IRC, payload, socket);
+	snooper.receivePayload(messageIn.getPayload(),
+		constants.COMMUNICATION_SOCKET_SERVER);
+}
+
+// Handlers
 function handleMessage(data, socket) {
 	data.text = data.text.trim();
 	if(data.text === '')
@@ -92,7 +100,6 @@ function handleJoin(data, socket) {
 			joinOut.getPayload(),
 			socket);
 	}
-
 }
 
 function handleLeave(data, socket) {
@@ -271,12 +278,15 @@ exports.receivePayload = function(payload, socket) {
 	switch(payload.type) {
 		case constants.COMMUNICATION_IRC_PAYLOAD_MESSAGE:
 			handleMessage(payload.data, socket);
+			snoop(payload, socket);
 			break;
 		case constants.COMMUNICATION_IRC_PAYLOAD_JOIN:
 			handleJoin(payload.data, socket);
+			snoop(payload, socket);
 			break;
 		case constants.COMMUNICATION_IRC_PAYLOAD_LEAVE:
 			handleLeave(payload.data, socket);
+			snoop(payload, socket);
 			break;
 		default: 
 			break;		

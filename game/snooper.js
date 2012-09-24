@@ -23,9 +23,11 @@ function handleMessage(data, socket) {
 	
 	// A message has been snooped and needs to be pushed to the appropriate players
 	var game = communication.getGameBySocketId(data.socket.id);
+	console.log("TEST");
 	for(var x in game.players) {
 		var player = game.players[x];
 		if(player.role == constants.PLAYER_ROLE_SPY) {
+			console.log("TEST2");
 			var socket = communication.getSocketByPlayerId(player.id);
 			var messageOut = new payloads.SnooperMessageOutPayload(data.target, data.payload);
 			exports.sendPayload(

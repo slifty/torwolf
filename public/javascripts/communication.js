@@ -34,6 +34,9 @@ var Communication = Class.extend({
 			case COMMUNICATION_TARGET_LOBBY:
 				window.LOBBY.receivePayload(message.payload);
 				break;
+			case COMMUNICATION_TARGET_SNOOPER:
+				window.SNOOPER.receivePayload(message.payload);
+				break;
 			case COMMUNICATION_TARGET_TOR:
 				window.TOR.receivePayload(message.payload);
 				break;

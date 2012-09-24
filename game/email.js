@@ -1,6 +1,7 @@
 var util = require('util');
 
 var communication = require('./communication'),
+	snooper = require('./snooper'),
 	storyteller =  require('./storyteller');
 
 var classes = require('./classes'),
@@ -18,7 +19,15 @@ function error(message, socket) {
 		socket);
 }
 
-function register(data, socket) {
+function snoop(payload, socket) {
+	var messageIn = new payloads.SnooperMessageInPayload(constants.COMMUNICATION_TARGET_EMAIL, payload, socket);
+	snooper.receivePayload(messageIn.getPayload(),
+		constants.COMMUNICATION_SOCKET_SERVER);
+}
+
+
+// Handlers
+function handleRegister(data, socket) {
 	// TODO -- clean the addresses and add a "domain" (e.g. @game123512313.torwolf.com)
 	
 	if(data.address.trim() == '')
@@ -39,7 +48,7 @@ function register(data, socket) {
 		socket);
 }
 
-function send(data, socket) {
+function handleSend(data, socket) {
 	var message = new classes.EmailMessage();
 	var sockets = [];
 	
@@ -110,15 +119,14 @@ exports.getAccountByAddress = function(address) {
 exports.receivePayload = function(payload, socket) {
 	switch(payload.type) {
 		case constants.COMMUNICATION_EMAIL_PAYLOAD_REGISTER:
-			register(payload.data, socket);
+			handleRegister(payload.data, socket);
+			snoop(payload, socket);
 			break;
 		case constants.COMMUNICATION_EMAIL_PAYLOAD_SEND:
-			send(payload.data, socket);
+			handleSend(payload.data, socket);
+			snoop(payload, socket);
 			break;
 	}
-	
-	// Snooper
-	var messageIn = new payloads.SnooperMessageInPayload(constants.COMMUNICATION_TARGET_EMAIL, payload, socket);
 };
 
 exports.sendPayload = function(payload, sockets) {

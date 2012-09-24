@@ -40,7 +40,7 @@ exports.Game = function() {
 		constants.PLAYER_ROLE_SPY];*/
 	this.roles = [
 		constants.PLAYER_ROLE_JOURNALIST,
-		constants.PLAYER_ROLE_ACTIVIST
+		constants.PLAYER_ROLE_SPY
 	];
 	this.round = 0;
 	this.rumors = {};
