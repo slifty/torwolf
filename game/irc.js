@@ -7,7 +7,6 @@ var classes = require('./classes'),
 	constants = require('../constants'),
 	locales = require('../locales'),
 	payloads = require('../payloads');
-	
 
 var users = {};
 
@@ -196,9 +195,8 @@ function processNick(newNick, socket) {
 	}
 	else {
 		//send an error message to the client
-		var nickExistsMessage = new classes.IrcMessage();
+		var nickExistsMessage = new classes.IrcError();
 		nickExistsMessage.text = util.format(locales[game.locale].errors.irc.NICKEXISTS, newNick);
-		nickExistsMessage.user = user;
 		error(nickExistsMessage, communication.getSocketByPlayerId(user.player.id));		
 	}
 }

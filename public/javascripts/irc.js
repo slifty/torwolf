@@ -93,7 +93,6 @@ var Irc = Class.extend({
 	errorOut: function(data) {
 		var errorMessage = new IrcError();
 		errorMessage.text = data.content.text;
-		errorMessage.type = IRC_MESSAGE_TYPE_ERROR;
 		
 		this.messages.push(errorMessage);
 		
