@@ -1,4 +1,4 @@
-var IrcErrorMessage = Visible.extend({
+var IrcError = Visible.extend({
 	init: function() {
 		this._super();
 		
