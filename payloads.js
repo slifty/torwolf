@@ -3,6 +3,7 @@ if(typeof(window) != "undefined") {
 	var constants = window;
 } else {
 	constants = require('./constants');
+	locales = require('./locales/default.js');
 }
 
 exports.EmailRegisterInPayload = function(account) {
@@ -79,7 +80,7 @@ exports.ErrorPayload = function(content) {
 	this.content = content;
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_GENERAL_PAYLOAD_ERROR,
+			type: content.type?content.type:constants.COMMUNICATION_GENERAL_PAYLOAD_ERROR,
 			data: {
 				content: this.content
 			}
@@ -87,12 +88,28 @@ exports.ErrorPayload = function(content) {
 	};
 };
 
+exports.IrcConnectOutPayload = function(message) {
+	this.message = message;
+	this.user =  message.user;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_IRC_PAYLOAD_CONNECT,
+			data: {
+				messageId: this.message.id,
+				playerId: this.user.player.id,
+				text: this.message.text,
+				type: this.message.type,
+				userId: this.user.id
+			}
+		}
+	};
+};
 
-exports.IrcBroadcastInPayload = function(text) {
+exports.IrcMessageInPayload = function(text) {
 	this.text = text;
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_IRC_PAYLOAD_BROADCAST,
+			type: constants.COMMUNICATION_IRC_PAYLOAD_MESSAGE,
 			data: {
 				text: this.text
 			}
@@ -100,28 +117,28 @@ exports.IrcBroadcastInPayload = function(text) {
 	};
 };
 
-exports.IrcBroadcastOutPayload = function(message) {
+exports.IrcMessageOutPayload = function(message) {
 	this.message = message;
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_IRC_PAYLOAD_BROADCAST,
+			type: constants.COMMUNICATION_IRC_PAYLOAD_MESSAGE,
 			data: {
 				messageId: this.message.id,
 				text: this.message.text,
 				type: this.message.type,
-				userId: this.message.userId
+				userId: this.message.user.id
 			}
 		}
 	};
 };
 
-exports.IrcJoinInPayload = function(alias) {
-	this.alias = alias;
+exports.IrcJoinInPayload = function(nick) {
+	this.nick = nick;
 	this.getPayload = function() {
 		return {
 			type: constants.COMMUNICATION_IRC_PAYLOAD_JOIN,
 			data: {
-				alias: this.alias
+				nick: this.nick
 			}
 		}
 	};
@@ -135,12 +152,24 @@ exports.IrcJoinOutPayload = function(user) {
 			data: {
 				playerId: this.user.player.id,
 				userId: this.user.id,
-				alias: this.user.alias,
+				nick: this.user.nick
 			}
 		}
 	};
 };
 
+exports.IrcNickOutPayload = function(user) { 
+	this.user = user;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_IRC_PAYLOAD_NICK,
+			data: {
+				newNick: this.user.nick,
+				userId: this.user.id
+			}
+		}
+	}
+};
 
 exports.LobbyConnectInPayload = function(name) {
 	this.name = name;
