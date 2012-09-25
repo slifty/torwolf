@@ -64,25 +64,28 @@ KEY:
 + means the agent gets this information regardless of wiretapping
 * means the agent gets this information only when wiretapped
 - means it is a way for the user to fight against the agent
-? means I'm not sure if it fits
 
-===In Tor===
+===Tor===
 + The agent knows who has enabled Tor.
 - ... unless a player is using a private Tor bridge, in which case the agent know nothing.
-* ... unless the player is wiretapped, in which case the agent learns the address of the private tor bridge.
-?* The agent knows when a user's Tor node has sent a message.
+* ... unless the player is wiretapped, in which case the agent still knows the player is using Tor.
 
-===In Email (Without Tor)===
+===Email===
 + The agent can read the content of all emails.
-- If the sender uses PGP encryption the agent will still see the content, but it will be encrypted content (and therefore useless).
+- ... unless the sender uses PGP encryption (the agent will still see the content, but it will be encrypted.)
 + The agent can therefore tell when a specific account has sent an email.
 + The agent can also therefore view the destination (to, from, cc, bcc) of all emails.
-+ The agent knows which email accounts a player is accessing
++ The agent knows which email accounts a player is accessing.
 - ... unless the player is using SSL or Tor.
-+ The agent knows when a user is using SSL.
-- ... unless the player is using Tor.
-* The agent knows when an email has been sent using SSL.
 
+===IRC===
++ The agent can see when a user does any action.
++ The agent can see when a player does any action.
+- ... unless the player is using SSL or Tor.
+
+===In General===
+* The agent knows when a player has taken an action on a service using SSL.
+- ... unless the player is using Tor.
 
 Help me turn this into a fun and balanced game!
 
