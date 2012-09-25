@@ -58,7 +58,7 @@ exports.COMMUNICATION_TOR_PAYLOAD_ROUTE = "route"; // Send a package to be route
 exports.LOCALE_DEFAULT = "default";
 
 exports.IRC_MESSAGE_TYPE_ACTION = "A";
-exports.IRC_MESSAGE_TYPE_ERROR = "E";
+exports.IRC_MESSAGE_TYPE_JOIN = "J";
 exports.IRC_MESSAGE_TYPE_MESSAGE = "M";
 exports.IRC_MESSAGE_TYPE_NICK = "N";
 exports.IRC_MESSAGE_TYPE_SYSTEM = "S";

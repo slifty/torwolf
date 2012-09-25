@@ -171,7 +171,7 @@ if(typeof(window) != "undefined") {
 		irc: {
 			CONNECTING: "Connecting to IRC... ",
 			CONNECTED: "Connected.",
-			JOINED: "%s has joined the channel.",
+			JOINED: "has joined the channel.",
 			LEFT: "has left the channel.",
 			MOTD: "MOTD for irc.torwolf.net: Welcome to the torwolf IRC server! " + 
 			"Thank you to Dry_Bones for hosting this server, and now, " +

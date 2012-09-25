@@ -14,13 +14,13 @@ var IrcUser = Visible.extend({
 			
 			output.empty()
 				.removeClass()
-				.addClass('user');
+				.addClass('nick')
+				.addClass('user' + this.nick);
 			
 			switch(viewport.type) {
 				case VIEWPORT_IRC_USER_USERLIST:
 					var userName = $('<div />')
 						.addClass('name')
-						.attr('id', this.nick)
 						.text(this.nick)
 						.appendTo(output);
 					

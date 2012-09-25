@@ -164,7 +164,7 @@ exports.IrcNickOutPayload = function(user) {
 		return {
 			type: constants.COMMUNICATION_IRC_PAYLOAD_NICK,
 			data: {
-				newNick: this.user.nick,
+				nick: this.user.nick,
 				userId: this.user.id
 			}
 		}
