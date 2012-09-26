@@ -186,6 +186,12 @@ if(typeof(window) != "undefined") {
 			"support, slifty! And thank you everyone for using torwolf IRC.",
 			SWITCHNICK: "%s is now known as %s.",
 		},
+		snooper: {
+			ANONYMOUS: "Someone",
+			DEFAULT: "Intercepted a message from %s: %s %s",
+			EMAIL_REGISTER: "%s just registered the email address %s",
+			EMAIL_SEND: "%s just sent an email",
+		},
 		storyteller: {
 			GAMEOVER: "The game is over.",
 			KILL: "%s walks up to %s, takes out his gun, and shoots.  It is not a pretty scene",

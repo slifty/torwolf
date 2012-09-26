@@ -19,11 +19,10 @@ var IrcError = Visible.extend({
 					var messageContent = $('<div />')
 						.addClass('errorText')
 						.text(this.text)
-						.appendTo(output);	
+						.appendTo(output);
 				default:
 				break;
 			}
-				
 		}
 	}
 });

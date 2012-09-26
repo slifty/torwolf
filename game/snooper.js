@@ -79,6 +79,7 @@ function processEmailInterception(message, socket, player) {
 		case constants.COMMUNICATION_EMAIL_PAYLOAD_REGISTER:
 		case constants.COMMUNICATION_EMAIL_PAYLOAD_SEND:
 			var interceptOut = new payloads.SnooperInterceptOutPayload(message, communication.getPlayerBySocketId(socket.id));
+			console.log(message);
 			if(message.isSsl || message.isTor)
 				interceptOut.player = null;
 			

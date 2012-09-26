@@ -319,9 +319,9 @@ exports.SnooperInterceptOutPayload = function(message, player) {
 		return {
 			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_INTERCEPT,
 			data: {
-				payload: message.payload,
-				playerId: player?player.id:"",
-				target: message.target
+				payload: this.message.payload,
+				playerId: this.player?this.player.id:"",
+				target: this.message.target
 			}
 		}
 	}
