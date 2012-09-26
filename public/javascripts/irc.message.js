@@ -34,6 +34,17 @@ var IrcMessage = Visible.extend({
 								.text(this.text)
 								.appendTo(output);
 							break;
+						case IRC_MESSAGE_TYPE_JOIN:
+							var messageNick = $('<div />')
+								.addClass('nick')
+								.text('+ ' + this.sender.nick + ' ')
+								.appendTo(output);
+								
+							var messageContent = $('<div />')
+								.addClass('text')
+								.text(this.text)
+								.appendTo(output);
+							break;
 						case IRC_MESSAGE_TYPE_MESSAGE:
 							var messageNick = $('<div />')
 								.addClass('nick')

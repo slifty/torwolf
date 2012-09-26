@@ -7,7 +7,6 @@ var classes = require('./classes'),
 	constants = require('../constants'),
 	locales = require('../locales'),
 	payloads = require('../payloads');
-	
 
 var users = {};
 
@@ -74,8 +73,8 @@ function handleJoin(data, socket) {
 	
 	// Broadcast the join
 	var message = new classes.IrcMessage();
-	message.text = util.format(locales[game.locale].messages.irc.JOINED, user.nick);
-	message.type = constants.IRC_MESSAGE_TYPE_SYSTEM;
+	message.text = locales[game.locale].messages.irc.JOINED;
+	message.type = constants.IRC_MESSAGE_TYPE_JOINED;
 	message.user = user;
 	
 	var broadcastJoinOut = new payloads.IrcMessageOutPayload(message);
@@ -190,10 +189,8 @@ function processNick(newNick, socket) {
 	}
 	else {
 		//send an error message to the client
-		var nickExistsMessage = new classes.IrcMessage();
+		var nickExistsMessage = new classes.IrcError();
 		nickExistsMessage.text = util.format(locales[game.locale].errors.irc.NICKEXISTS, newNick);
-		nickExistsMessage.type = constants.IRC_MESSAGE_TYPE_ERROR;
-		nickExistsMessage.user = user;
 		error(nickExistsMessage, communication.getSocketByPlayerId(user.player.id));		
 	}
 }

@@ -84,6 +84,11 @@ exports.Game = function() {
 
 }
 
+exports.IrcError = function () {
+	this.id = uuid.v4();
+	this.text = "";
+}
+
 exports.IrcMessage = function () {
 	this.id = uuid.v4();
 	this.text = "";
