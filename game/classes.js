@@ -47,6 +47,7 @@ exports.Game = function() {
 	this.rumorCount = 3;
 	this.tickLength = 60 * 1000; //2 * 60 * 1000; // Tick length in Miliseconds
 	this.usedWords = [];
+	this.wiretapCount = 1;
 	
 	
 	this.popRole = function() { // Generate a random role

@@ -371,14 +371,27 @@ exports.SnooperTorOutPayload = function(player, state) {
 	}
 }
 
-exports.SnooperWiretapInPayload = function() {
-}
-
-exports.SnooperWiretapOutPayload = function() {
+exports.SnooperWiretapInPayload = function(player) {
+	this.player = player;
+	
 	this.getPayload = function() {
 		return {
 			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_WIRETAP,
 			data: {
+				playerId: player.id
+			}
+		}
+	}
+}
+
+exports.SnooperWiretapOutPayload = function(player) {
+	this.player = player;
+	
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_WIRETAP,
+			data: {
+				playerId: player.id
 			}
 		}
 	}

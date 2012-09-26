@@ -24,7 +24,7 @@ function error(message, socket) {
 // Handlers
 function handleIntercept(data, socket) {
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
-		return error(locales[socket.locale].errors.snooper.SNOOP_SYSTEM, socket);
+		return error(locales[socket.locale].errors.snooper.INTERCEPT_SYSTEM, socket);
 	
 	// A message has been intercepted and needs to be pushed to the appropriate players
 	var game = communication.getGameBySocketId(data.socketId);
@@ -145,22 +145,23 @@ function processTorInterception(message, socket, player) {
 	}
 }
 
+
 function handleWiretap(data, socket) {
-	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
-		return error(locales[socket.locale].errors.snooper.SNOOP_SYSTEM, socket);
+	var player = communication.getPlayerBySocketId(socket.id);
+	var game = communication.getGameBySocketId(socket.id);
 	
-	// A message has been snooped and needs to be pushed to the appropriate players
-	var game = communication.getGameBySocketId(data.socketId);
-	for(var x in game.players) {
-		var player = game.players[x];
-		if(player.role == constants.PLAYER_ROLE_SPY) {
-			var socket = communication.getSocketByPlayerId(player.id);
-			var messageOut = new payloads.SnooperMessageOutPayload(data.target, data.payload);
-			exports.sendPayload(
-				messageOut.getPayload(),
-				socket);
-		}
-	}
+	if(player.role != constants.PLAYER_ROLE_SPY)
+		return error(locales[socket.locale].errors.snooper.WIRETAP_ROLE, socket);
+	var wiretaps = getWiretapsByPlayerId(player.id);
+	if(wiretaps.length >= game.wiretapCount)
+		return error(locales[socket.locale].errors.snooper.WIRETAP_MAX, socket);
+	
+	wiretaps.push(data.playerId);
+	
+	var wiretapOut = new payloads.SnooperWiretapOutPayload(communication.getPlayerById(data.playerId));
+	exports.sendPayload(
+		wiretapOut.getPayload(),
+		socket);			
 }
 
 

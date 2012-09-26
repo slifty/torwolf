@@ -27,7 +27,9 @@ if(typeof(window) != "undefined") {
 		newspaper: {
 		},
 		snooper: {
-			SNOOP_SYSTEM: "Only the system can snoop a message."
+			WIRETAP_COUNT: "You have used up all your wiretaps.",
+			WIRETAP_ROLE: "You cannot wiretap other players.",
+			INTERCEPT_SYSTEM: "Only the system can intercept a message."
 		},
 		storyteller: {
 			GAMEOVER_SYSTEM: "Only the system can end the game.",
