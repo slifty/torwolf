@@ -118,3 +118,10 @@ exports.sendPayload = function(payload, sockets) {
 		sockets)
 };
 
+exports.sendPayload = function(payload, sockets) {
+	communication.sendMessage(
+		constants.COMMUNICATION_TARGET_LOBBY,
+		payload,
+		sockets)
+};
+

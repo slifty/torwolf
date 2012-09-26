@@ -19,12 +19,6 @@ function error(message, socket) {
 		socket);
 }
 
-function snoop(payload, socket) {
-	var messageIn = new payloads.SnooperMessageInPayload(constants.COMMUNICATION_TARGET_EMAIL, payload, socket);
-	snooper.receivePayload(messageIn.getPayload(),
-		constants.COMMUNICATION_SOCKET_SERVER);
-}
-
 
 // Handlers
 function handleRegister(data, socket) {
@@ -120,11 +114,9 @@ exports.receivePayload = function(payload, socket) {
 	switch(payload.type) {
 		case constants.COMMUNICATION_EMAIL_PAYLOAD_REGISTER:
 			handleRegister(payload.data, socket);
-			snoop(payload, socket);
 			break;
 		case constants.COMMUNICATION_EMAIL_PAYLOAD_SEND:
 			handleSend(payload.data, socket);
-			snoop(payload, socket);
 			break;
 	}
 };

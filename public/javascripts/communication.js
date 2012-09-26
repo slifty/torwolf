@@ -7,11 +7,11 @@ var Communication = Class.extend({
 		this.playerName = "";
 	},
 	
-	sendMessage: function(target, payload) {
+	sendMessage: function(target, payload, isSsl) {
 		console.log("In:");
 		console.log(payload);
-
 		this.socket.emit('message', {
+			isSsl: isSsl?true:false,
 			target: target,
 			payload: payload
 		});

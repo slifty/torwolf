@@ -28,7 +28,9 @@ exports.COMMUNICATION_PROXY_TOR = "tor";
 exports.COMMUNICATION_SOCKET_SERVER = "server"; // allows the server to communicate with itself
 exports.COMMUNICATION_SOCKET_TOR = "tor"; // allows tor to send anonymous messages
 
-exports.COMMUNICATION_SNOOPER_PAYLOAD_MESSAGE = "message"; // Snoop a message / Send a snooped message
+exports.COMMUNICATION_SNOOPER_PAYLOAD_INTERCEPT = "intercept"; // Intercept a message / Send an intercepted message
+exports.COMMUNICATION_SNOOPER_PAYLOAD_SSL = "ssl"; // Intercept an SSL message / Send an intercepted SSL message
+exports.COMMUNICATION_SNOOPER_PAYLOAD_TOR = "tor"; // alert the agent of tor use
 exports.COMMUNICATION_SNOOPER_PAYLOAD_WIRETAP = "wiretap"; // Trigger a wiretap / Confirm a wiretap
 
 exports.COMMUNICATION_STORYTELLER_PAYLOAD_ALLEGIANCE = "allegiance"; // Change allegiance / Set allegiance
@@ -62,6 +64,9 @@ exports.IRC_MESSAGE_TYPE_JOIN = "J";
 exports.IRC_MESSAGE_TYPE_MESSAGE = "M";
 exports.IRC_MESSAGE_TYPE_NICK = "N";
 exports.IRC_MESSAGE_TYPE_SYSTEM = "S";
+
+exports.SNOOPER_TOR_ENABLED = "Y";
+exports.SNOOPER_TOR_DISABLED = "N";
 
 // Player Attributes
 exports.PLAYER_ALLEGIANCE_GOVERNMENT = "G";

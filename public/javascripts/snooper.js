@@ -22,8 +22,14 @@ var Snooper = Class.extend({
 	},
 	receivePayload: function(payload) {
 		switch(payload.type) {
-			case COMMUNICATION_SNOOPER_PAYLOAD_MESSAGE:
-				this.messageOut(payload.data);
+			case COMMUNICATION_SNOOPER_PAYLOAD_INTERCEPT:
+				this.interceptOut(payload.data);
+				break;
+			case COMMUNICATION_SNOOPER_PAYLOAD_SSL:
+				this.sslOut(payload.data);
+				break;
+			case COMMUNICATION_SNOOPER_PAYLOAD_TOR:
+				this.torOut(payload.data);
 				break;
 			case COMMUNICATION_SNOOPER_PAYLOAD_WIRETAP:
 				this.wiretapOut(payload.data);
@@ -31,13 +37,31 @@ var Snooper = Class.extend({
 		}
 	},
 	
-	messageOut: function(data) {
-		console.log("Got a snooped message!");
-		console.log(data);
+	interceptOut: function(data) {
+		var intercept = new SnooperIntercept();
+		intercept.target = data.target;
+		intercept.payload = data.payload;
+		intercept.player = STORYTELLER.getPlayerById(data.playerId);
+
+		this.messages.push(intercept);
+		
+		var output = $('<li />')
+			.appendTo(this.messageList);
+		
+		var viewport = new Viewport(output, VIEWPORT_SNOOPER_INTERCEPT_MESSAGELIST);
+		intercept.render(viewport);
+		
+		this.messageList.scrollTop(this.messageList.height());
+	},
+	
+	sslOut: function(data) {
+	},
+	
+	torOut: function(data) {
 	},
 	
 	wiretapOut: function(data) {
-	}
+	},
 	
 });
 

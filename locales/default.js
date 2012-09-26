@@ -27,7 +27,9 @@ if(typeof(window) != "undefined") {
 		newspaper: {
 		},
 		snooper: {
-			SNOOP_SYSTEM: "Only the system can snoop a message."
+			WIRETAP_COUNT: "You have used up all your wiretaps.",
+			WIRETAP_ROLE: "You cannot wiretap other players.",
+			INTERCEPT_SYSTEM: "Only the system can intercept a message."
 		},
 		storyteller: {
 			GAMEOVER_SYSTEM: "Only the system can end the game.",
@@ -183,6 +185,12 @@ if(typeof(window) != "undefined") {
 			"us to make Mario Party game after Mario Party game. Thanks for your " + 
 			"support, slifty! And thank you everyone for using torwolf IRC.",
 			SWITCHNICK: "%s is now known as %s.",
+		},
+		snooper: {
+			ANONYMOUS: "Someone",
+			DEFAULT: "Intercepted a message from %s: %s %s",
+			EMAIL_REGISTER: "%s just registered the email address %s",
+			EMAIL_SEND: "%s just sent an email",
 		},
 		storyteller: {
 			GAMEOVER: "The game is over.",
