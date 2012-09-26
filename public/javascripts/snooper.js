@@ -42,13 +42,13 @@ var Snooper = Class.extend({
 		intercept.target = data.target;
 		intercept.payload = data.payload;
 		intercept.player = STORYTELLER.getPlayerById(data.playerId);
-
+		
 		this.messages.push(intercept);
 		
 		var output = $('<li />')
 			.appendTo(this.messageList);
 		
-		var viewport = new Viewport(output, VIEWPORT_SNOOPER_INTERCEPT_MESSAGELIST);
+		var viewport = new Viewport(output, VIEWPORT_SNOOPER_MESSAGELIST);
 		intercept.render(viewport);
 		
 		this.messageList.scrollTop(this.messageList.height());

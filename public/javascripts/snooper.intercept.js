@@ -19,24 +19,50 @@ var SnooperIntercept = Visible.extend({
 				.addClass('type-' + this.payload.type)
 				.addClass('intercept');
 			
+			var description = $('<div />')
+				.addClass('description')
+				.appendTo(output);
+			this.description = description;
+			
+			var details = $('<div />')
+				.addClass('details')
+				.appendTo(output);
+			this.details = details;
+			
 			switch(viewport.type) {
-				case VIEWPORT_SNOOPER_INTERCEPT_MESSAGELIST:
+				case VIEWPORT_SNOOPER_MESSAGELIST:
 					switch(this.payload.type) {
 						case COMMUNICATION_EMAIL_PAYLOAD_REGISTER:
-							var description = $('<div />')
-								.addClass('description')
-								.text(sprintf(localization[LOCALE].messages.snooper.DEFAULT, playerName, this.target, this.payload))
-								.appendTo(output);
-							this.description = description;
+							description.text(sprintf(localization[LOCALE].messages.snooper.EMAIL_REGISTER, playerName, this.payload.data.address));
 							break;
+							
+						case COMMUNICATION_EMAIL_PAYLOAD_SEND:
+							description.text(sprintf(localization[LOCALE].messages.snooper.EMAIL_SEND, playerName));
+							
+							var message = new EmailMessage();
+							message.bccAddresses = this.payload.data.bccAddresses;
+							message.body = this.payload.data.body;
+							message.ccAddresses = this.payload.data.ccAddresses;
+							message.fromAddress = this.payload.data.fromAddress;
+							message.id = this.payload.data.id;
+							message.subject = this.payload.data.subject;
+							message.timestamp = window.STORYTELLER.turn;
+							message.toAddresses = this.payload.data.toAddresses;
+							var viewport = new Viewport(details, VIEWPORT_SNOOPER_MESSAGELIST);
+							message.render(viewport);
+							break;
+						
 						default:
-							var description = $('<div />')
-								.addClass('description')
-								.text(sprintf(localization[LOCALE].messages.snooper.DEFAULT, playerName, this.target, this.payload))
-								.appendTo(output);
-							this.description = description;
+							description.text(sprintf(localization[LOCALE].messages.snooper.DEFAULT, playerName, this.target))
 							break;
 					}
+					
+					var payload = $('<div />')
+						.addClass('payload')
+						.text(JSON.stringify(this.payload))
+						.appendTo(output);
+					this.payload = payload;
+					
 					break;
 				}
 		}

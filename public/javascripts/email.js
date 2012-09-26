@@ -404,7 +404,6 @@ var Email = Class.extend({
 	},
 	sendOut: function(data) {
 		var message = new EmailMessage();
-		console.log(data);
 		message.bccAddresses = data.bccAddresses;
 		message.body = data.body;
 		message.ccAddresses = data.ccAddresses;

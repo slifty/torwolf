@@ -188,7 +188,7 @@ if(typeof(window) != "undefined") {
 		},
 		snooper: {
 			ANONYMOUS: "Someone",
-			DEFAULT: "Intercepted a message from %s: %s %s",
+			DEFAULT: "Intercepted a message from %s to module %s ",
 			EMAIL_REGISTER: "%s just registered the email address %s",
 			EMAIL_SEND: "%s just sent an email",
 		},
