@@ -13,7 +13,7 @@ var rumors = {};
 
 
 // Functions
-function end(data, socket) {
+function handleEnd(data, socket) {
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
 		return error(locales[socket.locale].errors.storyteller.GAMEOVER_SYSTEM, socket);
 	
@@ -35,7 +35,7 @@ function error(message, socket) {
 		socket);
 }
 
-function investigate(data, socket) {
+function handleInvestigation(data, socket) {
 	var player = communication.getPlayerBySocketId(socket.id);
 	if(player == null)
 		return error(locales[socket.locale].errors.storyteller.INVESTIGATE_NOPLAYER, socket);
@@ -56,7 +56,7 @@ function investigate(data, socket) {
 	game.activeInvestigations[rumor.id] = rumor;
 }
 
-function join(data, socket) {
+function handleJoin(data, socket) {
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
 		return error(locales[socket.locale].errors.storyteller.JOIN_LOBBY, socket);
 	
@@ -97,7 +97,7 @@ function join(data, socket) {
 	}
 }
 
-function start(data, socket) {
+function handleStart(data, socket) {
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
 		return error(locales[socket.locale].errors.storyteller.START_SYSTEM, socket);
 	
@@ -172,7 +172,7 @@ function start(data, socket) {
 	}, constants.TICK_HEARTBEAT);
 }
 
-function heartbeat(data, socket) {
+function handleHeartbeat(data, socket) {
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
 		return error(locales[socket.locale].errors.storyteller.HEARTBEAT_SYSTEM, socket);
 	
@@ -223,7 +223,7 @@ function heartbeat(data, socket) {
 	}, constants.TICK_HEARTBEAT);
 }
 
-function rumor(data, socket) {
+function handleRumor(data, socket) {
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
 		return error(locales[socket.locale].errors.storyteller.RUMOR_SYSTEM, socket);
 	
@@ -249,7 +249,7 @@ function rumor(data, socket) {
 		socket);
 }
 
-function tick(data, socket) {
+function handleTick(data, socket) {
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
 		return error(locales[socket.locale].errors.storyteller.TICK_SYSTEM, socket);
 	
@@ -362,16 +362,16 @@ exports.receivePayload = function(payload, socket) {
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_ALLEGIANCE:
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_END:
-			end(payload.data, socket);
+			handleEnd(payload.data, socket);
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_HEARTBEAT:
-			heartbeat(payload.data, socket);
+			handleHeartbeat(payload.data, socket);
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_INVESTIGATE:
-			investigate(payload.data, socket);
+			handleInvestigation(payload.data, socket);
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_JOIN:
-			join(payload.data, socket);
+			handleJoin(payload.data, socket);
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_LEAVE:
 			break;
@@ -380,13 +380,13 @@ exports.receivePayload = function(payload, socket) {
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_ROLE:
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_RUMOR:
-			rumor(payload.data, socket);
+			handleRumor(payload.data, socket);
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_START:
-			start(payload.data, socket);
+			handleStart(payload.data, socket);
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_TICK:
-			tick(payload.data, socket);
+			handleTick(payload.data, socket);
 			break;
 	}
 };

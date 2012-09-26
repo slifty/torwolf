@@ -19,11 +19,11 @@ function error(message, socket) {
 		socket);
 }
 
-function bridge(data, socket) {
+function handleBridge(data, socket) {
 	// TODO -- enable tor bridges
 }
 
-function disconnect(data, socket) {
+function handleDisconnect(data, socket) {
 	var player = communication.getPlayerBySocketId(socket.id);
 	delete users[player.id];
 	
@@ -34,7 +34,7 @@ function disconnect(data, socket) {
 		socket);
 }
 
-function connect(data, socket) {
+function handleConnect(data, socket) {
 	var player = communication.getPlayerBySocketId(socket.id);
 	users[player.id] = player;
 	
@@ -45,7 +45,7 @@ function connect(data, socket) {
 		socket);
 }
 
-function route(data, socket) {
+function handleRoute(data, socket) {
 	data.message.isTor = true; // Temporary
 	communication.receiveMessage(data.message, socket); // Eventually we will want to use anonymization here, for now we will do that in line
 	
@@ -69,16 +69,16 @@ exports.getUserByPlayerId = function(playerId) {
 exports.receivePayload = function(payload, socket) {
 	switch(payload.type) {
 		case constants.COMMUNICATION_TOR_PAYLOAD_BRIDGE:
-			bridge(payload.data, socket);
+			handleBridge(payload.data, socket);
 			break;
 		case constants.COMMUNICATION_TOR_PAYLOAD_CONNECT:
-			connect(payload.data, socket);
+			handleConnect(payload.data, socket);
 			break;
 		case constants.COMMUNICATION_TOR_PAYLOAD_DISCONNECT:
-			disconnect(payload.data, socket);
+			handleDisconnect(payload.data, socket);
 			break;
 		case constants.COMMUNICATION_TOR_PAYLOAD_ROUTE:
-			route(payload.data, socket);
+			handleRoute(payload.data, socket);
 			break;
 	}
 };
