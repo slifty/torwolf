@@ -99,7 +99,7 @@ var Irc = Class.extend({
 		var output = $('<li />')
 			.appendTo(this.messageList);
 			
-		var viewport = new Viewport(output, VIEWPORT_IRC_MESSAGE_MESSAGELIST);
+		var viewport = new Viewport(output, VIEWPORT_IRC_MESSAGELIST);
 		errorMessage.render(viewport);
 		
 		this.messageList.scrollTop(this.messageList.height());
@@ -126,7 +126,7 @@ var Irc = Class.extend({
 		var output = $('<li />')
 			.appendTo(this.messageList);
 		
-		var viewport = new Viewport(output, VIEWPORT_IRC_MESSAGE_MESSAGELIST);
+		var viewport = new Viewport(output, VIEWPORT_IRC_MESSAGELIST);
 		message.render(viewport);
 		
 		this.messageList.scrollTop(this.messageList.height());
@@ -151,7 +151,7 @@ var Irc = Class.extend({
 			.appendTo(this.userList)
 			.remove(".name");
 	
-		var viewport = new Viewport(output, VIEWPORT_IRC_USER_USERLIST);
+		var viewport = new Viewport(output, VIEWPORT_IRC_USERLIST);
 		user.render(viewport);
 	},
 	
@@ -169,7 +169,7 @@ var Irc = Class.extend({
 		var output = $('<li />')
 			.appendTo(this.userList);
 		
-		var viewport = new Viewport(output, VIEWPORT_IRC_USER_USERLIST);
+		var viewport = new Viewport(output, VIEWPORT_IRC_USERLIST);
 		user.render(viewport);
 	},
 	

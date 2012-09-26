@@ -110,7 +110,7 @@ var Storyteller = Class.extend({
 		var output = $('<li />')
 			.appendTo(this.announcementList);
 		
-		var viewport = new Viewport(output, VIEWPORT_STORYTELLER_ANNOUNCEMENT_ANNOUNCEMENTPANE);
+		var viewport = new Viewport(output, VIEWPORT_STORYTELLER_ANNOUNCEMENTPANE);
 		announcement.render(viewport);
 	},
 
@@ -145,12 +145,12 @@ var Storyteller = Class.extend({
 		var output = $('<li />')
 			.appendTo(this.playerList);
 		
-		var viewport = new Viewport(output, VIEWPORT_STORYTELLER_PLAYER_PEERPANE);
+		var viewport = new Viewport(output, VIEWPORT_STORYTELLER_PEERPANE);
 		player.render(viewport);
 		
 		if(player.id == COMMUNICATION.playerId) {
 			this.you = player;
-			var viewport = new Viewport(this.playerPane, VIEWPORT_STORYTELLER_PLAYER_PLAYERPANE);
+			var viewport = new Viewport(this.playerPane, VIEWPORT_STORYTELLER_PLAYERPANE);
 			player.render(viewport);
 		}
 	},
@@ -176,7 +176,7 @@ var Storyteller = Class.extend({
 			var output = $('<li />')
 			.appendTo(this.rumorList);
 			
-			var viewport = new Viewport(output, VIEWPORT_STORYTELLER_RUMOR_RUMORPANE);
+			var viewport = new Viewport(output, VIEWPORT_STORYTELLER_RUMORPANE);
 			rumor.render(viewport);
 		}
 		

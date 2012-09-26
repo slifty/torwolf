@@ -22,7 +22,7 @@ var EmailMessage = Visible.extend({
 				.addClass('message');
 			
 			switch(viewport.type) {
-				case VIEWPORT_IRC_MESSAGE_MESSAGELIST:
+				case VIEWPORT_IRC_MESSAGELIST:
 					var shortMessage = $('<div />')
 						.addClass('short');
 						.bind('click', {context: this}, function(ev) {

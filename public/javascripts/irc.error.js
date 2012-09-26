@@ -15,7 +15,7 @@ var IrcError = Visible.extend({
 				.addClass('message');
 				
 			switch(viewport.type) {
-				case VIEWPORT_IRC_MESSAGE_MESSAGELIST:
+				case VIEWPORT_IRC_MESSAGELIST:
 					var messageContent = $('<div />')
 						.addClass('errorText')
 						.text(this.text)

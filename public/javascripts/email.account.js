@@ -17,7 +17,7 @@ var EmailAccount = Visible.extend({
 				.addClass('account');
 			
 			switch(viewport.type) {
-				case VIEWPORT_EMAIL_ACCOUNT_ACCOUNTLIST:
+				case VIEWPORT_EMAIL_ACCOUNTLIST:
 					var userName = $('<div />')
 						.addClass('name')
 						.text(this.address)
@@ -25,7 +25,7 @@ var EmailAccount = Visible.extend({
 					
 					break;
 					
-				case VIEWPORT_EMAIL_ACCOUNT_ADDRESSLIST:
+				case VIEWPORT_EMAIL_ADDRESSLIST:
 					var userName = $('<div />')
 						.addClass('name')
 						.text(this.address)
@@ -33,7 +33,7 @@ var EmailAccount = Visible.extend({
 					
 					break;
 				
-				case VIEWPORT_EMAIL_ACCOUNT_FROM:
+				case VIEWPORT_EMAIL_FROM:
 					output.attr('value',this.address);
 					output.text(this.address);
 					break;

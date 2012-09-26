@@ -191,7 +191,7 @@ var Lobby = Class.extend({
 			})
 			.appendTo(this.gameList);
 		
-		var viewport = new Viewport(output, VIEWPORT_LOBBY_GAME_GAMELIST);
+		var viewport = new Viewport(output, VIEWPORT_LOBBY_GAMELIST);
 		game.render(viewport);
 	},
 	

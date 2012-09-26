@@ -15,7 +15,7 @@ var StorytellerMessage = Visible.extend({
 				.addClass('message');
 			
 			switch(viewport.type) {
-				case VIEWPORT_STORYTELLER_ANNOUNCEMENT_ANNOUNCEMENTPANE:
+				case VIEWPORT_STORYTELLER_ANNOUNCEMENTPANE:
 					var announcementCopy = $('<div />')
 						.addClass('text')
 						.text(this.text)

@@ -20,7 +20,7 @@ var Game = Visible.extend({
 				.addClass('game');
 			
 			switch(viewport.type) {
-				case VIEWPORT_LOBBY_GAME_GAMELIST:
+				case VIEWPORT_LOBBY_GAMELIST:
 					var outputName = $('<div />')
 						.addClass('name')
 						.text(this.name)
