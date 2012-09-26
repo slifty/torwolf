@@ -296,31 +296,76 @@ exports.NewspaperPublishOutPayload = function(edition) {
 }
 
 
-exports.SnooperMessageInPayload = function(target, payload, socket) {
-	this.payload = payload;
+exports.SnooperInterceptInPayload = function(message, socket) {
+	this.message = message;
 	this.socket = socket;
-	this.target = target;
+	
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_MESSAGE,
+			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_INTERCEPT,
 			data: {
-				payload: this.payload,
-				socket: this.socket,
+				message: this.message,
+				socketId: this.socket.id
+			}
+		}
+	}
+}
+
+exports.SnooperInterceptOutPayload = function(message, player) {
+	this.message = message;
+	this.player = player;
+	
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_INTERCEPT,
+			data: {
+				payload: message.payload,
+				playerId: player?player.id:"",
+				target: message.target
+			}
+		}
+	}
+}
+
+exports.SnooperSslInPayload = function() {
+	this.getPayload = function() {
+		return {
+		}
+	}
+}
+
+exports.SnooperSslOutPayload = function(player, target) {
+	this.player = player;
+	this.target = target;
+	
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_TOR,
+			data: {
+				playerId: this.player.id,
 				target: this.target
 			}
 		}
 	}
 }
 
-exports.SnooperMessageOutPayload = function(target, payload) {
-	this.payload = payload;
-	this.target = target;
+exports.SnooperTorInPayload = function() {
 	this.getPayload = function() {
 		return {
-			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_MESSAGE,
+		}
+	}
+}
+
+exports.SnooperTorOutPayload = function(player, state) {
+	this.player = player;
+	this.state = state;
+	
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_TOR,
 			data: {
-				payload: payload,
-				target: target
+				playerId: this.player.id,
+				state: this.state
 			}
 		}
 	}

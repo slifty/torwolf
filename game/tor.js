@@ -46,7 +46,7 @@ function connect(data, socket) {
 }
 
 function route(data, socket) {
-	data.message.payload.isTor = true; // Temporary
+	data.message.isTor = true; // Temporary
 	communication.receiveMessage(data.message, socket); // Eventually we will want to use anonymization here, for now we will do that in line
 	
 	/*

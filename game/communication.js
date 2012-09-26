@@ -15,7 +15,9 @@ var sockets = {},
 
 // Exports
 exports.receiveMessage = function(message, socket) {
-	message.payload.isTor = message.payload.isTor?true:false; // Temporary.
+	message.isTor = message.isTor?true:false; // Temporary.
+	message.isSsl = message.isSsl?true:false; // Temporary.
+	
 	switch(message.target) {
 		case constants.COMMUNICATION_TARGET_IRC:
 			irc.receivePayload(message.payload, socket);
@@ -39,6 +41,12 @@ exports.receiveMessage = function(message, socket) {
 			newspaper.receivePayload(message.payload, socket);
 			break;
 	}
+	
+	// Snooper determines what messages are visible to who based on simulated privacy
+	var interceptIn = new payloads.SnooperInterceptInPayload(message, socket);
+	snooper.receivePayload(
+		interceptIn.getPayload(),
+		constants.COMMUNICATION_SOCKET_SERVER);
 }
 
 exports.sendMessage = function(target, payload, sockets) {
@@ -100,6 +108,11 @@ exports.getPlayers = function() {
 
 exports.getSocketByPlayerId = function(playerId) {
 	return (playerId in sockets)?sockets[playerId]:null;
+}
+
+exports.getSocketById = function(socketId) {
+	var player = exports.getPlayerBySocketId(socketId)
+	return (player == null)?null:exports.getSocketByPlayerId(player.id);
 }
 
 exports.getSockets = function() {
