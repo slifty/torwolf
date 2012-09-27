@@ -298,7 +298,6 @@ exports.NewspaperPublishOutPayload = function(edition) {
 
 exports.SnooperInterceptInPayload = function(interaction) {
 	this.interaction = interaction;
-	this.socket = socket;
 	
 	this.getPayload = function() {
 		return {
@@ -318,9 +317,10 @@ exports.SnooperInterceptOutPayload = function(interaction, player) {
 		return {
 			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_INTERCEPT,
 			data: {
+				interactionId: this.interaction.id,
 				message: this.interaction.message,
-				responses: this.interaction.responses,
-				playerId: this.player?this.player.id:""
+				playerId: this.player?this.player.id:"",
+				responses: this.interaction.responses
 			}
 		}
 	}

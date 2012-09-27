@@ -23,17 +23,18 @@ exports.receiveMessage = function(message, socket) {
 		return; // Invalid payload
 	
 	// Set up metadata about the message
-	if(exports.getInteractionById(message.payload.data._interactionId) != null)
+	if(exports.getInteractionById(message.payload.data.interactionId) != null)
 		return; // Duplicate interaction
 	
 	// Build the interaction
 	var interaction = new classes.Interaction();
-	interaction.id = message.payload.data._interactionId?message.payload.data._interactionId:interaction.id;
+	interaction.id = message.payload.data.interactionId?message.payload.data.interactionId:interaction.id;
 	interaction.message = message;
 	interaction.isTor = message.isTor?true:false;
 	interaction.isSsl = message.isSsl?true:false;
 	interaction.socket = socket;
 	interactions[interaction.id] = interaction;
+	message.payload.data.interactionId = interaction.id;
 	
 	// Route the message
 	switch(message.target) {
@@ -61,7 +62,7 @@ exports.receiveMessage = function(message, socket) {
 	}
 }
 
-exports.sendMessage = function(target, payload, sockets) {
+exports.sendMessage = function(target, payload, sockets, interactionId) {
 	if(!(sockets instanceof Array)) sockets = [sockets];
 	var message = {
 		target: target,
@@ -69,9 +70,11 @@ exports.sendMessage = function(target, payload, sockets) {
 	};
 	
 	// Add to the interaction
-	var interaction = exports.getInteractionById(message.payload.data._interactionId)
-	if(interaction != null)
+	var interaction = exports.getInteractionById(interactionId)
+	if(interaction != null) {
 		interaction.responses.push(message);
+		message.payload.data.interactionId = interactionId;
+	}
 	
 	// Snoop the interaction
 	if(interaction != null) {

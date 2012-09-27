@@ -27,13 +27,13 @@ function handleIntercept(data, socket) {
 		return error(locales[socket.locale].errors.snooper.INTERCEPT_SYSTEM, socket);
 	
 	// An interaction has been intercepted and needs to be pushed to the appropriate players
-	var game = communication.getGameBySocketId(data.socketId);
 	var interaction = communication.getInteractionById(data.interactionId);
-	
-	if(game == null)
-		return; // The user isn't in a game
 	if(interaction == null)
 		return; // This intercept isn't part of an interaction
+	
+	var game = communication.getGameBySocketId(interaction.socket.id);
+	if(game == null)
+		return; // The user isn't in a game
 	
 	// Process the interception
 	for(var x in game.players) {

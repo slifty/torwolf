@@ -84,9 +84,9 @@ exports.receivePayload = function(payload, socket) {
 };
 
 exports.sendPayload = function(payload, sockets, interactionId) {
-	if(interactionId) payload.data._interactionId = interactionId; 
 	communication.sendMessage(
 		constants.COMMUNICATION_TARGET_TOR,
 		payload,
-		sockets)
+		sockets,
+		interactionId)
 };

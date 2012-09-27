@@ -23,13 +23,11 @@ function error(message, socket) {
 // Handlers
 function handleRegister(data, socket) {
 	// TODO -- clean the addresses and add a "domain" (e.g. @game123512313.torwolf.com)
-	
 	if(data.address.trim() == '')
 		return error(locales[socket.locale].errors.email.ADDRESS_EMPTY, socket);
-	
 	if(exports.getAccountByAddress(data.address) != null)
 		return error(locales[socket.locale].errors.email.ADDRESS_TAKEN, socket);
-		
+	
 	var player = communication.getPlayerBySocketId(socket.id);
 	var account = new classes.EmailAccount();
 	account.address = data.address;
@@ -39,17 +37,17 @@ function handleRegister(data, socket) {
 	var registerOut = new payloads.EmailRegisterOutPayload(account);
 	exports.sendPayload(
 		registerOut.getPayload(),
-		socket);
+		socket,
+		data.interactionId);
 }
 
 function handleSend(data, socket) {
-	var message = new classes.EmailMessage();
 	var sockets = [];
 	
+	var message = new classes.EmailMessage();
 	message.body = data.body;
 	message.subject = data.subject;
 	message.from = exports.getAccountByAddress(data.fromAddress);
-	
 	for(var x in data.bccAddresses) {
 		var account = exports.getAccountByAddress(data.bccAddresses[x]);
 		if(account === null) {
@@ -101,7 +99,8 @@ function handleSend(data, socket) {
 	var sendOut = new payloads.EmailSendOutPayload(message);
 	exports.sendPayload(
 		sendOut.getPayload(),
-		sockets);
+		sockets,
+		data.interactionId);
 }
 
 
@@ -122,9 +121,9 @@ exports.receivePayload = function(payload, socket) {
 };
 
 exports.sendPayload = function(payload, sockets, interactionId) {
-	if(interactionId) payload.data._interactionId = interactionId; 
 	communication.sendMessage(
 		constants.COMMUNICATION_TARGET_EMAIL,
 		payload,
-		sockets)
+		sockets,
+		interactionId)
 };

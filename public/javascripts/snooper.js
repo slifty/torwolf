@@ -38,18 +38,19 @@ var Snooper = Class.extend({
 	},
 	
 	interceptOut: function(data) {
-		var intercept = new SnooperIntercept();
-		intercept.target = data.target;
-		intercept.payload = data.payload;
-		intercept.player = STORYTELLER.getPlayerById(data.playerId);
+		var interaction = new SnooperInteraction();
+		interaction.id = data.interactionId;
+		interaction.message = data.message;
+		interaction.responses = data.responses;
+		interaction.player = STORYTELLER.getPlayerById(data.playerId);
 		
-		this.messages.push(intercept);
+		this.messages.push(interaction);
 		
 		var output = $('<li />')
 			.appendTo(this.messageList);
 		
 		var viewport = new Viewport(output, VIEWPORT_SNOOPER_MESSAGELIST);
-		intercept.render(viewport);
+		interaction.render(viewport);
 		
 		this.messageList.scrollTop(this.messageList.height());
 	},
