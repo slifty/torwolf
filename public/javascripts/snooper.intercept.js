@@ -48,8 +48,30 @@ var SnooperIntercept = Visible.extend({
 							message.subject = this.payload.data.subject;
 							message.timestamp = window.STORYTELLER.turn;
 							message.toAddresses = this.payload.data.toAddresses;
+							
 							var viewport = new Viewport(details, VIEWPORT_SNOOPER_MESSAGELIST);
 							message.render(viewport);
+							break;
+						
+						case COMMUNICATION_IRC_PAYLOAD_JOIN:
+							description.text(sprintf(localization[LOCALE].messages.snooper.IRC_JOIN, playerName));
+							break;
+						
+						case COMMUNICATION_IRC_PAYLOAD_LEAVE:
+							description.text(sprintf(localization[LOCALE].messages.snooper.IRC_LEAVE, playerName));
+							break;
+						
+						case COMMUNICATION_IRC_PAYLOAD_MESSAGE:
+							description.text(sprintf(localization[LOCALE].messages.snooper.IRC_MESSAGE, playerName));
+							
+							/* var message = new IrcMessage();
+							message.text = this.payload.data.text;
+							message.id = this.payload.data.messageId;
+							message.sender = IRC.getUserById(this.payload.data.userId);
+							message.type = this.payload.data.type;
+							
+							var viewport = new Viewport(details, VIEWPORT_SNOOPER_MESSAGELIST);
+							message.render(viewport); */
 							break;
 						
 						default:

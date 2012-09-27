@@ -191,6 +191,9 @@ if(typeof(window) != "undefined") {
 			DEFAULT: "Intercepted a message from %s to module %s ",
 			EMAIL_REGISTER: "%s just registered the email address %s",
 			EMAIL_SEND: "%s just sent an email",
+			IRC_JOIN: "%s has joined the channel in IRC",
+			IRC_LEAVE: "%s has left the channel in IRC",
+			IRC_MESSAGE: "%s has said something in IRC",
 		},
 		storyteller: {
 			GAMEOVER: "The game is over.",
