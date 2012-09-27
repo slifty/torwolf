@@ -9,14 +9,14 @@ var IrcMessage = Visible.extend({
 	},
 	
 	redraw: function() {
+		var nick = this.sender?this.sender.nick:localization[LOCALE].messages.snooper.MISSINGNO;
 		for(var x in this.viewports) {
 			var viewport = this.viewports[x];
 			var output = viewport.output;
 			
 			output.empty()
 				.removeClass()
-				.addClass('user-' + this.sender.id)
-				.addClass('player-' + this.sender.player.id)
+				.addClass('user-' + this.sender?this.sender.id:"")
 				.addClass('type-' + this.type)
 				.addClass('message');
 			
@@ -27,7 +27,7 @@ var IrcMessage = Visible.extend({
 						case IRC_MESSAGE_TYPE_ACTION:
 							var messageNick = $('<div />')
 								.addClass('nick')
-								.text('* ' + this.sender.nick + ' ')
+								.text('* ' + nick + ' ')
 								.appendTo(output);
 							
 							var messageContent = $('<div />')
@@ -38,7 +38,7 @@ var IrcMessage = Visible.extend({
 						case IRC_MESSAGE_TYPE_JOIN:
 							var messageNick = $('<div />')
 								.addClass('nick')
-								.text('+ ' + this.sender.nick + ' ')
+								.text('+ ' + nick + ' ')
 								.appendTo(output);
 								
 							var messageContent = $('<div />')
@@ -49,7 +49,7 @@ var IrcMessage = Visible.extend({
 						case IRC_MESSAGE_TYPE_MESSAGE:
 							var messageNick = $('<div />')
 								.addClass('nick')
-								.text('<' + this.sender.nick + '> ')
+								.text('<' + nick + '> ')
 								.appendTo(output);
 								
 							var messageContent = $('<div />')

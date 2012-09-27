@@ -116,11 +116,7 @@ var Irc = Class.extend({
 		message.id = data.messageId;
 		message.sender = window.IRC.getUserById(data.userId);
 		message.type = data.type;
-
-		if(message.sender == null) {
-			console.log("Error in messageOut - message.sender is null");
-			return;
-		}
+		
 		this.messages.push(message);
 		
 		var output = $('<li />')
