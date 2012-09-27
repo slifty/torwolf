@@ -6,18 +6,36 @@ var irc = require('./irc'),
 	newspaper = require('./newspaper'),
 	snooper = require('./snooper');
 
-var constants = require('../constants'),
+var classes = require('./classes'),
+	constants = require('../constants'),
 	payloads = require('../payloads');
 
-var sockets = {},
+var interactions = {},
+	messagesIn = {},
+	messagesOut = {},
+	sockets = {},
 	players = {},
 	games = {};
 
 // Exports
 exports.receiveMessage = function(message, socket) {
-	message.isTor = message.isTor?true:false; // Temporary.
-	message.isSsl = message.isSsl?true:false; // Temporary.
+	if(!message.payload || !message.payload.data)
+		return; // Invalid payload
 	
+	// Set up metadata about the message
+	if(exports.getInteractionById(message.payload.data._interactionId) != null)
+		return; // Duplicate interaction
+	
+	// Build the interaction
+	var interaction = new classes.Interaction();
+	interaction.id = message.payload.data._interactionId?message.payload.data._interactionId:interaction.id;
+	interaction.message = message;
+	interaction.isTor = message.isTor?true:false;
+	interaction.isSsl = message.isSsl?true:false;
+	interaction.socket = socket;
+	interactions[interaction.id] = interaction;
+	
+	// Route the message
 	switch(message.target) {
 		case constants.COMMUNICATION_TARGET_IRC:
 			irc.receivePayload(message.payload, socket);
@@ -41,26 +59,27 @@ exports.receiveMessage = function(message, socket) {
 			newspaper.receivePayload(message.payload, socket);
 			break;
 	}
-	
-	// Snoop the inbound message
-	var interceptIn = new payloads.SnooperInterceptInPayload(message, socket, constants.SNOOPER_MESSAGE_INBOUND);
-	snooper.receivePayload(
-		interceptIn.getPayload(),
-		constants.COMMUNICATION_SOCKET_SERVER);
 }
 
 exports.sendMessage = function(target, payload, sockets) {
 	if(!(sockets instanceof Array)) sockets = [sockets];
 	var message = {
-			target: target,
-			payload: payload
+		target: target,
+		payload: payload
 	};
 	
-	// Snoop the outbound message
-	var interceptIn = new payloads.SnooperInterceptInPayload(message, socket, constants.SNOOPER_MESSAGE_OUTBOUND);
-	snooper.receivePayload(
-		interceptIn.getPayload(),
-		constants.COMMUNICATION_SOCKET_SERVER);
+	// Add to the interaction
+	var interaction = exports.getInteractionById(message.payload.data._interactionId)
+	if(interaction != null)
+		interaction.responses.push(message);
+	
+	// Snoop the interaction
+	if(interaction != null) {
+		var interceptIn = new payloads.SnooperInterceptInPayload(interaction);
+		snooper.receivePayload(
+			interceptIn.getPayload(),
+			constants.COMMUNICATION_SOCKET_SERVER);
+	}
 	
 	for(var x in sockets) {
 		sockets[x].emit('message', message);
@@ -87,7 +106,7 @@ exports.getGameByPlayerId = function(playerId) {
 
 exports.getGameBySocketId = function(socketId) {
 	var player = exports.getPlayerBySocketId(socketId);
-	return exports.getGameById(player.activeGameId);
+	return (player==null)?null:exports.getGameById(player.activeGameId);
 }
 
 
@@ -95,6 +114,10 @@ exports.getGames = function() {
 	var gameArr = [];
 	for(var x in games) gameArr.push(games[x]);
 	return gameArr;
+}
+
+exports.getInteractionById = function(interactionId) {
+	return(interactionId in interactions)?interactions[interactionId]:null;
 }
 
 exports.getPlayerById = function(playerId) {

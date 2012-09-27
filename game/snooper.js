@@ -26,42 +26,42 @@ function handleIntercept(data, socket) {
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
 		return error(locales[socket.locale].errors.snooper.INTERCEPT_SYSTEM, socket);
 	
-	// A message has been intercepted and needs to be pushed to the appropriate players
+	// An interaction has been intercepted and needs to be pushed to the appropriate players
 	var game = communication.getGameBySocketId(data.socketId);
-	data.message.isSsl = data.message.isSsl?true:false;
-	data.message.isTor = data.message.isTor?true:false;
+	var interaction = communication.getInteractionById(data.interactionId);
 	
-	// Is the player in a game?
 	if(game == null)
-		return;
+		return; // The user isn't in a game
+	if(interaction == null)
+		return; // This intercept isn't part of an interaction
 	
 	// Process the interception
 	for(var x in game.players) {
 		var player = game.players[x];
-		data.message.isWiretap = (getWiretapsByPlayerId(game.players[x].id).indexOf(player.id) != -1);
+		interaction.isWiretap = (getWiretapsByPlayerId(game.players[x].id).indexOf(player.id) != -1);
 		switch(player.role) {
 			case constants.PLAYER_ROLE_SPY:
-				switch(data.message.target) {
+				switch(interaction.message.target) {
 					case constants.COMMUNICATION_TARGET_EMAIL:
-						processEmailInterception(data.message, communication.getSocketById(data.socketId), player);
+						processEmailInterception(interaction, player);
 						break;
 					case constants.COMMUNICATION_TARGET_IRC:
-						processIrcInterception(data.message, communication.getSocketById(data.socketId), player);
+						processIrcInterception(interaction, player);
 						break;
 					case constants.COMMUNICATION_TARGET_TOR:
-						processTorInterception(data.message, communication.getSocketById(data.socketId), player);
+						processTorInterception(interaction, player);
 						break;
 					default:
 						break;
 				}
 				
 				// Process SSL Information
-				if(data.message.isWiretap && data.message.isSsl) {
-					var sslOut = new payloads.SnooperSslOutPayload(communication.getPlayerBySocketId(data.socketId), data.message.target);
+				if(interaction.isWiretap && interaction.isSsl) {
+					var sslOut = new payloads.SnooperSslOutPayload(communication.getPlayerBySocketId(data.socketId), interaction.message.target);
 					exports.sendPayload(
 						sslOut.getPayload(),
 						communication.getSocketByPlayerId(player.id));
-				}	
+				}
 				break;
 			default: 
 				break;
@@ -69,17 +69,17 @@ function handleIntercept(data, socket) {
 	}
 }
 
-function processEmailInterception(message, socket, player) {
+function processEmailInterception(interaction, player) {
 	/*
 		{+} The agent can read the content of all emails.
 		{+} The agent knows which email accounts a player is accessing.
 		{-} ... unless the player is using SSL or Tor.
 	*/
-	switch(message.payload.type) {
+	switch(interaction.message.payload.type) {
 		case constants.COMMUNICATION_EMAIL_PAYLOAD_REGISTER:
 		case constants.COMMUNICATION_EMAIL_PAYLOAD_SEND:
-			var interceptOut = new payloads.SnooperInterceptOutPayload(message, communication.getPlayerBySocketId(socket.id));
-			if(message.isSsl || message.isTor)
+			var interceptOut = new payloads.SnooperInterceptOutPayload(interaction, communication.getPlayerBySocketId(interaction.socket.id));
+			if(interaction.isSsl || interaction.isTor)
 				interceptOut.player = null;
 			exports.sendPayload(
 				interceptOut.getPayload(),
@@ -90,17 +90,17 @@ function processEmailInterception(message, socket, player) {
 	}
 }
 
-function processIrcInterception(message, socket, player) {
+function processIrcInterception(interaction, player) {
 	/*
 		{*} The government knows when a person has taken an action on a service using SSL.
 		{-} ... unless the person is using Tor.
 	*/
-	switch(message.payload.type) {
+	switch(interaction.message.payload.type) {
 		case constants.COMMUNICATION_IRC_PAYLOAD_LEAVE:
 		case constants.COMMUNICATION_IRC_PAYLOAD_JOIN:
 		case constants.COMMUNICATION_IRC_PAYLOAD_MESSAGE:
-			var interceptOut = new payloads.SnooperInterceptOutPayload(message, communication.getPlayerBySocketId(socket.id));
-			if(message.isSsl || message.isTor)
+			var interceptOut = new payloads.SnooperInterceptOutPayload(interaction, communication.getPlayerBySocketId(interaction.socket.id));
+			if(interaction.isSsl || interaction.isTor)
 				interceptOut.player = null;
 			
 			exports.sendPayload(
@@ -112,29 +112,29 @@ function processIrcInterception(message, socket, player) {
 	}
 }
 
-function processTorInterception(message, socket, player) {
+function processTorInterception(interaction, player) {
 	/*
 		{+} The agent knows who has enabled Tor.
 		{-} ... unless a player is using a private Tor bridge, in which case the agent know nothing.
 		{*} ... unless the player is wiretapped, in which case the agent still knows the player is using Tor.
 	*/
-	switch(message.payload.type) {
+	switch(interaction.message.payload.type) {
 		case constants.COMMUNICATION_TOR_PAYLOAD_BRIDGE:
-			var torOut = new payloads.SnooperTorOutPayload(communication.getPlayerBySocketId(socket.id), constants.SNOOPER_TOR_DISABLED);
-			if(data.message.isWiretap)
+			var torOut = new payloads.SnooperTorOutPayload(communication.getPlayerBySocketId(interaction.socket.id), constants.SNOOPER_TOR_DISABLED);
+			if(interaction.isWiretap)
 				torOut.status = constants.SNOOPER_TOR_ENABLED;
 			exports.sendPayload(
 				torOut.getPayload(),
 				communication.getSocketByPlayerId(player.id));			
 			break;
 		case constants.COMMUNICATION_TOR_PAYLOAD_CONNECT:
-			var torOut = new payloads.SnooperTorOutPayload(communication.getPlayerBySocketId(socket.id), constants.SNOOPER_TOR_ENABLED);
+			var torOut = new payloads.SnooperTorOutPayload(communication.getPlayerBySocketId(interaction.socket.id), constants.SNOOPER_TOR_ENABLED);
 			exports.sendPayload(
 				torOut.getPayload(),
 				communication.getSocketByPlayerId(player.id));			
 			break;
 		case constants.COMMUNICATION_TOR_PAYLOAD_DISCONNECT:
-			var torOut = new payloads.SnooperTorOutPayload(communication.getPlayerBySocketId(socket.id), constants.SNOOPER_TOR_DISABLED);
+			var torOut = new payloads.SnooperTorOutPayload(communication.getPlayerBySocketId(interaction.socket.id), constants.SNOOPER_TOR_DISABLED);
 			exports.sendPayload(
 				torOut.getPayload(),
 				communication.getSocketByPlayerId(player.id));			

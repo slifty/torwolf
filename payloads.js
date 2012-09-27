@@ -296,34 +296,31 @@ exports.NewspaperPublishOutPayload = function(edition) {
 }
 
 
-exports.SnooperInterceptInPayload = function(message, socket, direction) {
-	this.direction = direction;
-	this.message = message;
+exports.SnooperInterceptInPayload = function(interaction) {
+	this.interaction = interaction;
 	this.socket = socket;
 	
 	this.getPayload = function() {
 		return {
 			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_INTERCEPT,
 			data: {
-				direction: this.direction,
-				message: this.message,
-				socketId: this.socket.id
+				interactionId: this.interaction.id
 			}
 		}
 	}
 }
 
-exports.SnooperInterceptOutPayload = function(message, player) {
-	this.message = message;
+exports.SnooperInterceptOutPayload = function(interaction, player) {
+	this.interaction = interaction;
 	this.player = player;
 	
 	this.getPayload = function() {
 		return {
 			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_INTERCEPT,
 			data: {
-				payload: this.message.payload,
-				playerId: this.player?this.player.id:"",
-				target: this.message.target
+				message: this.interaction.message,
+				responses: this.interaction.responses,
+				playerId: this.player?this.player.id:""
 			}
 		}
 	}

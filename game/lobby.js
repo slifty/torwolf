@@ -119,7 +119,8 @@ exports.sendPayload = function(payload, sockets) {
 		sockets)
 };
 
-exports.sendPayload = function(payload, sockets) {
+exports.sendPayload = function(payload, sockets, interactionId) {
+	if(interactionId) payload.data._interactionId = interactionId; 
 	communication.sendMessage(
 		constants.COMMUNICATION_TARGET_LOBBY,
 		payload,

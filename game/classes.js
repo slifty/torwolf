@@ -143,9 +143,11 @@ exports.Rumor = function() {
 	}
 }
 
-exports.SnooperMessage = function() {
+exports.Interaction = function() {
 	this.id = uuid.v4();
-	this.payload = null;
+	this.isSsl = false;
+	this.isTor = false;
+	this.message = null;
+	this.responses = [];
 	this.socket = null;
-	this.target = "";
 }
