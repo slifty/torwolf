@@ -65,14 +65,16 @@ var SnooperInteraction = Visible.extend({
 						case COMMUNICATION_IRC_PAYLOAD_MESSAGE:
 							description.text(sprintf(localization[LOCALE].messages.snooper.IRC_MESSAGE, playerName));
 							
-							/* var message = new IrcMessage();
-							message.text = this.payload.data.text;
-							message.id = this.payload.data.messageId;
-							message.sender = IRC.getUserById(this.payload.data.userId);
-							message.type = this.payload.data.type;
+							var response = this.responses[0];
+							
+							var message = new IrcMessage();
+							message.text = response.payload.data.text;
+							message.id = response.payload.data.messageId;
+							message.sender = IRC.getUserById(response.payload.data.userId);
+							message.type = response.payload.data.type;
 							
 							var viewport = new Viewport(details, VIEWPORT_SNOOPER_MESSAGELIST);
-							message.render(viewport); */
+							message.render(viewport);
 							break;
 						
 						default:

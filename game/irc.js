@@ -76,9 +76,9 @@ function handleJoin(data, socket) {
 	message.type = constants.IRC_MESSAGE_TYPE_JOINED;
 	message.user = user;
 	
-	var broadcastJoinOut = new payloads.IrcMessageOutPayload(message);
+	var messageOut = new payloads.IrcMessageOutPayload(message);
 	exports.sendPayload(
-		broadcastJoinOut.getPayload(),
+		messageOut.getPayload(),
 		communication.getSocketsByGameId(game.id));
 	
 	// Tell the player who is already in the channel
@@ -116,9 +116,9 @@ function processAction(action, socket) {
 	message.type = constants.IRC_MESSAGE_TYPE_ACTION;
 	message.user = user;
 	
-	var actionOut = new payloads.IrcMessageOutPayload(message);
+	var messageOut = new payloads.IrcMessageOutPayload(message);
 	exports.sendPayload(
-		actionOut.getPayload(),
+		messageOut.getPayload(),
 		communication.getSocketsByGameId(game.id));
 }
 
@@ -181,9 +181,9 @@ function processNick(newNick, socket) {
 		
 		users[user.player.id].nick = newNick;
 		
-		var messageOut = new payloads.IrcNickOutPayload(user);
+		var nickOut = new payloads.IrcNickOutPayload(user);
 		exports.sendPayload(
-			messageOut.getPayload(),
+			nickOut.getPayload(),
 			communication.getSocketsByGameId(game.id));
 	}
 	else {
