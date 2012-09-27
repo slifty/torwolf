@@ -57,23 +57,18 @@ exports.COMMUNICATION_TOR_PAYLOAD_CONNECT = "connect"; // Connect to Tor
 exports.COMMUNICATION_TOR_PAYLOAD_DISCONNECT = "disconnect"; // Disconnect from Tor
 exports.COMMUNICATION_TOR_PAYLOAD_ROUTE = "route"; // Send a package to be routed through Tor
 
-exports.LOCALE_DEFAULT = "default";
-
 exports.IRC_MESSAGE_TYPE_ACTION = "A";
 exports.IRC_MESSAGE_TYPE_JOIN = "J";
 exports.IRC_MESSAGE_TYPE_MESSAGE = "M";
 exports.IRC_MESSAGE_TYPE_NICK = "N";
 exports.IRC_MESSAGE_TYPE_SYSTEM = "S";
 
-exports.SNOOPER_TOR_ENABLED = "Y";
-exports.SNOOPER_TOR_DISABLED = "N";
+exports.LOCALE_DEFAULT = "default";
 
-// Player Attributes
 exports.PLAYER_ALLEGIANCE_GOVERNMENT = "G";
 exports.PLAYER_ALLEGIANCE_NEUTRAL = "N";
 exports.PLAYER_ALLEGIANCE_REBELLION = "R";
 exports.PLAYER_ALLEGIANCE_UNKNOWN = "U";
-
 exports.PLAYER_ROLE_ACTIVIST = "A";
 exports.PLAYER_ROLE_CITIZEN = "C";
 exports.PLAYER_ROLE_CITIZEN_ACTIVIST = "CA";
@@ -82,7 +77,6 @@ exports.PLAYER_ROLE_EDITOR = "E";
 exports.PLAYER_ROLE_JOURNALIST = "J";
 exports.PLAYER_ROLE_SPY = "S";
 exports.PLAYER_ROLE_UNKNOWN = "U";
-
 exports.PLAYER_STATUS_ALIVE = "A";
 exports.PLAYER_STATUS_DEAD = "D";
 
@@ -96,10 +90,14 @@ exports.RUMOR_PUBLICATIONSTATUS_UNPUBLISHED = "U";
 exports.RUMOR_SOURCE_SYSTEM = "S";
 exports.RUMOR_SOURCE_NEWSPAPER = "N";
 
+exports.SNOOPER_MESSAGE_INBOUND = "I";
+exports.SNOOPER_MESSAGE_OUTBOUND = "O";
+exports.SNOOPER_TOR_ENABLED = "Y";
+exports.SNOOPER_TOR_DISABLED = "N";
+
 exports.TICK_WARNING = 50000; // Number of milliseconds warning to give before ending the turn
 exports.TICK_HEARTBEAT = 10000; // How many milliseconds between each heartbeat
 
-// Viewport Types
 exports.VIEWPORT_EMAIL_ACCOUNTLIST = "email-account-accountlist";
 exports.VIEWPORT_EMAIL_ADDRESSLIST = "email-account-addresslist";
 exports.VIEWPORT_EMAIL_FROM = "email-input-from";

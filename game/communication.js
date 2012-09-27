@@ -42,8 +42,8 @@ exports.receiveMessage = function(message, socket) {
 			break;
 	}
 	
-	// Snooper determines what messages are visible to who based on simulated privacy
-	var interceptIn = new payloads.SnooperInterceptInPayload(message, socket);
+	// Snoop the inbound message
+	var interceptIn = new payloads.SnooperInterceptInPayload(message, socket, constants.SNOOPER_MESSAGE_INBOUND);
 	snooper.receivePayload(
 		interceptIn.getPayload(),
 		constants.COMMUNICATION_SOCKET_SERVER);
@@ -55,6 +55,13 @@ exports.sendMessage = function(target, payload, sockets) {
 			target: target,
 			payload: payload
 	};
+	
+	// Snoop the outbound message
+	var interceptIn = new payloads.SnooperInterceptInPayload(message, socket, constants.SNOOPER_MESSAGE_OUTBOUND);
+	snooper.receivePayload(
+		interceptIn.getPayload(),
+		constants.COMMUNICATION_SOCKET_SERVER);
+	
 	for(var x in sockets) {
 		sockets[x].emit('message', message);
 	}

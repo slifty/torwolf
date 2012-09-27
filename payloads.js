@@ -296,7 +296,8 @@ exports.NewspaperPublishOutPayload = function(edition) {
 }
 
 
-exports.SnooperInterceptInPayload = function(message, socket) {
+exports.SnooperInterceptInPayload = function(message, socket, direction) {
+	this.direction = direction;
 	this.message = message;
 	this.socket = socket;
 	
@@ -304,6 +305,7 @@ exports.SnooperInterceptInPayload = function(message, socket) {
 		return {
 			type: constants.COMMUNICATION_SNOOPER_PAYLOAD_INTERCEPT,
 			data: {
+				direction: this.direction,
 				message: this.message,
 				socketId: this.socket.id
 			}
