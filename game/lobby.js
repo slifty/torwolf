@@ -8,6 +8,14 @@ var classes = require('./classes'),
 
 
 // Functions
+function error(message, socket) {
+	var error = new payloads.ErrorPayload(message);
+	return exports.sendPayload(
+		error.getPayload(),
+		socket);
+}
+
+// Handlers
 function handleConnect(data, socket) {
 	player = new classes.Player();
 	player.name = data.name;
@@ -59,13 +67,6 @@ function handleCreate(data, socket) {
 	joinIn.password = game.password;
 	exports.receivePayload(
 		joinIn.getPayload(),
-		socket);
-}
-
-function error(message, socket) {
-	var error = new payloads.ErrorPayload(message);
-	return exports.sendPayload(
-		error.getPayload(),
 		socket);
 }
 
