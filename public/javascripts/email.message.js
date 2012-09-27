@@ -24,7 +24,7 @@ var EmailMessage = Visible.extend({
 			
 			switch(viewport.type) {
 				case VIEWPORT_SNOOPER_MESSAGELIST:
-				case VIEWPORT_EMAIL_MESSAGE_MESSAGELIST:
+				case VIEWPORT_EMAIL_MESSAGELIST:
 					var shortMessage = $('<div />')
 						.addClass('short')
 						.bind('click', {context: this}, function(ev) {

@@ -51,7 +51,7 @@ var Newspaper = Class.extend({
 		var output = $('<li />')
 			.appendTo(this.editionList);
 		
-		var viewport = new Viewport(output, VIEWPORT_NEWSPAPER_EDITION_ARCHIVEPANE);
+		var viewport = new Viewport(output, VIEWPORT_NEWSPAPER_ARCHIVEPANE);
 		edition.render(viewport);
 	}
 	

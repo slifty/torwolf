@@ -380,7 +380,7 @@ var Email = Class.extend({
 		this.addressBook.push(account);
 		var output = $('<div />')
 			.appendTo(this.addressList)
-		var viewport = new Viewport(output, VIEWPORT_EMAIL_ACCOUNT_ADDRESSLIST);
+		var viewport = new Viewport(output, VIEWPORT_EMAIL_ADDRESSLIST);
 		account.render(viewport);
 		
 		if(account.player !== null && account.player.id == COMMUNICATION.playerId) {
@@ -388,12 +388,12 @@ var Email = Class.extend({
 			var output = $('<option />')
 				.appendTo(this.inputFrom)
 			
-			var viewport = new Viewport(output, VIEWPORT_EMAIL_ACCOUNT_FROM);
+			var viewport = new Viewport(output, VIEWPORT_EMAIL_FROM);
 			account.render(viewport);
 			
 			var output = $('<li />')
 				.appendTo(this.accountList)
-			var viewport = new Viewport(output, VIEWPORT_EMAIL_ACCOUNT_ACCOUNTLIST);
+			var viewport = new Viewport(output, VIEWPORT_EMAIL_ACCOUNTLIST);
 			account.render(viewport);
 			
 		}
@@ -417,7 +417,7 @@ var Email = Class.extend({
 		var output = $('<li />')
 			.prependTo(this.messageList);
 		
-		var viewport = new Viewport(output, VIEWPORT_EMAIL_MESSAGE_MESSAGELIST);
+		var viewport = new Viewport(output, VIEWPORT_EMAIL_MESSAGELIST);
 		message.render(viewport);
 	}
 });

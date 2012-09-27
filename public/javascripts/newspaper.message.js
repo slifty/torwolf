@@ -18,7 +18,7 @@ var NewspaperMessage = Visible.extend({
 				.addClass('edition');
 			
 			switch(viewport.type) {
-				case VIEWPORT_NEWSPAPER_EDITION_ARCHIVEPANE:
+				case VIEWPORT_NEWSPAPER_ARCHIVEPANE:
 					var editionRound = $('<div />')
 						.addClass('round')
 						.text(this.round)

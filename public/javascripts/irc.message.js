@@ -21,7 +21,7 @@ var IrcMessage = Visible.extend({
 				.addClass('message');
 			
 			switch(viewport.type) {
-				case VIEWPORT_IRC_MESSAGE_MESSAGELIST:
+				case VIEWPORT_IRC_MESSAGELIST:
 					switch(this.type) {
 						case IRC_MESSAGE_TYPE_ACTION:
 							var messageNick = $('<div />')

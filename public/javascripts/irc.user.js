@@ -18,7 +18,7 @@ var IrcUser = Visible.extend({
 				.addClass('user' + this.nick);
 			
 			switch(viewport.type) {
-				case VIEWPORT_IRC_USER_USERLIST:
+				case VIEWPORT_IRC_USERLIST:
 					var userName = $('<div />')
 						.addClass('name')
 						.text(this.nick)

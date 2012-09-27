@@ -8,7 +8,7 @@ var classes = require('./classes'),
 
 
 // Functions
-function connect(data, socket) {
+function handleConnect(data, socket) {
 	player = new classes.Player();
 	player.name = data.name;
 	communication.registerPlayer(player, socket);
@@ -34,7 +34,7 @@ function connect(data, socket) {
 	
 }
 
-function create(data, socket) {
+function handleCreate(data, socket) {
 	if(data.name == "")
 		return error(locales[socket.locale].errors.lobby.CREATE_NAME_BLANK, socket);
 	
@@ -69,7 +69,7 @@ function error(message, socket) {
 		socket);
 }
 
-function join(data, socket) {
+function handleJoin(data, socket) {
 	var game = communication.getGameById(data.gameId);
 	var player = communication.getPlayerBySocketId(socket.id);
 	
@@ -100,13 +100,13 @@ function join(data, socket) {
 exports.receivePayload = function(payload, socket) {
 	switch(payload.type) {
 		case constants.COMMUNICATION_LOBBY_PAYLOAD_CONNECT:
-			connect(payload.data, socket);
+			handleConnect(payload.data, socket);
 			break;
 		case constants.COMMUNICATION_LOBBY_PAYLOAD_CREATE:
-			create(payload.data, socket);
+			handleCreate(payload.data, socket);
 			break;
 		case constants.COMMUNICATION_LOBBY_PAYLOAD_JOIN:
-			join(payload.data, socket);
+			handleJoin(payload.data, socket);
 			break;
 	}
 };

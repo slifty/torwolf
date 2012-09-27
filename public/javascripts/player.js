@@ -27,7 +27,7 @@ var Player = Visible.extend({
 				output.addClass('you');
 			
 			switch(viewport.type) {
-				case VIEWPORT_STORYTELLER_PLAYER_PEERPANE:
+				case VIEWPORT_STORYTELLER_PEERPANE:
 					var playerName = $('<div />')
 						.addClass('name')
 						.text(this.name + ((this.id == COMMUNICATION.playerId)?" (" + localization[LOCALE].gui.player.YOU + ")":""))
@@ -60,7 +60,7 @@ var Player = Visible.extend({
 						
 					break;
 					
-				case VIEWPORT_STORYTELLER_PLAYER_PLAYERPANE:
+				case VIEWPORT_STORYTELLER_PLAYERPANE:
 					var playerAvatar = $('<div />')
 						.addClass('avatar')
 						.addClass('player-' + this.id)
