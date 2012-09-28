@@ -22,15 +22,19 @@ function error(message, socket) {
 
 
 // Handlers
-function handleIntercept(data, socket) {
+function handleIntercept(data, interaction) {
+	var socket = interaction.socket;
+	console.log("tesT");
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
 		return error(locales[socket.locale].errors.snooper.INTERCEPT_SYSTEM, socket);
 	
+	console.log("tesT2");
 	// An interaction has been intercepted and needs to be pushed to the appropriate players
 	var interaction = communication.getInteractionById(data.interactionId);
 	if(interaction == null)
 		return; // This intercept isn't part of an interaction
 	
+	console.log("tesT3");
 	var game = communication.getGameBySocketId(interaction.socket.id);
 	if(game == null)
 		return; // The user isn't in a game
@@ -145,7 +149,8 @@ function processTorInterception(interaction, player) {
 }
 
 
-function handleWiretap(data, socket) {
+function handleWiretap(data, interaction) {
+	var socket = interaction.socket;
 	var player = communication.getPlayerBySocketId(socket.id);
 	var game = communication.getGameBySocketId(socket.id);
 	
@@ -169,19 +174,19 @@ function getWiretapsByPlayerId(playerId) {
 }
 
 // Exports
-exports.receivePayload = function(payload, socket) {
+exports.receivePayload = function(payload, interaction) {
 	switch(payload.type) {
 		case constants.COMMUNICATION_SNOOPER_PAYLOAD_INTERCEPT:
-			handleIntercept(payload.data, socket);
+			handleIntercept(payload.data, interaction);
 			break;
 		case constants.COMMUNICATION_SNOOPER_PAYLOAD_SSL:
-			handleSsl(payload.data, socket);
+			handleSsl(payload.data, interaction);
 			break;
 		case constants.COMMUNICATION_SNOOPER_PAYLOAD_TOR:
-			handleTor(payload.data, socket);
+			handleTor(payload.data, interaction);
 			break;
 		case constants.COMMUNICATION_SNOOPER_PAYLOAD_WIRETAP:
-			handleWiretap(payload.data, socket);
+			handleWiretap(payload.data, interaction);
 			break;
 	}
 };

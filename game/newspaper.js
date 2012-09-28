@@ -17,7 +17,8 @@ function error(message, socket) {
 		socket);
 }
 
-function handlePublish(data, socket) {
+function handlePublish(data, interaction) {
+	var socket = interaction.socket;
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
 		return error(locales[socket.locale].errors.newspaper.PUBLISH_SYSTEM, socket);
 	
@@ -55,10 +56,10 @@ function handlePublish(data, socket) {
 
 
 // Exports
-exports.receivePayload = function(payload, socket) {
+exports.receivePayload = function(payload, interaction) {
 	switch(payload.type) {
 		case constants.COMMUNICATION_NEWSPAPER_PAYLOAD_PUBLISH:
-			handlePublish(payload.data, socket);
+			handlePublish(payload.data, interaction);
 			break;
 	}
 };

@@ -20,7 +20,8 @@ function error(message, socket) {
 }
 
 // Handlers
-function handleMessage(data, socket) {
+function handleMessage(data, interaction) {
+	var socket = interaction.socket;
 	data.text = data.text.trim();
 	if(data.text === '')
 		return;
@@ -53,7 +54,10 @@ function handleMessage(data, socket) {
 	}
 }
 
-function handleJoin(data, socket) {
+function handleJoin(data, interaction) {
+	var socket = interaction.socket;
+	console.log(socket.id);
+	console.log("TEST");
 	var player = communication.getPlayerBySocketId(socket.id);
 	var game = communication.getGameById(player.activeGameId);
 	var user = new classes.IrcUser();
@@ -94,7 +98,8 @@ function handleJoin(data, socket) {
 	}
 }
 
-function handleLeave(data, socket) {
+function handleLeave(data, interaction) {
+	var socket = interaction.socket;
 }
 
 /*
@@ -264,16 +269,16 @@ exports.getUserByPlayerId = function(playerId) {
 	return (playerId in users)?users[playerId]:null;
 }
 
-exports.receivePayload = function(payload, socket) {
+exports.receivePayload = function(payload, interaction) {
 	switch(payload.type) {
 		case constants.COMMUNICATION_IRC_PAYLOAD_MESSAGE:
-			handleMessage(payload.data, socket);
+			handleMessage(payload.data, interaction);
 			break;
 		case constants.COMMUNICATION_IRC_PAYLOAD_JOIN:
-			handleJoin(payload.data, socket);
+			handleJoin(payload.data, interaction);
 			break;
 		case constants.COMMUNICATION_IRC_PAYLOAD_LEAVE:
-			handleLeave(payload.data, socket);
+			handleLeave(payload.data, interaction);
 			break;
 		default: 
 			break;		

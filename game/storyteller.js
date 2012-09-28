@@ -13,7 +13,17 @@ var rumors = {};
 
 
 // Functions
-function handleEnd(data, socket) {
+function error(message, socket) {
+	var error = new payloads.ErrorPayload(message);
+	return exports.sendPayload(
+		error.getPayload(),
+		socket);
+}
+
+
+// Handlers
+function handleEnd(data, interaction) {
+	var socket = interaction.socket;
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
 		return error(locales[socket.locale].errors.storyteller.GAMEOVER_SYSTEM, socket);
 	
@@ -28,14 +38,8 @@ function handleEnd(data, socket) {
 		communication.getSocketsByGameId(game.id));
 }
 
-function error(message, socket) {
-	var error = new payloads.ErrorPayload(message);
-	return exports.sendPayload(
-		error.getPayload(),
-		socket);
-}
-
-function handleInvestigation(data, socket) {
+function handleInvestigation(data, interaction) {
+	var socket = interaction.socket;
 	var player = communication.getPlayerBySocketId(socket.id);
 	if(player == null)
 		return error(locales[socket.locale].errors.storyteller.INVESTIGATE_NOPLAYER, socket);
@@ -56,7 +60,8 @@ function handleInvestigation(data, socket) {
 	game.activeInvestigations[rumor.id] = rumor;
 }
 
-function handleJoin(data, socket) {
+function handleJoin(data, interaction) {
+	var socket = interaction.socket;
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
 		return error(locales[socket.locale].errors.storyteller.JOIN_LOBBY, socket);
 	
@@ -84,20 +89,23 @@ function handleJoin(data, socket) {
 	
 	// Have them join IRC
 	var joinIn = new payloads.IrcJoinInPayload(player.name);
-	irc.receivePayload(
+	communication.routeMessage(
+		constants.COMMUNICATION_TARGET_IRC,
 		joinIn.getPayload(),
 		socket);
 	
 	// If the game is full, start the game
 	if(Object.keys(game.players).length == game.roles.length) {
 		var startOut = new payloads.StorytellerStartInPayload(game);
-		exports.receivePayload(
+		communication.routeMessage(
+			constants.COMMUNICATION_TARGET_STORYTELLER,
 			startOut.getPayload(),
 			constants.COMMUNICATION_SOCKET_SERVER);
 	}
 }
 
-function handleStart(data, socket) {
+function handleStart(data, interaction) {
+	var socket = interaction.socket;
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
 		return error(locales[socket.locale].errors.storyteller.START_SYSTEM, socket);
 	
@@ -155,7 +163,9 @@ function handleStart(data, socket) {
 			rumorIn.destinationId = player.id;
 			rumorIn.sourceId = player.id;
 			rumorIn.truthStatus = rumor.truthStatus;
-			exports.receivePayload(
+			
+			communication.routeMessage(
+				constants.COMMUNICATION_TARGET_STORYTELLER,
 				rumorIn.getPayload(),
 				constants.COMMUNICATION_SOCKET_SERVER);
 		}
@@ -166,13 +176,15 @@ function handleStart(data, socket) {
 		var heartbeatIn = new payloads.StorytellerHeartbeatInPayload(game);
 		heartbeatIn.count = 0;
 		
-		exports.receivePayload(
+		communication.routeMessage(
+			constants.COMMUNICATION_TARGET_STORYTELLER,
 			heartbeatIn.getPayload(),
 			constants.COMMUNICATION_SOCKET_SERVER);
 	}, constants.TICK_HEARTBEAT);
 }
 
-function handleHeartbeat(data, socket) {
+function handleHeartbeat(data, interaction) {
+	var socket = interaction.socket;
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
 		return error(locales[socket.locale].errors.storyteller.HEARTBEAT_SYSTEM, socket);
 	
@@ -191,7 +203,8 @@ function handleHeartbeat(data, socket) {
 		return setTimeout(function() {
 			var tickIn = new payloads.StorytellerTickInPayload(game);
 			tickIn.count = count;
-			exports.receivePayload(
+			communication.routeMessage(
+				constants.COMMUNICATION_TARGET_STORYTELLER,
 				tickIn.getPayload(),
 				constants.COMMUNICATION_SOCKET_SERVER);
 		}, constants.TICK_HEARTBEAT);
@@ -217,13 +230,15 @@ function handleHeartbeat(data, socket) {
 	return setTimeout(function() {
 		var heartbeatIn = new payloads.StorytellerHeartbeatInPayload(game);
 		heartbeatIn.count = count;
-		exports.receivePayload(
+		communication.routeMessage(
+			constants.COMMUNICATION_TARGET_STORYTELLER,
 			heartbeatIn.getPayload(),
 			constants.COMMUNICATION_SOCKET_SERVER);
 	}, constants.TICK_HEARTBEAT);
 }
 
-function handleRumor(data, socket) {
+function handleRumor(data, interaction) {
+	var socket = interaction.socket;
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
 		return error(locales[socket.locale].errors.storyteller.RUMOR_SYSTEM, socket);
 	
@@ -249,7 +264,8 @@ function handleRumor(data, socket) {
 		socket);
 }
 
-function handleTick(data, socket) {
+function handleTick(data, interaction) {
+	var socket = interaction.socket;
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
 		return error(locales[socket.locale].errors.storyteller.TICK_SYSTEM, socket);
 	
@@ -280,7 +296,8 @@ function handleTick(data, socket) {
 		communication.getSocketsByGameId(game.id));
 	
 	var publishIn = new payloads.NewspaperPublishInPayload(game);
-	newspaper.receivePayload(
+	communication.routeMessage(
+		constants.COMMUNICATION_TARGET_NEWSPAPER,
 		publishIn.getPayload(),
 		constants.COMMUNICATION_SOCKET_SERVER);
 	
@@ -312,13 +329,15 @@ function handleTick(data, socket) {
 		var announcementOut = new payloads.StorytellerAnnouncementOutPayload(locales[game.locale].messages.storyteller.VICTORY_ACTIVISTS_MEDIA);
 		exports.sendPayload(
 			announcementOut.getPayload(),
-			communication.getSocketsByGameId(game.id));
+			communication.getSocketsByGameId(game.id),
+			constants.COMMUNICATION_SOCKET_SERVER);
 			
 		var endIn = new payloads.StorytellerEndInPayload(game);
 		
-		return exports.receivePayload(
-			heartbeatIn.getPayload(),
-			constants.COMMUNICATION_SOCKET_SERVER);
+		communication.routeMessage(
+			constants.COMMUNICATION_TARGET_STORYTELLER,
+			heartbeatIn.getPayload());
+		return;
 	}
 	
 	// Start the next turn
@@ -342,13 +361,12 @@ function handleTick(data, socket) {
 		var heartbeatIn = new payloads.StorytellerHeartbeatInPayload(game);
 		heartbeatIn.count = 0;
 		
-		exports.receivePayload(
+		communication.routeMessage(
+			constants.COMMUNICATION_TARGET_STORYTELLER,
 			heartbeatIn.getPayload(),
 			constants.COMMUNICATION_SOCKET_SERVER);
 	}, constants.TICK_HEARTBEAT);
 }
-
-
 
 
 // Exports
@@ -357,21 +375,21 @@ exports.getRumorById = function(rumorId) {
 }
 
 
-exports.receivePayload = function(payload, socket) {
+exports.receivePayload = function(payload, interaction) {
 	switch(payload.type) {
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_ALLEGIANCE:
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_END:
-			handleEnd(payload.data, socket);
+			handleEnd(payload.data, interaction);
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_HEARTBEAT:
-			handleHeartbeat(payload.data, socket);
+			handleHeartbeat(payload.data, interaction);
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_INVESTIGATE:
-			handleInvestigation(payload.data, socket);
+			handleInvestigation(payload.data, interaction);
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_JOIN:
-			handleJoin(payload.data, socket);
+			handleJoin(payload.data, interaction);
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_LEAVE:
 			break;
@@ -380,13 +398,13 @@ exports.receivePayload = function(payload, socket) {
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_ROLE:
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_RUMOR:
-			handleRumor(payload.data, socket);
+			handleRumor(payload.data, interaction);
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_START:
-			handleStart(payload.data, socket);
+			handleStart(payload.data, interaction);
 			break;
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_TICK:
-			handleTick(payload.data, socket);
+			handleTick(payload.data, interaction);
 			break;
 	}
 };

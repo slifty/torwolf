@@ -16,7 +16,8 @@ function error(message, socket) {
 }
 
 // Handlers
-function handleConnect(data, socket) {
+function handleConnect(data, interaction) {
+	var socket = interaction.socket;
 	player = new classes.Player();
 	player.name = data.name;
 	communication.registerPlayer(player, socket);
@@ -42,7 +43,9 @@ function handleConnect(data, socket) {
 	
 }
 
-function handleCreate(data, socket) {
+function handleCreate(data, interaction) {
+	var socket = interaction.socket;
+
 	if(data.name == "")
 		return error(locales[socket.locale].errors.lobby.CREATE_NAME_BLANK, socket);
 	
@@ -65,12 +68,15 @@ function handleCreate(data, socket) {
 	// Add the creator to the game
 	var joinIn = new payloads.LobbyJoinInPayload(game);
 	joinIn.password = game.password;
-	exports.receivePayload(
+	
+	communication.routeMessage(
+		constants.COMMUNICATION_TARGET_LOBBY,
 		joinIn.getPayload(),
 		socket);
 }
 
-function handleJoin(data, socket) {
+function handleJoin(data, interaction) {
+	var socket = interaction.socket;
 	var game = communication.getGameById(data.gameId);
 	var player = communication.getPlayerBySocketId(socket.id);
 	
@@ -91,23 +97,24 @@ function handleJoin(data, socket) {
 	
 	// Announce to the storyteller that a player joined
 	var joinIn = new payloads.StorytellerJoinInPayload(player, game);
-	storyteller.receivePayload(
+	communication.routeMessage(
+		constants.COMMUNICATION_TARGET_STORYTELLER,
 		joinIn.getPayload(),
 		constants.COMMUNICATION_SOCKET_SERVER);
 }
 
 
 // Exports
-exports.receivePayload = function(payload, socket) {
+exports.receivePayload = function(payload, interaction) {
 	switch(payload.type) {
 		case constants.COMMUNICATION_LOBBY_PAYLOAD_CONNECT:
-			handleConnect(payload.data, socket);
+			handleConnect(payload.data, interaction);
 			break;
 		case constants.COMMUNICATION_LOBBY_PAYLOAD_CREATE:
-			handleCreate(payload.data, socket);
+			handleCreate(payload.data, interaction);
 			break;
 		case constants.COMMUNICATION_LOBBY_PAYLOAD_JOIN:
-			handleJoin(payload.data, socket);
+			handleJoin(payload.data, interaction);
 			break;
 	}
 };

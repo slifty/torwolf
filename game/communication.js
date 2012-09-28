@@ -23,43 +23,52 @@ exports.receiveMessage = function(message, socket) {
 		return; // Invalid payload
 	
 	// Set up metadata about the message
-	if(exports.getInteractionById(message.payload.data.interactionId) != null)
+	if(exports.getInteractionById(message.interactionId) != null)
 		return; // Duplicate interaction
 	
 	// Build the interaction
 	var interaction = new classes.Interaction();
-	interaction.id = message.payload.data.interactionId?message.payload.data.interactionId:interaction.id;
+	interaction.id = message.interactionId?message.interactionId:interaction.id;
 	interaction.message = message;
 	interaction.isTor = message.isTor?true:false;
 	interaction.isSsl = message.isSsl?true:false;
 	interaction.socket = socket;
 	interactions[interaction.id] = interaction;
-	message.payload.data.interactionId = interaction.id;
+	message.interactionId = interaction.id;
 	
 	// Route the message
 	switch(message.target) {
 		case constants.COMMUNICATION_TARGET_IRC:
-			irc.receivePayload(message.payload, socket);
+			irc.receivePayload(message.payload, interaction);
 			break;
 		case constants.COMMUNICATION_TARGET_EMAIL:
-			email.receivePayload(message.payload, socket);
+			email.receivePayload(message.payload, interaction);
 			break;
 		case constants.COMMUNICATION_TARGET_STORYTELLER:
-			storyteller.receivePayload(message.payload, socket);
+			storyteller.receivePayload(message.payload, interaction);
 			break;
 		case constants.COMMUNICATION_TARGET_LOBBY:
-			lobby.receivePayload(message.payload, socket);
+			lobby.receivePayload(message.payload, interaction);
 			break;
 		case constants.COMMUNICATION_TARGET_SNOOPER:
-			snooper.receivePayload(message.payload, socket);
+			snooper.receivePayload(message.payload, interaction);
 			break;
 		case constants.COMMUNICATION_TARGET_TOR:
-			tor.receivePayload(message.payload, socket);
+			tor.receivePayload(message.payload, interaction);
 			break;
 		case constants.COMMUNICATION_TARGET_NEWSPAPER:
-			newspaper.receivePayload(message.payload, socket);
+			newspaper.receivePayload(message.payload, interaction);
 			break;
 	}
+}
+
+exports.routeMessage = function(target, payload, socket) {
+	var message = {
+		target: target,
+		payload: payload
+	};
+	
+	exports.receiveMessage(message, socket);
 }
 
 exports.sendMessage = function(target, payload, sockets, interactionId) {
@@ -73,13 +82,14 @@ exports.sendMessage = function(target, payload, sockets, interactionId) {
 	var interaction = exports.getInteractionById(interactionId)
 	if(interaction != null) {
 		interaction.responses.push(message);
-		message.payload.data.interactionId = interactionId;
+		message.interactionId = interactionId;
 	}
 	
 	// Snoop the interaction
 	if(interaction != null) {
 		var interceptIn = new payloads.SnooperInterceptInPayload(interaction);
-		snooper.receivePayload(
+		exports.routeMessage(
+			constants.COMMUNICATION_TARGET_SNOOPER,
 			interceptIn.getPayload(),
 			constants.COMMUNICATION_SOCKET_SERVER);
 	}

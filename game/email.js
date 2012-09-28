@@ -21,7 +21,9 @@ function error(message, socket) {
 
 
 // Handlers
-function handleRegister(data, socket) {
+function handleRegister(data, interaction) {
+	var socket = interaction.socket;
+
 	// TODO -- clean the addresses and add a "domain" (e.g. @game123512313.torwolf.com)
 	if(data.address.trim() == '')
 		return error(locales[socket.locale].errors.email.ADDRESS_EMPTY, socket);
@@ -38,10 +40,11 @@ function handleRegister(data, socket) {
 	exports.sendPayload(
 		registerOut.getPayload(),
 		socket,
-		data.interactionId);
+		interaction.id);
 }
 
-function handleSend(data, socket) {
+function handleSend(data, interaction) {
+	var socket = interaction.socket;
 	var sockets = [];
 	
 	var message = new classes.EmailMessage();
@@ -83,13 +86,14 @@ function handleSend(data, socket) {
 		for(var y in sockets) {
 			var destinationPlayer = communication.getPlayerBySocketId(sockets[y].id);
 			var rumorIn = new payloads.StorytellerRumorInPayload(rumor);
-		
+			
 			destinationPlayer.rumors[rumor.id] = rumor;
 			rumorIn.sourceId = player.id;
 			rumorIn.truthStatus = rumor.getPlayerTruthStatus(destinationPlayer);
 			rumorIn.destinationId = destinationPlayer.id;
 			
-			storyteller.receivePayload(
+			communication.routeMessage(
+				constants.COMMUNICATION_TARGET_STORYTELLER,
 				rumorIn.getPayload(),
 				constants.COMMUNICATION_SOCKET_SERVER);
 		}
@@ -100,7 +104,7 @@ function handleSend(data, socket) {
 	exports.sendPayload(
 		sendOut.getPayload(),
 		sockets,
-		data.interactionId);
+		interaction.id);
 }
 
 
@@ -109,13 +113,13 @@ exports.getAccountByAddress = function(address) {
 	return (address in accounts)?accounts[address]:null;
 }
 
-exports.receivePayload = function(payload, socket) {
+exports.receivePayload = function(payload, interaction) {
 	switch(payload.type) {
 		case constants.COMMUNICATION_EMAIL_PAYLOAD_REGISTER:
-			handleRegister(payload.data, socket);
+			handleRegister(payload.data, interaction);
 			break;
 		case constants.COMMUNICATION_EMAIL_PAYLOAD_SEND:
-			handleSend(payload.data, socket);
+			handleSend(payload.data, interaction);
 			break;
 	}
 };
