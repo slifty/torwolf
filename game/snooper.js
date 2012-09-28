@@ -24,17 +24,14 @@ function error(message, socket) {
 // Handlers
 function handleIntercept(data, interaction) {
 	var socket = interaction.socket;
-	console.log("tesT");
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
 		return error(locales[socket.locale].errors.snooper.INTERCEPT_SYSTEM, socket);
 	
-	console.log("tesT2");
 	// An interaction has been intercepted and needs to be pushed to the appropriate players
 	var interaction = communication.getInteractionById(data.interactionId);
 	if(interaction == null)
 		return; // This intercept isn't part of an interaction
 	
-	console.log("tesT3");
 	var game = communication.getGameBySocketId(interaction.socket.id);
 	if(game == null)
 		return; // The user isn't in a game
