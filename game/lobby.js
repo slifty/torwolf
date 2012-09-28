@@ -32,8 +32,6 @@ function handleConnect(data, interaction) {
 	var games = communication.getGames();
 	for(var x in games) {
 		var createOut = new payloads.LobbyCreateOutPayload(games[x]);
-		
-		console.log(createOut);
 		exports.sendPayload(
 			createOut.getPayload(),
 			socket);

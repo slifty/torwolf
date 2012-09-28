@@ -38,26 +38,24 @@ function handleMessage(data, interaction) {
 		var action = actionPieces[1];
 		switch(action) {
 			case 'me':
-				processAction(actionPieces[2], socket);
+				processAction(actionPieces[2], interaction);
 				break;
 			case 'msg':
-				processMsg(actionPieces[2], socket, null);
+				processMsg(actionPieces[2], interaction, null);
 				break;
 			case 'nick':
-				processNick(actionPieces[2], socket);
+				processNick(actionPieces[2], interaction);
 				break;
 			default:
 				break;
 		}
 	} else {
-		processMsg(text, socket, null);
+		processMsg(text, interaction, null);
 	}
 }
 
 function handleJoin(data, interaction) {
 	var socket = interaction.socket;
-	console.log(socket.id);
-	console.log("TEST");
 	var player = communication.getPlayerBySocketId(socket.id);
 	var game = communication.getGameById(player.activeGameId);
 	var user = new classes.IrcUser();
@@ -111,7 +109,8 @@ Creates and sends a message to all clients in the game that the action has been 
 
 */
 
-function processAction(action, socket) {	
+function processAction(action, interaction) {
+	var socket = interaction.socket;	
 	var player = communication.getPlayerBySocketId(socket.id);
 	var game = communication.getGameById(player.activeGameId);
 	var user = exports.getUserByPlayerId(player.id);
@@ -124,7 +123,8 @@ function processAction(action, socket) {
 	var messageOut = new payloads.IrcMessageOutPayload(message);
 	exports.sendPayload(
 		messageOut.getPayload(),
-		communication.getSocketsByGameId(game.id));
+		communication.getSocketsByGameId(game.id),
+		interaction.id);
 }
 
 /*
@@ -138,8 +138,9 @@ case of generic typing to a channel.
 
 */
 
-function processMsg(msg, socket, target) {
+function processMsg(msg, interaction, target) {
 	//TODO: remove the hard coding of the target
+	var socket = interaction.socket;
 	var player = communication.getPlayerBySocketId(socket.id);
 	var game = communication.getGameById(player.activeGameId);
 	var user = exports.getUserByPlayerId(player.id);
@@ -152,7 +153,8 @@ function processMsg(msg, socket, target) {
 	var messageOut = new payloads.IrcMessageOutPayload(message);
 	exports.sendPayload(
 		messageOut.getPayload(),
-		communication.getSocketsByGameId(game.id));
+		communication.getSocketsByGameId(game.id),
+		interaction.id);
 }
 
 /*
@@ -165,7 +167,8 @@ the change. If it fails, only the client that initiated the change will be notif
 
 */
 
-function processNick(newNick, socket) {
+function processNick(newNick, interaction) {
+	var socket = interaction.socket;
 	var player = communication.getPlayerBySocketId(socket.id);
 	var game = communication.getGameById(player.activeGameId);
 	var user = exports.getUserByPlayerId(player.id);
@@ -189,7 +192,8 @@ function processNick(newNick, socket) {
 		var nickOut = new payloads.IrcNickOutPayload(user);
 		exports.sendPayload(
 			nickOut.getPayload(),
-			communication.getSocketsByGameId(game.id));
+			communication.getSocketsByGameId(game.id),
+			interaction.id);
 	}
 	else {
 		//send an error message to the client
