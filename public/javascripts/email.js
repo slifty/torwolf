@@ -2,7 +2,6 @@ var Email = Class.extend({
 	
 	init: function() {
 		this.accounts = [];
-		this.addressBook = [];
 		this.messages = [];
 		this.proxy = COMMUNICATION_PROXY_NONE;
 		
@@ -12,6 +11,16 @@ var Email = Class.extend({
 			.addClass('incommunicado')
 			.appendTo($("body"));
 		this.controlPane = controlPane;
+		
+		var header = $('<div />')
+			.addClass('header')
+			.appendTo(controlPane);
+		var logo = $('<div />')
+			.addClass("logo")
+			.appendTo(header);
+		var title = $('<h1 />')
+			.text(localization[LOCALE].gui.email.EMAIL)
+			.appendTo(header)
 		
 		var tabs = $('<ul />')
 			.attr('id','email-tabs')
@@ -46,20 +55,11 @@ var Email = Class.extend({
 			.text(localization[LOCALE].gui.email.tabs.COMPOSE)
 			.appendTo(tabCompose);
 		
-		var tabAddresses = $('<li />')
-			.attr('id', 'email-tab-addresses')
-			.addClass('tab')
-			.appendTo(tabs);
-		var tabAddressesLink = $('<a />')
-			.attr('href', '#email-address-list')
-			.text(localization[LOCALE].gui.email.tabs.ADDRESSES)
-			.appendTo(tabAddresses);
-		
-		var tabAddresses = $('<li />')
+		var tabSettings = $('<li />')
 			.attr('id', 'email-tab-settings')
 			.addClass('tab')
 			.appendTo(tabs);
-		var tabAddressesLink = $('<a />')
+		var tabSettingsLink = $('<a />')
 			.attr('href', '#email-settings')
 			.text(localization[LOCALE].gui.email.tabs.SETTINGS)
 			.appendTo(tabAddresses);
@@ -306,13 +306,6 @@ var Email = Class.extend({
 		this.inputSubmit = sendPaneInputItem_submit;
 		
 		
-		// Address book
-		var addressList = $('<ul />')
-			.attr('id','email-address-list')
-			.appendTo(controlPane);
-		this.addressList = addressList;
-				
-		
 		// Settings
 		var settingsPane = $('<div />')
 			.attr('id','email-settings')
@@ -375,13 +368,6 @@ var Email = Class.extend({
 		var account = new EmailAccount();
 		account.address = data.address;
 		account.player = STORYTELLER.getPlayerById(data.playerId);
-		
-		
-		this.addressBook.push(account);
-		var output = $('<div />')
-			.appendTo(this.addressList)
-		var viewport = new Viewport(output, VIEWPORT_EMAIL_ADDRESSLIST);
-		account.render(viewport);
 		
 		if(account.player !== null && account.player.id == COMMUNICATION.playerId) {
 			this.accounts.push(account);

@@ -80,6 +80,7 @@ if(typeof(window) != "undefined") {
 			BCC: "Bcc",
 			CC: "Cc",
 			CREATE: "Create Account",
+			EMAIL: "TWmail",
 			FROM: "From",
 			REMOVE: "Remove",
 			RUMOR: "Rumor",
@@ -89,6 +90,7 @@ if(typeof(window) != "undefined") {
 			TOR: "Use Tor"
 		},
 		irc: {
+			IRC: "twIRC",
 			SEND: "Send",
 		},
 		player: {
@@ -165,7 +167,8 @@ if(typeof(window) != "undefined") {
 		},
 		tor: {
 			ACTIVATE: "Activate Tor",
-			DEACTIVATE: "Deactivate Tor"
+			DEACTIVATE: "Deactivate Tor",
+			TOR: "Tor"
 		}
 	};
 		
