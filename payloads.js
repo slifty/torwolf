@@ -6,6 +6,41 @@ if(typeof(window) != "undefined") {
 	locales = require('./locales/default.js');
 }
 
+// Generic Payloads
+exports.ErrorPayload = function(content) {
+	this.content = content;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_GENERAL_PAYLOAD_ERROR,
+			data: {
+				content: this.content
+			}
+		}
+	};
+};
+
+exports.ActivatePayload = function(content) {
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_GENERAL_PAYLOAD_ACTIVATE,
+			data: {
+			}
+		}
+	};
+};
+
+exports.DeactivatePayload = function(content) {
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_GENERAL_PAYLOAD_DEACTIVATE,
+			data: {
+			}
+		}
+	};
+};
+
+
+// Module Payloads
 exports.EmailRegisterInPayload = function(account) {
 	this.account = account;
 	this.getPayload = function() {
@@ -75,18 +110,6 @@ exports.EmailSendOutPayload = function(message) {
 	};
 };
 
-
-exports.ErrorPayload = function(content) {
-	this.content = content;
-	this.getPayload = function() {
-		return {
-			type: content.type?content.type:constants.COMMUNICATION_GENERAL_PAYLOAD_ERROR,
-			data: {
-				content: this.content
-			}
-		}
-	};
-};
 
 exports.IrcConnectOutPayload = function(message) {
 	this.message = message;
