@@ -38,6 +38,60 @@ function handleEnd(data, interaction) {
 		communication.getSocketsByGameId(game.id));
 }
 
+function handleHeartbeat(data, interaction) {
+	var socket = interaction.socket;
+	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
+		return error(locales[socket.locale].errors.storyteller.HEARTBEAT_SYSTEM, socket);
+	
+	var count = data.count;
+	var game = communication.getGameById(data.gameId);
+	
+	var heartbeatOut = new payloads.StorytellerHeartbeatOutPayload(count);
+	exports.sendPayload(
+		heartbeatOut.getPayload(),
+		communication.getSocketsByGameId(game.id));
+	
+	count += constants.TICK_HEARTBEAT;
+	
+	// Time for the next tick?
+	if(count >= game.tickLength) {
+		return setTimeout(function() {
+			var tickIn = new payloads.StorytellerTickInPayload(game);
+			tickIn.count = count;
+			communication.routeMessage(
+				constants.COMMUNICATION_TARGET_STORYTELLER,
+				tickIn.getPayload(),
+				constants.COMMUNICATION_SOCKET_SERVER);
+		}, constants.TICK_HEARTBEAT);
+		return tick(game);
+	}
+	
+	// Almost time for the next tick?
+	var remainingTime = game.tickLength - count;
+	if(remainingTime <= constants.TICK_WARNING
+	&& remainingTime > constants.TICK_WARNING - constants.TICK_HEARTBEAT) {
+		var announcementOut = new payloads.StorytellerAnnouncementOutPayload(
+			util.format(locales[game.locale].messages.storyteller.WARNING,
+				Math.floor(remainingTime / 1000),
+				(Math.floor(remainingTime / 1000) == 1)?locales[game.locale].messages.storyteller.WARNING_UNIT_SINGULAR:locales[game.locale].messages.storyteller.WARNING_UNIT_PLURAL
+			)
+		);
+		exports.sendPayload(
+			announcementOut.getPayload(),
+			communication.getSocketsByGameId(game.id));
+	}
+	
+	// Start the next heartbeat
+	return setTimeout(function() {
+		var heartbeatIn = new payloads.StorytellerHeartbeatInPayload(game);
+		heartbeatIn.count = count;
+		communication.routeMessage(
+			constants.COMMUNICATION_TARGET_STORYTELLER,
+			heartbeatIn.getPayload(),
+			constants.COMMUNICATION_SOCKET_SERVER);
+	}, constants.TICK_HEARTBEAT);
+}
+
 function handleInvestigation(data, interaction) {
 	var socket = interaction.socket;
 	var player = communication.getPlayerBySocketId(socket.id);
@@ -102,139 +156,6 @@ function handleJoin(data, interaction) {
 			startOut.getPayload(),
 			constants.COMMUNICATION_SOCKET_SERVER);
 	}
-}
-
-function handleStart(data, interaction) {
-	var socket = interaction.socket;
-	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
-		return error(locales[socket.locale].errors.storyteller.START_SYSTEM, socket);
-	
-	var game = communication.getGameById(data.gameId);
-	var players = game.players;
-	
-	// Assign information to the players
-	for(var x in players) {
-		var player = players[x];
-		
-		// Assign a random role
-		player.role = game.popRole();
-		
-		// Assign allegiance based on the role
-		switch(player.role) {
-			case constants.PLAYER_ROLE_ACTIVIST:
-			case constants.PLAYER_ROLE_CITIZEN_ACTIVIST:
-				player.allegiance = constants.PLAYER_ALLEGIANCE_REBELLION;
-				break;
-			case constants.PLAYER_ROLE_CITIZEN:
-			case constants.PLAYER_ROLE_EDITOR:
-			case constants.PLAYER_ROLE_JOURNALIST:
-				player.allegiance = constants.PLAYER_ALLEGIANCE_NEUTRAL;
-				break;
-			case constants.PLAYER_ROLE_SPY:
-			case constants.PLAYER_ROLE_CITIZEN_SPY:
-				player.allegiance = constants.PLAYER_ALLEGIANCE_GOVERNMENT;
-				break;
-		}
-		
-		// Tell the player his role
-		var roleOut = new payloads.StorytellerRoleOutPayload(player);
-		exports.sendPayload(
-			roleOut.getPayload(),
-			communication.getSocketByPlayerId(player.id));
-		
-		// Tell the player his allegiance
-		var allegianceOut = new payloads.StorytellerAllegianceOutPayload(player);
-		exports.sendPayload(
-			allegianceOut.getPayload(),
-			communication.getSocketByPlayerId(player.id));
-		
-		// Give the player his starting rumors
-		for(var x = 0; x < game.rumorCount; ++x) {
-			var rumor = game.generateRumor();
-			rumor.destinationId = player.id;
-			rumor.publicationStatus = constants.RUMOR_PUBLICATIONSTATUS_UNPUBLISHED;
-			rumor.sourceId = constants.RUMOR_SOURCE_SYSTEM;
-			rumor.truthStatus = (player.role == constants.PLAYER_ROLE_ACTIVIST)?constants.RUMOR_TRUTHSTATUS_TRUE:constants.RUMOR_TRUTHSTATUS_FALSE;
-			game.rumors[rumor.id] = rumor;
-			player.rumors[rumor.id] = rumor;
-			rumors[rumor.id] = rumor;
-			
-			var rumorIn = new payloads.StorytellerRumorInPayload(rumor);
-			rumorIn.destinationId = player.id;
-			rumorIn.sourceId = player.id;
-			rumorIn.truthStatus = rumor.truthStatus;
-			
-			communication.routeMessage(
-				constants.COMMUNICATION_TARGET_STORYTELLER,
-				rumorIn.getPayload(),
-				constants.COMMUNICATION_SOCKET_SERVER);
-		}
-	}
-	
-	// Start the next turn
-	return setTimeout(function() {
-		var heartbeatIn = new payloads.StorytellerHeartbeatInPayload(game);
-		heartbeatIn.count = 0;
-		
-		communication.routeMessage(
-			constants.COMMUNICATION_TARGET_STORYTELLER,
-			heartbeatIn.getPayload(),
-			constants.COMMUNICATION_SOCKET_SERVER);
-	}, constants.TICK_HEARTBEAT);
-}
-
-function handleHeartbeat(data, interaction) {
-	var socket = interaction.socket;
-	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
-		return error(locales[socket.locale].errors.storyteller.HEARTBEAT_SYSTEM, socket);
-	
-	var count = data.count;
-	var game = communication.getGameById(data.gameId);
-	
-	var heartbeatOut = new payloads.StorytellerHeartbeatOutPayload(count);
-	exports.sendPayload(
-		heartbeatOut.getPayload(),
-		communication.getSocketsByGameId(game.id));
-	
-	count += constants.TICK_HEARTBEAT;
-	
-	// Time for the next tick?
-	if(count >= game.tickLength) {
-		return setTimeout(function() {
-			var tickIn = new payloads.StorytellerTickInPayload(game);
-			tickIn.count = count;
-			communication.routeMessage(
-				constants.COMMUNICATION_TARGET_STORYTELLER,
-				tickIn.getPayload(),
-				constants.COMMUNICATION_SOCKET_SERVER);
-		}, constants.TICK_HEARTBEAT);
-		return tick(game);
-	}
-	
-	// Almost time for the next tick?
-	var remainingTime = game.tickLength - count;
-	if(remainingTime <= constants.TICK_WARNING
-	&& remainingTime > constants.TICK_WARNING - constants.TICK_HEARTBEAT) {
-		var announcementOut = new payloads.StorytellerAnnouncementOutPayload(
-			util.format(locales[game.locale].messages.storyteller.WARNING,
-				Math.floor(remainingTime / 1000),
-				(Math.floor(remainingTime / 1000) == 1)?locales[game.locale].messages.storyteller.WARNING_UNIT_SINGULAR:locales[game.locale].messages.storyteller.WARNING_UNIT_PLURAL
-			)
-		);
-		exports.sendPayload(
-			announcementOut.getPayload(),
-			communication.getSocketsByGameId(game.id));
-	}
-	
-	// Start the next heartbeat
-	return setTimeout(function() {
-		var heartbeatIn = new payloads.StorytellerHeartbeatInPayload(game);
-		heartbeatIn.count = count;
-		communication.routeMessage(
-			constants.COMMUNICATION_TARGET_STORYTELLER,
-			heartbeatIn.getPayload(),
-			constants.COMMUNICATION_SOCKET_SERVER);
-	}, constants.TICK_HEARTBEAT);
 }
 
 function handleKill(data, interaction) {
@@ -318,6 +239,85 @@ function handleRumor(data, interaction) {
 	exports.sendPayload(
 		rumorOut.getPayload(),
 		socket);
+}
+
+function handleStart(data, interaction) {
+	var socket = interaction.socket;
+	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
+		return error(locales[socket.locale].errors.storyteller.START_SYSTEM, socket);
+	
+	var game = communication.getGameById(data.gameId);
+	var players = game.players;
+	
+	// Assign information to the players
+	for(var x in players) {
+		var player = players[x];
+		
+		// Assign a random role
+		player.role = game.popRole();
+		
+		// Assign allegiance based on the role
+		switch(player.role) {
+			case constants.PLAYER_ROLE_ACTIVIST:
+			case constants.PLAYER_ROLE_CITIZEN_ACTIVIST:
+				player.allegiance = constants.PLAYER_ALLEGIANCE_REBELLION;
+				break;
+			case constants.PLAYER_ROLE_CITIZEN:
+			case constants.PLAYER_ROLE_EDITOR:
+			case constants.PLAYER_ROLE_JOURNALIST:
+				player.allegiance = constants.PLAYER_ALLEGIANCE_NEUTRAL;
+				break;
+			case constants.PLAYER_ROLE_SPY:
+			case constants.PLAYER_ROLE_CITIZEN_SPY:
+				player.allegiance = constants.PLAYER_ALLEGIANCE_GOVERNMENT;
+				break;
+		}
+		
+		// Tell the player his role
+		var roleOut = new payloads.StorytellerRoleOutPayload(player);
+		exports.sendPayload(
+			roleOut.getPayload(),
+			communication.getSocketByPlayerId(player.id));
+		
+		// Tell the player his allegiance
+		var allegianceOut = new payloads.StorytellerAllegianceOutPayload(player);
+		exports.sendPayload(
+			allegianceOut.getPayload(),
+			communication.getSocketByPlayerId(player.id));
+		
+		// Give the player his starting rumors
+		for(var x = 0; x < game.rumorCount; ++x) {
+			var rumor = game.generateRumor();
+			rumor.destinationId = player.id;
+			rumor.publicationStatus = constants.RUMOR_PUBLICATIONSTATUS_UNPUBLISHED;
+			rumor.sourceId = constants.RUMOR_SOURCE_SYSTEM;
+			rumor.truthStatus = (player.role == constants.PLAYER_ROLE_ACTIVIST)?constants.RUMOR_TRUTHSTATUS_TRUE:constants.RUMOR_TRUTHSTATUS_FALSE;
+			game.rumors[rumor.id] = rumor;
+			player.rumors[rumor.id] = rumor;
+			rumors[rumor.id] = rumor;
+			
+			var rumorIn = new payloads.StorytellerRumorInPayload(rumor);
+			rumorIn.destinationId = player.id;
+			rumorIn.sourceId = player.id;
+			rumorIn.truthStatus = rumor.truthStatus;
+			
+			communication.routeMessage(
+				constants.COMMUNICATION_TARGET_STORYTELLER,
+				rumorIn.getPayload(),
+				constants.COMMUNICATION_SOCKET_SERVER);
+		}
+	}
+	
+	// Start the next turn
+	return setTimeout(function() {
+		var heartbeatIn = new payloads.StorytellerHeartbeatInPayload(game);
+		heartbeatIn.count = 0;
+		
+		communication.routeMessage(
+			constants.COMMUNICATION_TARGET_STORYTELLER,
+			heartbeatIn.getPayload(),
+			constants.COMMUNICATION_SOCKET_SERVER);
+	}, constants.TICK_HEARTBEAT);
 }
 
 function handleTick(data, interaction) {

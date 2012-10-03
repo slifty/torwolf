@@ -162,17 +162,19 @@ var Storyteller = Class.extend({
 		player.allegiance = data.allegiance;
 		this.players[player.id] = player;
 		
-		var output = $('<li />')
-			.appendTo(this.playerList);
-		
-		var viewport = new Viewport(output, VIEWPORT_STORYTELLER_PEERPANE);
-		player.render(viewport);
-		
+		// Set the player pane
 		if(player.id == COMMUNICATION.playerId) {
 			this.you = player;
 			var viewport = new Viewport(this.playerPane, VIEWPORT_STORYTELLER_PLAYERPANE);
 			player.render(viewport);
 		}
+		
+		// Add to the player list
+		var output = $('<li />')
+			.appendTo(this.playerList);
+		var viewport = new Viewport(output, VIEWPORT_STORYTELLER_PEERPANE);
+		player.render(viewport);
+		
 	},
 	
 	killIn: function(playerId) {
