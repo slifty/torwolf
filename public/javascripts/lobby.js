@@ -12,6 +12,16 @@ var Lobby = Class.extend({
 			.appendTo($("body"));
 		this.controlPane = controlPane;
 		
+		var header = $('<div />')
+			.addClass('header')
+			.appendTo(controlPane);
+		var logo = $('<div />')
+			.addClass("logo")
+			.appendTo(header);
+		var title = $('<h1 />')
+			.text(localization[LOCALE].gui.lobby.LOBBY)
+			.appendTo(header)
+		
 		var gameList = $('<ul />')
 			.attr('id','lobby-game-list')
 			.addClass('game-list')

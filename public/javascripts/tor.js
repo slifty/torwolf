@@ -12,6 +12,16 @@ var Tor = Class.extend({
 			.appendTo($("body"));
 		this.controlPane = controlPane;
 		
+		var header = $('<div />')
+			.addClass('header')
+			.appendTo(controlPane);
+		var logo = $('<div />')
+			.addClass("logo")
+			.appendTo(header);
+		var title = $('<h1 />')
+			.text(localization[LOCALE].gui.tor.TOR)
+			.appendTo(header)
+		
 		var messageList = $('<ul />')
 			.attr('id','tor-message-list')
 			.addClass('messages')

@@ -13,6 +13,16 @@ var Newspaper = Class.extend({
 			.appendTo($("body"));
 		this.controlPane = controlPane;
 		
+		var header = $('<div />')
+			.addClass('header')
+			.appendTo(controlPane);
+		var logo = $('<div />')
+			.addClass("logo")
+			.appendTo(header);
+		var title = $('<h1 />')
+			.text(localization[LOCALE].gui.newspaper.NEWSPAPER)
+			.appendTo(header)
+		
 		// Outputs
 		var archivePane = $('<div />')
 			.attr('id','newspaper-archive-pane')

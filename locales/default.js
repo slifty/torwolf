@@ -65,6 +65,8 @@ if(typeof(window) != "undefined") {
 				NAME: "Name:",
 				PASSWORD: "Password"
 			},
+			
+			LOBBY: "Lobby"
 		},
 		email: {
 			tabs: {
@@ -93,9 +95,10 @@ if(typeof(window) != "undefined") {
 			IRC: "twIRC",
 			SEND: "Send",
 		},
+		newspaper: {
+			NEWSPAPER: "TWGazette"
+		},
 		player: {
-			YOU: "You",
-			
 			allegiance: {
 				G: "Government",
 				N: "Neutral",
@@ -131,7 +134,10 @@ if(typeof(window) != "undefined") {
 			status: {
 				A: "Alive",
 				D: "Dead"
-			}
+			},
+			
+			KILL: "Kill",
+			YOU: "You"
 		},
 		rumor: {
 			investigationStatus: {
@@ -164,6 +170,13 @@ if(typeof(window) != "undefined") {
 			},
 			
 			INVESTIGATE: "Investigate"
+		},
+		snooper: {
+			SNOOPER: "Snooper v1.0"
+		},
+		storyteller: {
+			PLAYERS: "Players",
+			RUMORS: "Rumors"
 		},
 		tor: {
 			ACTIVATE: "Activate Tor",

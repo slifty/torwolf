@@ -42,6 +42,16 @@ var Storyteller = Class.extend({
 			.appendTo(controlPane);
 		this.peerPane = peerPane;
 		
+		var header = $('<div />')
+			.addClass('header')
+			.appendTo(peerPane);
+		var logo = $('<div />')
+			.addClass("logo")
+			.appendTo(header);
+		var title = $('<h1 />')
+			.text(localization[LOCALE].gui.storyteller.PLAYERS)
+			.appendTo(header)
+		
 		var playerList = $('<ul />')
 			.attr('id','storyteller-player-list')
 			.addClass('player-list')
@@ -53,6 +63,16 @@ var Storyteller = Class.extend({
 			.addClass('output-pane')
 			.appendTo(controlPane);
 		this.rumorPane = rumorPane;
+		
+		var header = $('<div />')
+			.addClass('header')
+			.appendTo(rumorPane);
+		var logo = $('<div />')
+			.addClass("logo")
+			.appendTo(header);
+		var title = $('<h1 />')
+			.text(localization[LOCALE].gui.storyteller.RUMORS)
+			.appendTo(header)
 		
 		var rumorList = $('<ul />')
 			.attr('id','storyteller-rumor-list')
