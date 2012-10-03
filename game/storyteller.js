@@ -24,10 +24,12 @@ function error(message, socket) {
 // Handlers
 function handleEnd(data, interaction) {
 	var socket = interaction.socket;
+	
 	if(socket != constants.COMMUNICATION_SOCKET_SERVER)
 		return error(locales[socket.locale].errors.storyteller.GAMEOVER_SYSTEM, socket);
 	
 	var game = communication.getGameById(data.gameId);
+	game.isOver = true;
 	
 	// TODO - Reveal everyone's identity
 	
@@ -45,6 +47,10 @@ function handleHeartbeat(data, interaction) {
 	
 	var count = data.count;
 	var game = communication.getGameById(data.gameId);
+	
+	// Did the game end?
+	if(game.isOver)
+		return;
 	
 	var heartbeatOut = new payloads.StorytellerHeartbeatOutPayload(count);
 	exports.sendPayload(
@@ -189,6 +195,7 @@ function handleKill(data, interaction) {
 			constants.COMMUNICATION_TARGET_STORYTELLER,
 			endIn.getPayload(),
 			constants.COMMUNICATION_SOCKET_SERVER);
+		
 	} else if(player.role == constants.PLAYER_ROLE_JOURNALIST) {
 		var announcementOut = new payloads.StorytellerAnnouncementOutPayload(locales[game.locale].messages.storyteller.VICTORY_GOVERNMENT_JOURNALIST);
 		exports.sendPayload(

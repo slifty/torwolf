@@ -428,6 +428,32 @@ exports.StorytellerAnnouncementOutPayload = function(text) {
 	}
 }
 
+
+exports.StorytellerEndInPayload = function(game) {
+	this.game = game;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_END,
+			data: {
+				gameId: this.game.id
+			}
+		}
+	}
+}
+
+exports.StorytellerEndOutPayload = function(game) {
+	this.game = game;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_END,
+			data: {
+				gameId: this.game.id,
+			}
+		}
+	}
+}
+
+
 exports.StorytellerHeartbeatInPayload = function(game) {
 	this.game = game;
 	this.count = 0;

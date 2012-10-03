@@ -23,6 +23,7 @@ exports.EmailMessage = function() {
 exports.Game = function() {
 	this.activeInvestigations = [];
 	this.id = uuid.v4();
+	this.isOver = false;
 	this.isPrivate = false;
 	this.locale = constants.LOCALE_DEFAULT;
 	this.messages = [];
@@ -39,7 +40,9 @@ exports.Game = function() {
 		constants.PLAYER_ROLE_JOURNALIST,
 		constants.PLAYER_ROLE_SPY];*/
 	this.roles = [
-		constants.PLAYER_ROLE_SPY
+		constants.PLAYER_ROLE_SPY,
+		constants.PLAYER_ROLE_JOURNALIST,
+		constants.PLAYER_ROLE_ACTIVIST
 	];
 	this.round = 0;
 	this.rumors = {};
