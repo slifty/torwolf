@@ -62,7 +62,7 @@ var Email = Class.extend({
 		var tabSettingsLink = $('<a />')
 			.attr('href', '#email-settings')
 			.text(localization[LOCALE].gui.email.tabs.SETTINGS)
-			.appendTo(tabAddresses);
+			.appendTo(tabSettings);
 		
 		
 		// Account creation
