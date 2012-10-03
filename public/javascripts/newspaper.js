@@ -9,7 +9,7 @@ var Newspaper = Class.extend({
 		var controlPane = $('<div />')
 			.attr('id','newspaper-control-pane')
 			.addClass('control-pane')
-			.addClass('incommunicado')
+			.hide()
 			.appendTo($("body"));
 		this.controlPane = controlPane;
 		
@@ -39,6 +39,15 @@ var Newspaper = Class.extend({
 	
 	receivePayload: function(payload) {
 		switch(payload.type) {
+			case COMMUNICATION_GENERAL_PAYLOAD_ACTIVATE:
+				this.activateOut(payload.data);
+				break;
+			case COMMUNICATION_GENERAL_PAYLOAD_DEACTIVATE:
+				this.deactivateOut(payload.data);
+				break;
+			case COMMUNICATION_GENERAL_PAYLOAD_ERROR:
+				this.errorOut(payload.data);
+				break;
 			case COMMUNICATION_NEWSPAPER_PAYLOAD_PUBLISH:
 				this.publishOut(payload.data);
 				break;
@@ -47,6 +56,17 @@ var Newspaper = Class.extend({
 	
 	sendPayload: function(payload) {
 		COMMUNICATION.sendMessage(COMMUNICATION_TARGET_NEWSPAPER, payload);
+	},
+		
+	activateOut: function(data) {
+		this.controlPane.show();
+	},
+	
+	deactivateOut: function(data) {
+		this.controlPane.hide();
+	},
+	
+	errorOut: function(data) {
 	},
 	
 	

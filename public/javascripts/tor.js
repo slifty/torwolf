@@ -8,7 +8,7 @@ var Tor = Class.extend({
 		var controlPane = $('<div />')
 			.attr('id','tor-control-pane')
 			.addClass('control-pane')
-			.addClass('incommunicado')
+			.hide()
 			.appendTo($("body"));
 		this.controlPane = controlPane;
 		
@@ -81,8 +81,29 @@ var Tor = Class.extend({
 			case COMMUNICATION_TOR_PAYLOAD_ROUTE:
 				this.routeOut(payload.data);
 				break;
+			case COMMUNICATION_GENERAL_PAYLOAD_ACTIVATE:
+				this.activateOut(payload.data);
+				break;
+			case COMMUNICATION_GENERAL_PAYLOAD_DEACTIVATE:
+				this.deactivateOut(payload.data);
+				break;
+			case COMMUNICATION_GENERAL_PAYLOAD_ERROR:
+				this.errorOut(payload.data);
+				break;
 		}
 	},
+	
+	activateOut: function(data) {
+		this.controlPane.show();
+	},
+	
+	deactivateOut: function(data) {
+		this.controlPane.hide();
+	},
+	
+	errorOut: function(data) {
+	},
+	
 	
 	bridgeOut: function(data) {
 	},

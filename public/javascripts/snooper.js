@@ -6,7 +6,7 @@ var Snooper = Class.extend({
 		var controlPane = $('<div />')
 			.attr('id','snooper-control-pane')
 			.addClass('control-pane')
-			.addClass('incommunicado')
+			.hide()
 			.appendTo($("body"));
 		this.controlPane = controlPane;
 		
@@ -32,6 +32,15 @@ var Snooper = Class.extend({
 	},
 	receivePayload: function(payload) {
 		switch(payload.type) {
+			case COMMUNICATION_GENERAL_PAYLOAD_ACTIVATE:
+				this.activateOut(payload.data);
+				break;
+			case COMMUNICATION_GENERAL_PAYLOAD_DEACTIVATE:
+				this.deactivateOut(payload.data);
+				break;
+			case COMMUNICATION_GENERAL_PAYLOAD_ERROR:
+				this.errorOut(payload.data);
+				break;
 			case COMMUNICATION_SNOOPER_PAYLOAD_INTERCEPT:
 				this.interceptOut(payload.data);
 				break;
@@ -46,6 +55,19 @@ var Snooper = Class.extend({
 				break;
 		}
 	},
+	
+	
+	activateOut: function(data) {
+		this.controlPane.show();
+	},
+
+	deactivateOut: function(data) {
+		this.controlPane.hide();
+	},
+
+	errorOut: function(data) {
+	},
+	
 	
 	interceptOut: function(data) {
 		var interaction = new SnooperInteraction();

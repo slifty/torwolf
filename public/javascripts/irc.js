@@ -8,7 +8,7 @@ var Irc = Class.extend({
 		var controlPane = $('<div />')
 			.attr('id','irc-control-pane')
 			.addClass('control-pane')
-			.addClass('incommunicado')
+			.hide()
 			.appendTo($("body"));
 		this.controlPane = controlPane;
 		
@@ -77,11 +77,17 @@ var Irc = Class.extend({
 	},
 	receivePayload: function(payload) {
 		switch(payload.type) {
+			case COMMUNICATION_GENERAL_PAYLOAD_ACTIVATE:
+				this.activateOut(payload.data);
+				break;
+			case COMMUNICATION_GENERAL_PAYLOAD_DEACTIVATE:
+				this.deactivateOut(payload.data);
+				break;
+			case COMMUNICATION_GENERAL_PAYLOAD_ERROR:
+				this.errorOut(payload.data);
+				break;
 			case COMMUNICATION_IRC_PAYLOAD_CONNECT: 
 				this.messageOut(payload.data);
-				break;
-			case COMMUNICATION_IRC_PAYLOAD_ERROR:
-				this.errorOut(payload.data);
 				break;
 			case COMMUNICATION_IRC_PAYLOAD_MESSAGE:
 				this.messageOut(payload.data);
@@ -93,13 +99,22 @@ var Irc = Class.extend({
 				this.leaveOut(payload.data);
 				break;
 			case COMMUNICATION_IRC_PAYLOAD_NICK: 
-				this.switchNickOut(payload.data);
+				this.nickOut(payload.data);
 				break;
 			default: 
 				break; 
 		}
 	},
 	
+	
+	activateOut: function(data) {
+		this.controlPane.show();
+	},
+
+	deactivateOut: function(data) {
+		this.controlPane.hide();
+	},
+
 	errorOut: function(data) {
 		var errorMessage = new IrcError();
 		errorMessage.text = data.content.text;
@@ -114,6 +129,7 @@ var Irc = Class.extend({
 		
 		this.messageList.scrollTop(this.messageList.height());
 	},
+	
 	
 	messageIn: function(text) {
 		var messageIn = new IrcMessageInPayload(text);
@@ -138,14 +154,7 @@ var Irc = Class.extend({
 		this.messageList.scrollTop(this.messageList.height());
 	},
 	
-	/**
-		Input: data - The data of the message sent over the socket
-		
-		Removes the current user list viewport, removes the old nick from the user list, 
-		adds the new nick to the user list, and refreshes the viewport.
-	*/
-	
-	switchNickOut: function(data) {
+	nickOut: function(data) {
 		var user = window.IRC.getUserById(data.userId);
 		user.remove(); 
 		

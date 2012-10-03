@@ -8,7 +8,7 @@ var Email = Class.extend({
 		var controlPane = $('<div />')
 			.attr('id','email-control-pane')
 			.addClass('control-pane')
-			.addClass('incommunicado')
+			.hide()
 			.appendTo($("body"));
 		this.controlPane = controlPane;
 		
@@ -349,6 +349,7 @@ var Email = Class.extend({
 			COMMUNICATION.sendMessage(COMMUNICATION_TARGET_EMAIL, payload);
 		}
 	},
+
 	receivePayload: function(payload) {
 		switch(payload.type) {
 			case COMMUNICATION_EMAIL_PAYLOAD_REGISTER:
@@ -357,13 +358,36 @@ var Email = Class.extend({
 			case COMMUNICATION_EMAIL_PAYLOAD_SEND:
 				this.sendOut(payload.data);
 				break;
+			case COMMUNICATION_GENERAL_PAYLOAD_ACTIVATE:
+				this.activateOut(payload.data);
+				break;
+			case COMMUNICATION_GENERAL_PAYLOAD_DEACTIVATE:
+				this.deactivateOut(payload.data);
+				break;
+			case COMMUNICATION_GENERAL_PAYLOAD_ERROR:
+				this.errorOut(payload.data);
+				break;
 		}
 	},
+
 	
+	activateOut: function(data) {
+		this.controlPane.show();
+	},
+
+	deactivateOut: function(data) {
+		this.controlPane.hide();
+	},
+
+	errorOut: function(data) {
+	},
+	
+
 	registerIn: function(account) {
 		var registerIn = new EmailRegisterInPayload(account);
 		this.sendPayload(registerIn.getPayload());
 	},
+
 	registerOut: function(data) {
 		var account = new EmailAccount();
 		account.address = data.address;
@@ -384,10 +408,12 @@ var Email = Class.extend({
 			
 		}
 	},
+
 	sendIn: function(message) {
 		var sendIn = new EmailSendInPayload(message);
 		this.sendPayload(sendIn.getPayload());
 	},
+
 	sendOut: function(data) {
 		var message = new EmailMessage();
 		message.bccAddresses = data.bccAddresses;
@@ -406,6 +432,7 @@ var Email = Class.extend({
 		var viewport = new Viewport(output, VIEWPORT_EMAIL_MESSAGELIST);
 		message.render(viewport);
 	}
+
 });
 
 $(function() {

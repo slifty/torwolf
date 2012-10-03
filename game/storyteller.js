@@ -1,7 +1,10 @@
 var util = require('util');
 
 var communication = require('./communication'),
+	email = require('./email'),
 	irc = require('./irc'),
+	snooper = require('./snooper'),
+	tor = require('./tor'),
 	newspaper = require('./newspaper');
 
 var classes = require('./classes'),
@@ -312,6 +315,27 @@ function handleStart(data, interaction) {
 				constants.COMMUNICATION_TARGET_STORYTELLER,
 				rumorIn.getPayload(),
 				constants.COMMUNICATION_SOCKET_SERVER);
+		}
+		
+		// Activate the appropriate interfaces
+		var activateOut = new payloads.ActivatePayload();
+		email.sendPayload(
+			activateOut.getPayload(),
+			communication.getSocketByPlayerId(player.id));
+		irc.sendPayload(
+			activateOut.getPayload(),
+			communication.getSocketByPlayerId(player.id));
+		newspaper.sendPayload(
+			activateOut.getPayload(),
+			communication.getSocketByPlayerId(player.id));
+		tor.sendPayload(
+			activateOut.getPayload(),
+			communication.getSocketByPlayerId(player.id));
+		
+		if(player.role == constants.PLAYER_ROLE_SPY) {
+			snooper.sendPayload(
+				activateOut.getPayload(),
+				communication.getSocketByPlayerId(player.id));
 		}
 	}
 	
