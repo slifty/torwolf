@@ -500,6 +500,30 @@ exports.StorytellerJoinOutPayload = function(player) {
 	}
 }
 
+exports.StorytellerKillInPayload = function(player) {
+	this.player = player;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_KILL,
+			data: {
+				playerId: this.player.id
+			}
+		}
+	}
+}
+
+exports.StorytellerKillOutPayload = function(player) {
+	this.player = player;
+	this.getPayload = function() {
+		return {
+			type: constants.COMMUNICATION_STORYTELLER_PAYLOAD_KILL,
+			data: {
+				playerId: this.player.id,
+			}
+		}
+	}
+}
+
 exports.StorytellerRoleInPayload = function() {
 }
 

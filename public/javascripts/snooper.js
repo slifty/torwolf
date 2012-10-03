@@ -10,6 +10,16 @@ var Snooper = Class.extend({
 			.appendTo($("body"));
 		this.controlPane = controlPane;
 		
+		var header = $('<div />')
+			.addClass('header')
+			.appendTo(controlPane);
+		var logo = $('<div />')
+			.addClass("logo")
+			.appendTo(header);
+		var title = $('<h1 />')
+			.text(localization[LOCALE].gui.snooper.SNOOPER)
+			.appendTo(header)
+		
 		var messageList = $('<ul />')
 			.attr('id','snooper-message-list')
 			.addClass('messages')

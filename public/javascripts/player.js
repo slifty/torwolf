@@ -58,7 +58,19 @@ var Player = Visible.extend({
 						.text(this.id)
 						.appendTo(output);
 						
+					if(STORYTELLER.you.role == PLAYER_ROLE_SPY) {
+						var killButton = $('<div />')
+							.addClass('killButton')
+							.addClass('button')
+							.text(localization[LOCALE].gui.player.KILL)
+							.bind('click',{context: this}, function(ev) {
+								var self = ev.data.context;
+								STORYTELLER.killIn(self.id);
+							})
+							.appendTo(output);
+					}
 					break;
+
 					
 				case VIEWPORT_STORYTELLER_PLAYERPANE:
 					var playerAvatar = $('<div />')

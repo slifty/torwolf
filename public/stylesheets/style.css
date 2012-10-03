@@ -15,12 +15,11 @@ a {
 
 /* Generic Control Pane */
 .control-pane {
+	float: left;
 	background: #fff;
 	border: 1px solid #000;
 	padding: 10px;
 }
-
-.output-pane {}
 
 .button {
 	border: 1px solid #963;
@@ -75,10 +74,8 @@ a {
 
 /* Email */
 #email-control-pane {
-	position: absolute;
-	top: 150px;
-	right: 885px;
 	width: 500px;
+	height: 500px;
 }
 
 #email-account-list {}
@@ -201,9 +198,6 @@ a {
 
 /* Irc */
 #irc-control-pane {
-	position: absolute;
-	top: 50px;
-	right: 300px;
 	width: 535px;
 }
 
@@ -294,12 +288,20 @@ a {
 	float: right;
 }
 
+/* Newspaper */
+#newspaper-control-pane {
+	width: 500px;
+	height: 300px;
+}
+
+/* Snooper */
+#snooper-control-pane {
+	width: 500px;
+	height: 200px;
+}
 
 /* Storyteller */
 #storyteller-control-pane {
-	position: absolute;
-	right: 50px;
-	top: 50px;
 	width: 200px;
 }
 
@@ -429,11 +431,6 @@ a {
 
 
 /* Tor */
-
 #tor-control-pane {
-	position: absolute;
-	top: 50px;
-	height: 75px;
-	right: 885px;
-	width: 500px;
+	width: 200px;
 }

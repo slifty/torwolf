@@ -39,6 +39,8 @@ if(typeof(window) != "undefined") {
 			INVESTIGATE_NOPLAYER: "You aren't a registered player on the server.",
 			INVESTIGATE_NORUMOR: "That rumor doesn't exist in this game.",
 			INVESTIGATE_OLDRUMOR: "That rumor has already been investigated.",
+			KILL_ILLEGAL: "You aren't allowed to kill people.",
+			KILL_NOBODY: "The person you are trying to kill does not exist.",
 			RUMOR_INVALID_RUMOR: "The specified rumor does not exist.",
 			RUMOR_INVALID_SOURCE: "The specified player does not know that rumor.",
 			RUMOR_SYSTEM: "Only the system can decide when rumors are spread.",
@@ -82,7 +84,7 @@ if(typeof(window) != "undefined") {
 			BCC: "Bcc",
 			CC: "Cc",
 			CREATE: "Create Account",
-			EMAIL: "TWmail",
+			EMAIL: "Email",
 			FROM: "From",
 			REMOVE: "Remove",
 			RUMOR: "Rumor",
@@ -92,11 +94,11 @@ if(typeof(window) != "undefined") {
 			TOR: "Use Tor"
 		},
 		irc: {
-			IRC: "twIRC",
+			IRC: "IRC",
 			SEND: "Send",
 		},
 		newspaper: {
-			NEWSPAPER: "TWGazette"
+			NEWSPAPER: "The Wolf Gazette"
 		},
 		player: {
 			allegiance: {
@@ -176,7 +178,8 @@ if(typeof(window) != "undefined") {
 		},
 		storyteller: {
 			PLAYERS: "Players",
-			RUMORS: "Rumors"
+			RUMORS: "Rumors",
+			STORYTELLER: "Storyteller"
 		},
 		tor: {
 			ACTIVATE: "Activate Tor",

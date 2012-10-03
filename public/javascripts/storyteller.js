@@ -48,7 +48,7 @@ var Storyteller = Class.extend({
 		var logo = $('<div />')
 			.addClass("logo")
 			.appendTo(header);
-		var title = $('<h1 />')
+		var title = $('<h2 />')
 			.text(localization[LOCALE].gui.storyteller.PLAYERS)
 			.appendTo(header)
 		
@@ -70,7 +70,7 @@ var Storyteller = Class.extend({
 		var logo = $('<div />')
 			.addClass("logo")
 			.appendTo(header);
-		var title = $('<h1 />')
+		var title = $('<h2 />')
 			.text(localization[LOCALE].gui.storyteller.RUMORS)
 			.appendTo(header)
 		
@@ -173,6 +173,13 @@ var Storyteller = Class.extend({
 			var viewport = new Viewport(this.playerPane, VIEWPORT_STORYTELLER_PLAYERPANE);
 			player.render(viewport);
 		}
+	},
+	
+	killIn: function(playerId) {
+		var player = this.getPlayerById(playerId);
+		
+		var killIn = new StorytellerKillInPayload(player);
+		this.sendPayload(killIn.getPayload());
 	},
 	
 	roleOut: function(data) {
