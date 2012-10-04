@@ -146,6 +146,10 @@ exports.Rumor = function() {
 	}
 }
 
+exports.State = function() {
+	
+}
+
 exports.Interaction = function() {
 	this.id = uuid.v4();
 	this.isSsl = false;

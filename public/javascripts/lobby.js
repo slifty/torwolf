@@ -8,7 +8,7 @@ var Lobby = Class.extend({
 		var controlPane = $('<div />')
 			.attr('id','lobby-control-pane')
 			.addClass('control-pane')
-			.addClass('lobby')
+			.hide()
 			.appendTo($("body"));
 		this.controlPane = controlPane;
 		
@@ -62,7 +62,6 @@ var Lobby = Class.extend({
 			})
 			.appendTo(lobbyToolPane);
 		this.toolJoin = toolJoin;
-		
 		
 		
 		// Creation pane
@@ -144,6 +143,15 @@ var Lobby = Class.extend({
 
 	receivePayload: function(payload) {
 		switch(payload.type) {
+			case COMMUNICATION_GENERAL_PAYLOAD_ACTIVATE:
+				this.activateOut(payload.data);
+				break;
+			case COMMUNICATION_GENERAL_PAYLOAD_DEACTIVATE:
+				this.deactivateOut(payload.data);
+				break;
+			case COMMUNICATION_GENERAL_PAYLOAD_ERROR:
+				this.errorOut(payload.data);
+				break;
 			case COMMUNICATION_LOBBY_PAYLOAD_CONNECT:
 				this.connectOut(payload.data);
 				break;
@@ -161,6 +169,18 @@ var Lobby = Class.extend({
 	},
 	
 	
+	activateOut: function(data) {
+		this.controlPane.show();
+	},
+
+	deactivateOut: function(data) {
+		this.controlPane.hide();
+	},
+
+	errorOut: function(data) {
+	}
+	
+	
 	connectIn: function(name) {
 		var connect = new LobbyConnectInPayload(name);
 		this.sendPayload(connect.getPayload());
@@ -169,8 +189,6 @@ var Lobby = Class.extend({
 	connectOut: function(data) {
 		COMMUNICATION.playerId = data.playerId;
 		COMMUNICATION.playerName = data.name;
-		$(".lobby").show();
-		$(".incommunicado").hide();
 	},
 	
 	createIn: function(game) {

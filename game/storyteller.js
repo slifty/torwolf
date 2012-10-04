@@ -460,7 +460,6 @@ exports.getRumorById = function(rumorId) {
 	return (rumorId in rumors)?rumors[rumorId]:null;
 }
 
-
 exports.receivePayload = function(payload, interaction) {
 	switch(payload.type) {
 		case constants.COMMUNICATION_STORYTELLER_PAYLOAD_ALLEGIANCE:
