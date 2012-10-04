@@ -38,26 +38,26 @@ exports.receiveMessage = function(message, socket) {
 	
 	// Route the message
 	switch(message.target) {
-		case constants.COMMUNICATION_TARGET_IRC:
-			irc.receivePayload(message.payload, interaction);
-			break;
 		case constants.COMMUNICATION_TARGET_EMAIL:
 			email.receivePayload(message.payload, interaction);
 			break;
-		case constants.COMMUNICATION_TARGET_STORYTELLER:
-			storyteller.receivePayload(message.payload, interaction);
+		case constants.COMMUNICATION_TARGET_IRC:
+			irc.receivePayload(message.payload, interaction);
 			break;
 		case constants.COMMUNICATION_TARGET_LOBBY:
 			lobby.receivePayload(message.payload, interaction);
 			break;
+		case constants.COMMUNICATION_TARGET_NEWSPAPER:
+			newspaper.receivePayload(message.payload, interaction);
+			break;
 		case constants.COMMUNICATION_TARGET_SNOOPER:
 			snooper.receivePayload(message.payload, interaction);
 			break;
+		case constants.COMMUNICATION_TARGET_STORYTELLER:
+			storyteller.receivePayload(message.payload, interaction);
+			break;
 		case constants.COMMUNICATION_TARGET_TOR:
 			tor.receivePayload(message.payload, interaction);
-			break;
-		case constants.COMMUNICATION_TARGET_NEWSPAPER:
-			newspaper.receivePayload(message.payload, interaction);
 			break;
 	}
 }
