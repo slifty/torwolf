@@ -122,17 +122,6 @@ function processAction(action, interaction) {
 		interaction.id);
 }
 
-/*
-
-Input: 	data - The msg to be sent
-		socket - The socket that originated the msg.
-		target - The target that the msg is to be sent to, either a channel or a user.
-
-Handle a msg. The target can be either a user, in the case of a /msg, or a channel, in the 
-case of generic typing to a channel.
-
-*/
-
 function processMsg(msg, interaction, target) {
 	//TODO: remove the hard coding of the target
 	var socket = interaction.socket;
@@ -192,14 +181,6 @@ function processNick(newNick, interaction) {
 		error(nickExistsMessage, communication.getSocketByPlayerId(user.player.id));		
 	}
 }
-
-/*
-
-Input: socket - The socket to send the connection messages to
-
-Connects to an IRC server and displays the MOTD. Right now, it just dummies it and sends messages. 
-
-*/
 
 function connectToIrcServer(socket) {
 	var player = communication.getPlayerBySocketId(socket.id);
