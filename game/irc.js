@@ -13,7 +13,6 @@ var users = {};
 
 // Functions
 function error(message, socket) {
-	message.type = constants.COMMUNICATION_IRC_PAYLOAD_ERROR;
 	var error = new payloads.ErrorPayload(message);
 	return exports.sendPayload(
 		error.getPayload(),
@@ -176,8 +175,7 @@ function processNick(newNick, interaction) {
 	}
 	else {
 		//send an error message to the client
-		var nickExistsMessage = new classes.IrcError();
-		nickExistsMessage.text = util.format(locales[game.locale].errors.irc.NICKEXISTS, newNick);
+		var nickExistsMessage = util.format(locales[game.locale].errors.irc.NICKEXISTS, newNick);
 		error(nickExistsMessage, communication.getSocketByPlayerId(user.player.id));		
 	}
 }

@@ -87,11 +87,6 @@ exports.Game = function() {
 
 }
 
-exports.IrcError = function () {
-	this.id = uuid.v4();
-	this.text = "";
-}
-
 exports.IrcUser = function() {
 	this.id = uuid.v4();
 	this.nick = "";
