@@ -8,7 +8,6 @@ var Irc = Class.extend({
 		var controlPane = $('<div />')
 			.attr('id','irc-control-pane')
 			.addClass('control-pane')
-			.hide()
 			.appendTo($("body"));
 		this.controlPane = controlPane;
 		
