@@ -8,7 +8,6 @@ var Irc = Class.extend({
 		var controlPane = $('<div />')
 			.attr('id','irc-control-pane')
 			.addClass('control-pane')
-			.hide()
 			.appendTo($("body"));
 		this.controlPane = controlPane;
 		
@@ -117,7 +116,7 @@ var Irc = Class.extend({
 
 	errorOut: function(data) {
 		var errorMessage = new IrcError();
-		errorMessage.text = data.content.text;
+		errorMessage.text = data.content;
 		
 		this.messages.push(errorMessage);
 		
