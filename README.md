@@ -10,27 +10,18 @@ Installing
 
 Setting up the client and backend
 
-1. Install Node.js (http://nodejs.org/)
+1. Install nvm (https://github.com/creationix/nvm)
 
-2. Install MongoDB (http://www.mongodb.org/)
+2. Install node 0.10.38 (nvm install 0.10.38)
 
-3. Using a terminal, navigate to the the same directory as this README)
+3. Install MongoDB (http://www.mongodb.org/)
 
-4. Install the Express module (http://expressjs.com/guide.html)
+4. Navigate to project root and switch to correct version of node (nvm use)
 
-5. Install the Jade module (https://github.com/visionmedia/jade#readme)
+5. Install dependencies (npm install)
 
-6. Install the MongoDB module (http://www.mongodb.org/display/DOCS/node.JS)
-
-7. Install the Mongoose module (http://mongoosejs.com/)
-
-8. Install the SocketIO module (http://socket.io/)
-
-9. Install the node-uuid module (https://github.com/broofa/node-uuid/)
-
-10. Create a local config file
-		cp config.default.js config.js
-		vi config.js
+6. Create a local config file
+		cp config/env/local.js.example config/env/local.js && vi config/env/local.js
 
 
 Starting the Server
@@ -42,7 +33,7 @@ Starting the Server
 
 2. start the node server
 
-    node app.js
+    node server.js
 
 
 Code Conventions
