@@ -1,9 +1,31 @@
 {
-    "name": "application-name"
-  , "version": "0.0.1"
-  , "private": true
-  , "dependencies": {
-      "express": "2.5.10"
-    , "jade": ">= 0.0.1"
+  "name": "cobot-reservations",
+  "version": "1.0.0",
+  "description": "An application to render the room reservations in a cobot instance",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CivicHall/reservations"
+  },
+  "author": "Daniel Schultz <slifty@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CivicHall/reservations/issues"
+  },
+  "homepage": "https://github.com/CivicHall/reservations/",
+  "dependencies": {
+    "body-parser": "^1.13.2",
+    "chalk": "^1.1.0",
+    "cookie-parser": "^1.3.5",
+    "express": "^4.13.1",
+    "express-session": "^1.11.3",
+    "forever": "^0.14.2",
+    "glob": "^5.0.13",
+    "jade": "^1.11.0",
+    "lodash": "^3.10.0",
+    "method-override": "^2.3.3"
   }
 }
