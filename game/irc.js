@@ -7,12 +7,12 @@ var classes = require('./classes'),
 	constants = require('../constants'),
 	locales = require('../locales'),
 	payloads = require('../payloads');
+	ircMessage = require('./irc.message.js');
 
 var users = {};
 
 // Functions
 function error(message, socket) {
-	message.type = constants.COMMUNICATION_IRC_PAYLOAD_ERROR;
 	var error = new payloads.ErrorPayload(message);
 	return exports.sendPayload(
 		error.getPayload(),
@@ -73,11 +73,9 @@ function handleJoin(data, interaction) {
 	connectToIrcServer(socket);
 	
 	// Broadcast the join
-	var message = new classes.IrcMessage();
-	message.text = locales[game.locale].messages.irc.JOINED;
-	message.type = constants.IRC_MESSAGE_TYPE_JOINED;
-	message.user = user;
-	
+	var message = new ircMessage.IrcMessage(locales[game.locale].messages.irc.JOINED,
+										constants.IRC_MESSAGE_TYPE_JOIN,
+										user);
 	var messageOut = new payloads.IrcMessageOutPayload(message);
 	exports.sendPayload(
 		messageOut.getPayload(),
@@ -114,11 +112,7 @@ function processAction(action, interaction) {
 	var player = communication.getPlayerBySocketId(socket.id);
 	var game = communication.getGameById(player.activeGameId);
 	var user = exports.getUserByPlayerId(player.id);
-	var message = new classes.IrcMessage();
-
-	message.text = action;
-	message.type = constants.IRC_MESSAGE_TYPE_ACTION;
-	message.user = user;
+	var message = new ircMessage.IrcMessage(action, constants.IRC_MESSAGE_TYPE_ACTION, user);
 	
 	var messageOut = new payloads.IrcMessageOutPayload(message);
 	exports.sendPayload(
@@ -127,17 +121,6 @@ function processAction(action, interaction) {
 		interaction.id);
 }
 
-/*
-
-Input: 	data - The msg to be sent
-		socket - The socket that originated the msg.
-		target - The target that the msg is to be sent to, either a channel or a user.
-
-Handle a msg. The target can be either a user, in the case of a /msg, or a channel, in the 
-case of generic typing to a channel.
-
-*/
-
 function processMsg(msg, interaction, target) {
 	//TODO: remove the hard coding of the target
 	var socket = interaction.socket;
@@ -145,10 +128,7 @@ function processMsg(msg, interaction, target) {
 	var game = communication.getGameById(player.activeGameId);
 	var user = exports.getUserByPlayerId(player.id);
 	
-	var message = new classes.IrcMessage();
-		message.text = msg;
-		message.type = constants.IRC_MESSAGE_TYPE_MESSAGE;
-		message.user = user;
+	var message = new ircMessage.IrcMessage(msg, constants.IRC_MESSAGE_TYPE_MESSAGE, user);
 		
 	var messageOut = new payloads.IrcMessageOutPayload(message);
 	exports.sendPayload(
@@ -176,11 +156,9 @@ function processNick(newNick, interaction) {
 	if(getUserByNick(newNick) == null) {
 	
 		//announce, in chat, that a nick has been switched
-		var message = new classes.IrcMessage();
-		message.text = util.format(locales[game.locale].messages.irc.SWITCHNICK, 
+		var switchMessage = util.format(locales[game.locale].messages.irc.SWITCHNICK, 
 			users[user.player.id].nick, newNick);
-		message.type = constants.IRC_MESSAGE_TYPE_SYSTEM;
-		message.user = user;
+		var message = new ircMessage.IrcMessage(switchMessage, constants.IRC_MESSAGE_TYPE_SYSTEM, user);
 			
 		var messageOut = new payloads.IrcMessageOutPayload(message);
 		exports.sendPayload(
@@ -197,19 +175,10 @@ function processNick(newNick, interaction) {
 	}
 	else {
 		//send an error message to the client
-		var nickExistsMessage = new classes.IrcError();
-		nickExistsMessage.text = util.format(locales[game.locale].errors.irc.NICKEXISTS, newNick);
+		var nickExistsMessage = util.format(locales[game.locale].errors.irc.NICKEXISTS, newNick);
 		error(nickExistsMessage, communication.getSocketByPlayerId(user.player.id));		
 	}
 }
-
-/*
-
-Input: socket - The socket to send the connection messages to
-
-Connects to an IRC server and displays the MOTD. Right now, it just dummies it and sends messages. 
-
-*/
 
 function connectToIrcServer(socket) {
 	var player = communication.getPlayerBySocketId(socket.id);
@@ -217,10 +186,9 @@ function connectToIrcServer(socket) {
 	var user = exports.getUserByPlayerId(player.id);
 	
 	// Give the player a connecting message
-	var connectMessage = new classes.IrcMessage();
-	connectMessage.text = locales[game.locale].messages.irc.CONNECTING;
-	connectMessage.type = constants.IRC_MESSAGE_TYPE_SYSTEM;
-	connectMessage.user = user;
+	var connectMessage = new ircMessage.IrcMessage(locales[game.locale].messages.irc.CONNECTING, 
+												constants.IRC_MESSAGE_TYPE_SYSTEM, 
+												user);
 	
 	var connectOut = new payloads.IrcMessageOutPayload(connectMessage);
 	exports.sendPayload(
@@ -228,21 +196,18 @@ function connectToIrcServer(socket) {
 		socket);
 		
 	// Give the player a connected message
-	var connectMessage = new classes.IrcMessage();
-	connectMessage.text = locales[game.locale].messages.irc.CONNECTED;
-	connectMessage.type = constants.IRC_MESSAGE_TYPE_SYSTEM;
-	connectMessage.user = user;
-	
+	var connectMessage = new ircMessage.IrcMessage(locales[game.locale].messages.irc.CONNECTED,
+												constants.IRC_MESSAGE_TYPE_SYSTEM,
+												user);
 	var connectOut = new payloads.IrcMessageOutPayload(connectMessage);
 	exports.sendPayload(
 		connectOut.getPayload(),
 		socket);
 		
 	// Give the player a message of the day
-	var connectMessage = new classes.IrcMessage();
-	connectMessage.text = locales[game.locale].messages.irc.MOTD;
-	connectMessage.type = constants.IRC_MESSAGE_TYPE_SYSTEM;
-	connectMessage.user = user;
+	var connectMessage = new ircMessage.IrcMessage(locales[game.locale].messages.irc.MOTD,
+												constants.IRC_MESSAGE_TYPE_SYSTEM,
+												user);
 	
 	var connectOut = new payloads.IrcMessageOutPayload(connectMessage);
 	exports.sendPayload(
