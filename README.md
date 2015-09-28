@@ -14,7 +14,7 @@ Setting up the client and backend
 
 2. Install node 0.10.38 (nvm install 0.10.38)
 
-3. Install MongoDB (http://www.mongodb.org/)
+3. Install Postgres (http://www.postgresql.org/)
 
 4. Navigate to project root and switch to correct version of node (nvm use)
 
@@ -27,9 +27,9 @@ Setting up the client and backend
 Starting the Server
 -------------
 
-1. start the mongo daemon
+1. if it's not already running, start Postgres (http://www.postgresql.org/docs/9.4/static/server-start.html)
 
-    mongod
+(if you're having trouble with Postgres, https://wiki.postgresql.org/wiki/First_steps may help.)
 
 2. start the node server
 
