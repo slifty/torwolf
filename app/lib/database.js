@@ -36,8 +36,10 @@ if(!global.hasOwnProperty('database')) {
   var modelPath = __dirname + "/../models";
   fs.readdirSync(modelPath).forEach(function(file) {
     var name = file.substr(0, file.indexOf('.'));
-    global.database[name] = sequelize.import("#{modelPath}/#{name}");
+    global.database[name] = sequelize.import(modelPath + "/" + name);
   });
+
+  sequelize.sync();
 }
 
 module.exports = global.database
