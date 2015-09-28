@@ -1,21 +1,21 @@
 {
-  "name": "cobot-reservations",
+  "name": "torwolf",
   "version": "1.0.0",
-  "description": "An application to render the room reservations in a cobot instance",
+  "description": "An application about digital communication, media, deception, and Mario Party.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/CivicHall/reservations"
+    "url": "https://github.com/slifty/torwolf"
   },
   "author": "Daniel Schultz <slifty@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/CivicHall/reservations/issues"
+    "url": "https://github.com/slifty/torwolf/issues"
   },
-  "homepage": "https://github.com/CivicHall/reservations/",
+  "homepage": "https://github.com/slifty/torwolf/",
   "dependencies": {
     "body-parser": "^1.13.2",
     "chalk": "^1.1.0",
@@ -26,6 +26,11 @@
     "glob": "^5.0.13",
     "jade": "^1.11.0",
     "lodash": "^3.10.0",
-    "method-override": "^2.3.3"
+    "method-override": "^2.3.3",
+    "log4js": "0.6.27",
+    "moment": "2.10.6",
+    "sequelize": "3.9.0",
+    "pg-hstore": "2.3.2",
+    "pg": "4.4.2"
   }
 }
