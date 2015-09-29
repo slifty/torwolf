@@ -12,7 +12,10 @@ var fs = require('fs'),
   methodOverride = require('method-override'),
   cookieParser = require('cookie-parser'),
   path = require('path'),
-  config = require('../config');
+  config = require('../config'),
+  logging = require('../app/lib/logger');
+
+var logger = logging.expressLogger;
 
 module.exports = function(db) {
   // Initialize express app
@@ -38,6 +41,8 @@ module.exports = function(db) {
   app.use(bodyParser.json());
   app.use(methodOverride());
 
+  app.use(logger);
+
   // Setting the app router and static folder
   app.use(express.static(path.resolve('./public')));
 
@@ -55,7 +60,7 @@ module.exports = function(db) {
     if (!err) return next();
 
     // Log it
-    console.error(err.stack);
+    logger.error(err.stack);
 
     // Error page
     res.status(500).render('500', {

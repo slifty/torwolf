@@ -3,7 +3,9 @@
  * Module dependencies.
  */
 var chalk = require('chalk'),
-  config = require('./config');
+  config = require('./config'),
+  database = require('./app/lib/database'),
+  logger = require('./app/lib/logger').logger;
 
 /**
  * Main application entry file.
@@ -20,8 +22,8 @@ app.listen(config.port);
 exports = module.exports = app;
 
 // Logging initialization
-console.log('--');
-console.log(chalk.green(config.app.title + ' application started'));
-console.log(chalk.green('Environment:\t\t\t' + process.env.NODE_ENV));
-console.log(chalk.green('Port:\t\t\t\t' + config.port));
-console.log('--');
+logger.info('--');
+logger.info(chalk.green(config.app.title + ' application started'));
+logger.info(chalk.green('Environment:\t\t\t' + process.env.NODE_ENV));
+logger.info(chalk.green('Port:\t\t\t\t' + config.port));
+logger.info('--');
