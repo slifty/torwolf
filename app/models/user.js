@@ -1,3 +1,4 @@
+//#JSCOVERAGE_IF
 var Sequelize = require('sequelize');
 var bcrypt = require('bcrypt');
 
@@ -41,3 +42,4 @@ var options = {
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define("User", schema, options);
 }
+//#JSCOVERAGE_ENDIF

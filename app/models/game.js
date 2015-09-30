@@ -1,3 +1,4 @@
+//#JSCOVERAGE_IF
 var Sequelize = require('sequelize');
 
 var schema = {
@@ -43,3 +44,4 @@ module.exports = function(sequelize, DataTypes) {
 	Game.hasMany(User);
 	return Game;
 }
+//#JSCOVERAGE_ENDIF

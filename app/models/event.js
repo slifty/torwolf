@@ -1,3 +1,4 @@
+//#JSCOVERAGE_IF
 var Sequelize = require('sequelize');
 
 var schema = {
@@ -32,3 +33,4 @@ module.exports = function(sequelize, DataTypes) {
 	Event.belongsTo(Game);
 	return Event;
 }
+//#JSCOVERAGE_ENDIF

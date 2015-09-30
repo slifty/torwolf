@@ -1,3 +1,4 @@
+//#JSCOVERAGE_IF
 var Sequelize = require('sequelize');
 
 var schema = {
@@ -19,3 +20,4 @@ module.exports = function (sequelize, DataTypes) {
 	return Message;
 }
 
+//#JSCOVERAGE_ENDIF
