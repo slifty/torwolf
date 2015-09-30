@@ -37,6 +37,10 @@ Starting the Server
 
     node server.js
 
+Running Tests
+-------------
+
+`gulp test`
 
 Code Conventions
 =============
