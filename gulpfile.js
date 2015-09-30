@@ -3,7 +3,7 @@ var coverage = require('gulp-coverage');
 var gulp = require('gulp');
 
 gulp.task('test', function () {
-    return gulp.src('test/**/*Test.js')
+    return gulp.src('test/**/*Test.js', {read: false})
         .pipe(mocha())
         .once('error', function () {
             process.exit(1);
@@ -14,7 +14,7 @@ gulp.task('test', function () {
 });
 
 gulp.task('coverage', function () {
-    return gulp.src('test/**/*Test.js')
+    return gulp.src('test/**/*Test.js', {read: false})
 	    .pipe(coverage.instrument({
 	        pattern: ['app/**/*.js'],
 	        debugDirectory: 'debug'

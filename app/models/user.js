@@ -1,7 +1,7 @@
-//#JSCOVERAGE_IF
 var Sequelize = require('sequelize');
 var bcrypt = require('bcrypt');
 
+//#JSCOVERAGE_IF
 var schema = {
 	email: {
 		type: Sequelize.STRING,

@@ -1,6 +1,6 @@
-//#JSCOVERAGE_IF
 var Sequelize = require('sequelize');
 
+//#JSCOVERAGE_IF
 var schema = {
 	name: {
 		type: Sequelize.STRING,
