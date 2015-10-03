@@ -1,7 +1,10 @@
 'use strict';
+var express = require('express');
+var coreRouter = express.Router();
+var core = require('../../app/controllers/core.server.controller');
 
 module.exports = function(app) {
   // Root routing
-  var core = require('../../app/controllers/core.server.controller');
-  app.route('/').get(core.index);
+  coreRouter.get('/', core.index);
+  app.use('/', coreRouter);
 };

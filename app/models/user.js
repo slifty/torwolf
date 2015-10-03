@@ -36,7 +36,10 @@ var schema = {
 
 var options = {
 	underscored: true,
-	tableName: 'user'
+	tableName: 'user',
+	instanceMethods: {
+	  verifyPassword: function(password) { return bcrypt.compareSync(password, this.password); }
+	}
 };
 
 module.exports = function (sequelize, DataTypes) {

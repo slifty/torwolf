@@ -5,7 +5,10 @@
 var chalk = require('chalk'),
   config = require('./config'),
   database = require('./app/lib/database'),
-  logger = require('./app/lib/logger').logger;
+  logger = require('./app/lib/logger').logger,
+  passport = require('passport'),
+  userRepository = require('./app/repositories/user'),
+  LocalStrategy = require('passport-local');
 
 /**
  * Main application entry file.
@@ -14,6 +17,26 @@ var chalk = require('chalk'),
 
 // Init the express application
 var app = require('./config/express')();
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+// configure passport
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    userRepository.findByEmail(username, function (err, user) {
+      if (err) { return done(err); }
+      if (!user) { return done(null, false); }
+      if (!user.verifyPassword(password)) { return done(null, false); }
+      return done(null, user);
+    });
+  }
+));
 
 // Start the app by listening on <port>
 app.listen(config.port);

@@ -13,7 +13,8 @@ var fs = require('fs'),
   cookieParser = require('cookie-parser'),
   path = require('path'),
   config = require('../config'),
-  logging = require('../app/lib/logger');
+  logging = require('../app/lib/logger'),
+  passport = require('passport');
 
 var logger = logging.expressLogger;
 
@@ -42,6 +43,8 @@ module.exports = function(db) {
   app.use(methodOverride());
 
   app.use(logger);
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   // Setting the app router and static folder
   app.use(express.static(path.resolve('./public')));
@@ -60,7 +63,7 @@ module.exports = function(db) {
     if (!err) return next();
 
     // Log it
-    logger.error(err.stack);
+    logging.logger.error(err.stack);
 
     // Error page
     res.status(500).render('500', {
