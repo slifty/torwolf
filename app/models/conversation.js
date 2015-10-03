@@ -1,5 +1,6 @@
 var Sequelize = require('sequelize');
 
+//#JSCOVERAGE_IF
 var schema = {
 	isPrivate: {
 		type: Sequelize.BOOLEAN,
@@ -25,3 +26,4 @@ module.exports = function(sequelize, DataTypes) {
 	});
 	return Conversation;
 }
+//#JSCOVERAGE_ENDIF

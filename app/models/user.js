@@ -1,6 +1,7 @@
 var Sequelize = require('sequelize');
 var bcrypt = require('bcrypt');
 
+//#JSCOVERAGE_IF
 var schema = {
 	email: {
 		type: Sequelize.STRING,
@@ -41,3 +42,4 @@ var options = {
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define("User", schema, options);
 }
+//#JSCOVERAGE_ENDIF
