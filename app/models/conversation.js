@@ -1,3 +1,14 @@
+/*
+
+A conversation is a conversation in a pre-game lobby. 
+
+It can involve two participants (a conversation of direct messages) or more (a chat room).
+
+We will not be implementing API functionality for this model in V1, but we are leaving it here
+to be expanded on later.
+
+*/
+
 var Sequelize = require('sequelize');
 
 var schema = {

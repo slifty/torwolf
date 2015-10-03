@@ -1,3 +1,12 @@
+/*
+
+A message is a line of text in a conversation. It can be either a direct message, or a message in a chat room.
+
+We will not be implementing API functionality for this model in V1, but we are leaving it here
+to be expanded on later.
+
+*/
+
 var Sequelize = require('sequelize');
 var bcrypt = require('bcrypt');
 
