@@ -14,6 +14,10 @@ var schema = {
 		allowNull: false,
 		field: 'dispatched_at'
 	},
+	recipients: {
+		type: Sequelize.ARRAY(Sequelize.STRING),
+		allowNull: false
+	}
 };
 
 var options = {
