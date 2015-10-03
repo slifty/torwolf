@@ -1,0 +1,41 @@
+swagger: '2.0'
+info:
+  version: 0.0.0
+  title: '<enter your title>'
+paths:
+  /users/{id}:
+    get:
+      description: |
+        Gets a `User`
+      parameters:
+        - name: id
+          in: path
+          description: Size of array
+          required: true
+          type: number
+          format: i32
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            title: ArrayOfPersons
+            type: array
+            items:
+              title: Person
+              type: object
+              properties:
+                name:
+                  type: string
+                single:
+                  type: boolean
+definitions: 
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
