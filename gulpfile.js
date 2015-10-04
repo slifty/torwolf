@@ -5,7 +5,8 @@ var gulp = require('gulp');
 gulp.task('test', function () {
     return gulp.src('test/**/*Test.js', {read: false})
         .pipe(mocha())
-        .once('error', function () {
+        .once('error', function (error) {
+            console.log(error);
             process.exit(1);
         })
         .once('end', function () {
