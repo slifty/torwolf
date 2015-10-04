@@ -25,6 +25,10 @@ Setting up the client and backend
 7. Create a local config file
 		cp config/env/local.js.example config/env/local.js && vi config/env/local.js
 
+Code Style
+-------------
+
+Please use the included [Editor Config](http://editorconfig.org/) or an equivalently configured editor configuration.
 
 Starting the Server
 -------------
