@@ -45,7 +45,7 @@
     "gulp-coverage": "0.3.36",
     "supertest": "1.1.0",
     "mockery": "1.4.0",
-  	"gulp-jshint": "1.11.2",
-  	"gulp-watch": "4.3.5"
+    "gulp-jshint": "1.11.2",
+    "gulp-watch": "4.3.5"
   }
 }
