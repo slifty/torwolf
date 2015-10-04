@@ -1,6 +1,6 @@
-var logger = require('./logger').logger
-var config = require('../../config')
-var chalk = require('chalk')
+var logger = require('./logger').logger;
+var config = require('../../config');
+var chalk = require('chalk');
 
 if(!global.hasOwnProperty('database')) {
   var Sequelize = require('sequelize');

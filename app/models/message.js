@@ -18,6 +18,6 @@ module.exports = function (sequelize, DataTypes) {
 	var Message = sequelize.define('Message', schema, options);
 	Message.belongsTo(Conversation);
 	return Message;
-}
+};
 
 //#JSCOVERAGE_ENDIF

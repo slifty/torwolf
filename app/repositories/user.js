@@ -10,7 +10,7 @@ module.exports = {
 			return cb(null, user);
 		}).catch(function (error) {
 			return cb(error);
-		})
+		});
 	},
 
 	get: function(id, cb) {
@@ -23,7 +23,7 @@ module.exports = {
 			}
 		}).catch(function(error) {
 			return cb(error);
-		})
+		});
 	},
 
 	create: function (user, cb) {
@@ -32,7 +32,7 @@ module.exports = {
 			return cb(null, user);
 		}).catch(function(error) {
 			return cb(error);
-		})
+		});
 	},
 
 	update: function (user, id, cb) {
@@ -43,6 +43,6 @@ module.exports = {
 			return cb(null, result[1][0].dataValues);
 		}).catch(function(error) {
 			return cb(error);
-		})
+		});
 	}
-}
+};

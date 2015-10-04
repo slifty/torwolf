@@ -55,5 +55,5 @@ var options = {
 
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define("User", schema, options);
-}
+};
 //#JSCOVERAGE_ENDIF
