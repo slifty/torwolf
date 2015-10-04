@@ -4,7 +4,7 @@ var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var watch = require('gulp-watch');
 
-gulp.task('test', function () {
+gulp.task('test', ['lint'], function () {
     return gulp.src('test/**/*Test.js', {read: false})
         .pipe(mocha())
         .once('error', function (error) {
@@ -28,12 +28,14 @@ gulp.task('coverage', function () {
 	    .pipe(gulp.dest('reports'));
 });
 
-gulp.task("lint", function() {
-    gulp.src("./app/**/*.js")
+gulp.task('lint', function() {
+    var stream = gulp.src('./app/**/*.js')
         .pipe(jshint())
-        .pipe(jshint.reporter("default"));
+        .pipe(jshint.reporter('default'))
+        .pipe(jshint.reporter('fail'))
+    return stream;
 });
 
-gulp.task('watch', function() {
-    gulp.watch("./app/**/*.js", ["lint"]);
+gulp.task('watch', ['lint'], function() {
+    gulp.watch('./app/**/*.js', ['lint']);
 });
