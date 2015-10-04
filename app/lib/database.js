@@ -38,9 +38,9 @@ if(!global.hasOwnProperty('database')) {
       });
 
       sequelize.sync();
-    }, function (err) { 
+    }, function (err) {
       logger.error('Unable to connect to the database:', err);
     });
 }
 
-module.exports = global.database
+module.exports = global.database;
