@@ -43,14 +43,20 @@ module.exports = function(db) {
   app.use(methodOverride());
 
   app.use(logger);
+
+  app.use(cookieParser());
+  app.use(session({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true
+  }));
+  // CookieParser should be above session
+
   app.use(passport.initialize());
   app.use(passport.session());
 
   // Setting the app router and static folder
   app.use(express.static(path.resolve('./public')));
-
-  // CookieParser should be above session
-  app.use(cookieParser());
 
   // Globbing routing files
   config.getGlobbedFiles('./app/routes/**/*.js').forEach(function(routePath) {
