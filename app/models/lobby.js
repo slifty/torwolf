@@ -1,5 +1,6 @@
 var Sequelize = require('sequelize');
 
+//#JSCOVERAGE_IF
 var schema = {
 	name: {
 		type: Sequelize.STRING,
@@ -25,3 +26,4 @@ module.exports = function (sequelize, DataTypes) {
 	});
 	return Lobby;
 }
+//#JSCOVERAGE_ENDIF

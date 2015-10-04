@@ -1,5 +1,6 @@
 var Sequelize = require('sequelize');
 
+//#JSCOVERAGE_IF
 var schema = {
 	name: {
 		type: Sequelize.STRING,
@@ -43,3 +44,4 @@ module.exports = function(sequelize, DataTypes) {
 	Game.hasMany(User);
 	return Game;
 }
+//#JSCOVERAGE_ENDIF

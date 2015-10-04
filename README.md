@@ -18,7 +18,7 @@ Setting up the client and backend
 
 4. Navigate to project root and switch to correct version of node (nvm use)
 
-5. Install global dependencies (npm install -g sequelize-cli)
+5. Install global dependencies (npm install -g sequelize-cli mocha)
 
 6. Install dependencies (npm install)
 
@@ -41,6 +41,10 @@ Starting the Server
 
     node server.js
 
+Running Tests
+-------------
+
+`gulp test`
 
 Code Conventions
 =============

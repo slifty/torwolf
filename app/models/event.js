@@ -1,5 +1,6 @@
 var Sequelize = require('sequelize');
 
+//#JSCOVERAGE_IF
 var schema = {
 	payload: {
 		type: Sequelize.JSONB,
@@ -36,3 +37,4 @@ module.exports = function(sequelize, DataTypes) {
 	Event.belongsTo(Game);
 	return Event;
 }
+//#JSCOVERAGE_ENDIF
