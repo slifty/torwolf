@@ -1,7 +1,8 @@
 var mocha = require('gulp-mocha');
 var coverage = require('gulp-coverage');
 var gulp = require('gulp');
-var jshint = require('gulp-jshint')
+var jshint = require('gulp-jshint');
+var watch = require('gulp-watch');
 
 gulp.task('test', function () {
     return gulp.src('test/**/*Test.js', {read: false})
@@ -31,4 +32,8 @@ gulp.task("lint", function() {
     gulp.src("./app/**/*.js")
         .pipe(jshint())
         .pipe(jshint.reporter("default"));
+});
+
+gulp.task('watch', function() {
+    gulp.watch("./app/**/*.js", ["lint"]);
 });

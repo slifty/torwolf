@@ -31,3 +31,6 @@ node_modules
 
 # Local Config
 config/env/local.js
+
+# linting
+lint
