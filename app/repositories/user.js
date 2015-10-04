@@ -7,11 +7,7 @@ module.exports = {
 				email: email
 			}
 		}).then(function (user) {
-			if (!user) {
-				return cb(new Error("Could not find user with email " + email));
-			} else {
-				return cb(null, user);
-			}
+			return cb(null, user);
 		}).catch(function (error) {
 			return cb(error);
 		})
@@ -41,10 +37,11 @@ module.exports = {
 
 	update: function (user, id, cb) {
 		User.update(user, { 
-			where: { id: id }
-		}).then(function(users) {
-			return cb(null, users[0]);
-		}).catch(function(error)) {
+			where: { id: id },
+			returning: true
+		}).then(function(result) {
+			return cb(null, result[1][0].dataValues);
+		}).catch(function(error) {
 			return cb(error);
 		})
 	}

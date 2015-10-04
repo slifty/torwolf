@@ -27,8 +27,9 @@ passport.deserializeUser(function(user, done) {
 });
 
 // configure passport
-passport.use(new LocalStrategy(
-  function(username, password, done) {
+passport.use(new LocalStrategy({
+  usernameField: 'email'
+  }, function(username, password, done) {
     userRepository.findByEmail(username, function (err, user) {
       if (err) { return done(err); }
       if (!user) { return done(null, false); }
@@ -39,10 +40,13 @@ passport.use(new LocalStrategy(
 ));
 
 // Start the app by listening on <port>
-app.listen(config.port);
+var server = app.listen(config.port);
 
 // Expose app
-exports = module.exports = app;
+exports = module.exports = { 
+  app: app,
+  server: server
+}
 
 // Logging initialization
 logger.info('--');

@@ -2,14 +2,12 @@
 var controller = require('../controllers/user.server.controller');
 var express = require('express');
 var userRouter = express.Router();
-var passport = require('passport');
-
-var passportMiddleware = passport.authenticate('local', { failureRedirect: '/login' });
+var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 
 module.exports = function (app) {
 	// user routing
-	userRouter.post('/login', passportMiddleware, controller.login);
 	userRouter.post('/', controller.create);
-	userRouter.put('/:id', controller.update);
+	userRouter.put('/:id', ensureLoggedIn('/login'), controller.update);
+	userRouter.get('/:id', ensureLoggedIn('/login'), controller.get);
 	app.use('/users', userRouter);
 }
