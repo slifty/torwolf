@@ -13,7 +13,8 @@ var fs = require('fs'),
   cookieParser = require('cookie-parser'),
   path = require('path'),
   config = require('../config'),
-  logging = require('../app/lib/logger');
+  logging = require('../app/lib/logger'),
+  passport = require('passport');
 
 var logger = logging.expressLogger;
 
@@ -43,11 +44,19 @@ module.exports = function(db) {
 
   app.use(logger);
 
+  app.use(cookieParser());
+  app.use(session({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true
+  }));
+  // CookieParser should be above session
+
+  app.use(passport.initialize());
+  app.use(passport.session());
+
   // Setting the app router and static folder
   app.use(express.static(path.resolve('./public')));
-
-  // CookieParser should be above session
-  app.use(cookieParser());
 
   // Globbing routing files
   config.getGlobbedFiles('./app/routes/**/*.js').forEach(function(routePath) {
@@ -60,7 +69,7 @@ module.exports = function(db) {
     if (!err) return next();
 
     // Log it
-    logger.error(err.stack);
+    logging.logger.error(err.stack);
 
     // Error page
     res.status(500).render('500', {

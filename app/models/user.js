@@ -40,15 +40,29 @@ var schema = {
 		validate: {
 			len: [0, 255]
 		}
-	}
+	},
+	createdAt: {
+    	type: Sequelize.DATE,
+    	field: 'created_at'
+    }, 	
+    updatedAt: {
+    	type: Sequelize.DATE,
+    	field: 'updated_at'
+    }
 };
 
 var options = {
+	createdAt: 'createdAt',
+	updatedAt: 'updatedAt',
 	underscored: true,
-	tableName: 'user'
+	timestamps: true,
+	tableName: 'user',
+	instanceMethods: {
+	  verifyPassword: function(password) { return bcrypt.compareSync(password, this.password); }
+	}
 };
 
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define("User", schema, options);
-}
+};
 //#JSCOVERAGE_ENDIF

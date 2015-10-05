@@ -37,9 +37,9 @@ Starting the Server
 
 (if you're having trouble with Postgres, https://wiki.postgresql.org/wiki/First_steps may help.)
 
-2. start the node server
+2. start the node server and watch for any file changes
 
-    node server.js
+    gulp watch
 
 Running Tests
 -------------

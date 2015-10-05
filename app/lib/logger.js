@@ -6,7 +6,7 @@ layout = {
   pattern: '[%d{yyyy-MM-ddThh:mm:ss.SSS}%x{timeZone}] [%p] %c - %m',
   tokens: {
     timeZone: function () { return moment().format("ZZ"); }
-  }  
+  }
 };
 
 var appenders = [
@@ -36,4 +36,4 @@ var logging = {
     })
 };
 
-module.exports = logging
+module.exports = logging;

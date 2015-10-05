@@ -36,5 +36,5 @@ module.exports = function(sequelize, DataTypes) {
 	var Game = sequelize.import(__dirname + '/game');
 	Event.belongsTo(Game);
 	return Event;
-}
+};
 //#JSCOVERAGE_ENDIF
