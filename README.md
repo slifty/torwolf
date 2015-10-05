@@ -18,9 +18,11 @@ Setting up the client and backend
 
 4. Navigate to project root and switch to correct version of node (nvm use)
 
-5. Install dependencies (npm install)
+5. Install global dependencies (npm install -g sequelize-cli mocha)
 
-6. Create a local config file
+6. Install dependencies (npm install)
+
+7. Create a local config file
 		cp config/env/local.js.example config/env/local.js && vi config/env/local.js
 
 Code Style
@@ -39,6 +41,10 @@ Starting the Server
 
     node server.js
 
+Running Tests
+-------------
+
+`gulp test`
 
 Code Conventions
 =============
