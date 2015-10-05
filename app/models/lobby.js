@@ -11,7 +11,7 @@ var schema = {
 		type: Sequelize.TEXT,
 		allowNull: false
 	}
-}
+};
 
 var options = {
 	underscored: true,
@@ -25,5 +25,5 @@ module.exports = function (sequelize, DataTypes) {
 		through: 'user_lobby'
 	});
 	return Lobby;
-}
+};
 //#JSCOVERAGE_ENDIF

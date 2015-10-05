@@ -1,6 +1,6 @@
-var logger = require('./logger').logger
-var config = require('../../config')
-var chalk = require('chalk')
+var logger = require('./logger').logger;
+var config = require('../../config');
+var chalk = require('chalk');
 
 if(!global.hasOwnProperty('database')) {
   var Sequelize = require('sequelize');
@@ -38,9 +38,9 @@ if(!global.hasOwnProperty('database')) {
       });
 
       sequelize.sync();
-    }, function (err) { 
+    }, function (err) {
       logger.error('Unable to connect to the database:', err);
     });
 }
 
-module.exports = global.database
+module.exports = global.database;

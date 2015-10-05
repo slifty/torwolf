@@ -1,4 +1,3 @@
-'use strict';
 var express = require('express');
 var coreRouter = express.Router();
 var core = require('../../app/controllers/core.server.controller');
@@ -7,6 +6,7 @@ var passport = require('passport');
 var passportMiddleware = passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login' });
 
 module.exports = function(app) {
+  'use strict';
   // Root routing
   coreRouter.get('/', core.index);
   coreRouter.get('/login', core.login);

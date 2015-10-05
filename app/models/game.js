@@ -43,5 +43,5 @@ module.exports = function(sequelize, DataTypes) {
 	var Game = sequelize.define('Game', schema, options);
 	Game.hasMany(User);
 	return Game;
-}
+};
 //#JSCOVERAGE_ENDIF

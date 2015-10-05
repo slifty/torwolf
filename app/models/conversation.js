@@ -25,5 +25,5 @@ module.exports = function(sequelize, DataTypes) {
 		through: 'user_conversation'
 	});
 	return Conversation;
-}
+};
 //#JSCOVERAGE_ENDIF
