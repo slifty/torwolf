@@ -4,8 +4,7 @@ var Sequelize = require('sequelize');
 var schema = {
 	name: {
 		type: Sequelize.STRING,
-		allowNull: false,
-		unique: true
+		allowNull: false
 	},
 	description: {
 		type: Sequelize.TEXT,
@@ -21,20 +20,36 @@ var schema = {
 	},
 	phase: {
 		type: Sequelize.ENUM('FORMING', 'STARTED', 'COMPLETED'),
+		defaultValue: 'FORMING',
 		allowNull: false
 	},
 	victor: {
 		type: Sequelize.ENUM('REBELLION', 'GOVERNMENT')
-	}
+	},
+	createdAt: {
+    	type: Sequelize.DATE,
+    	field: 'created_at'
+    },
+    updatedAt: {
+    	type: Sequelize.DATE,
+    	field: 'updated_at'
+    }
 };
 
 var options = {
+	createdAt: 'createdAt',
+	updatedAt: 'updatedAt',
 	underscored: true,
+	timestamps: true,
 	tableName: 'game',
 	indexes: [{
     	name: 'phase_index',
     	method: 'BTREE',
     	fields: ['phase']
+    }, {
+    	name: 'name_index',
+    	method: 'BTREE',
+    	fields: ['name']
     }]
 };
 
