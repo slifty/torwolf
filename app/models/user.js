@@ -1,0 +1,68 @@
+/*
+
+A message is a line of text in a conversation. It can be either a direct message, or a message in a chat room.
+
+We will not be implementing API functionality for this model in V1, but we are leaving it here
+to be expanded on later.
+
+*/
+
+var Sequelize = require('sequelize');
+var bcrypt = require('bcrypt');
+
+//#JSCOVERAGE_IF
+var schema = {
+	email: {
+		type: Sequelize.STRING,
+		unique: true,
+		allowNull: false,
+		validate: {
+			isEmail: true,
+			len: [0, 255]
+		}
+	},
+	password: {
+		type: Sequelize.STRING,
+		allowNull: false,
+		set: function (password) {
+			var salt = bcrypt.genSaltSync(10);
+			var hash = bcrypt.hashSync(password, salt);
+			this.setDataValue('password', hash);
+		},
+		validate: {
+			len: [0, 255]
+		}
+	},
+	username: {
+		type: Sequelize.STRING,
+		allowNull: false,
+		unique: true,
+		validate: {
+			len: [0, 255]
+		}
+	},
+	createdAt: {
+    	type: Sequelize.DATE,
+    	field: 'created_at'
+    }, 	
+    updatedAt: {
+    	type: Sequelize.DATE,
+    	field: 'updated_at'
+    }
+};
+
+var options = {
+	createdAt: 'createdAt',
+	updatedAt: 'updatedAt',
+	underscored: true,
+	timestamps: true,
+	tableName: 'user',
+	instanceMethods: {
+	  verifyPassword: function(password) { return bcrypt.compareSync(password, this.password); }
+	}
+};
+
+module.exports = function (sequelize, DataTypes) {
+  return sequelize.define("User", schema, options);
+};
+//#JSCOVERAGE_ENDIF

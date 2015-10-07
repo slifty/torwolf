@@ -1,9 +1,51 @@
 {
-    "name": "application-name"
-  , "version": "0.0.1"
-  , "private": true
-  , "dependencies": {
-      "express": "2.5.10"
-    , "jade": ">= 0.0.1"
+  "name": "torwolf",
+  "version": "1.0.0",
+  "description": "An application about digital communication, media, deception, and Mario Party.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/slifty/torwolf"
+  },
+  "author": "Daniel Schultz <slifty@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/slifty/torwolf/issues"
+  },
+  "homepage": "https://github.com/slifty/torwolf/",
+  "dependencies": {
+    "body-parser": "^1.13.2",
+    "chalk": "^1.1.0",
+    "cookie-parser": "^1.3.5",
+    "express": "^4.13.1",
+    "express-session": "^1.11.3",
+    "forever": "^0.14.2",
+    "glob": "^5.0.13",
+    "jade": "^1.11.0",
+    "lodash": "^3.10.0",
+    "method-override": "^2.3.3",
+    "log4js": "0.6.27",
+    "moment": "2.10.6",
+    "sequelize": "3.9.0",
+    "pg-hstore": "2.3.2",
+    "pg": "4.4.2",
+    "bcrypt": "0.8.5",
+    "passport": "0.3.0",
+    "passport-local": "1.0.0",
+    "async": "1.4.2",
+    "connect-ensure-login": "0.1.1"
+  },
+  "devDependencies": {
+    "gulp-mocha": "2.1.3",
+    "chai": "3.3.0",
+    "sinon": "1.17.1",
+    "gulp-coverage": "0.3.36",
+    "supertest": "1.1.0",
+    "mockery": "1.4.0",
+    "gulp-jshint": "1.11.2",
+    "gulp-watch": "4.3.5"
   }
 }
