@@ -27,13 +27,13 @@ var schema = {
 		type: Sequelize.ENUM('REBELLION', 'GOVERNMENT')
 	},
 	createdAt: {
-    	type: Sequelize.DATE,
-    	field: 'created_at'
-    },
-    updatedAt: {
-    	type: Sequelize.DATE,
-    	field: 'updated_at'
-    }
+		type: Sequelize.DATE,
+		field: 'created_at'
+	},
+	updatedAt: {
+		type: Sequelize.DATE,
+		field: 'updated_at'
+	}
 };
 
 var options = {
@@ -43,14 +43,14 @@ var options = {
 	timestamps: true,
 	tableName: 'game',
 	indexes: [{
-    	name: 'phase_index',
-    	method: 'BTREE',
-    	fields: ['phase']
-    }, {
-    	name: 'name_index',
-    	method: 'BTREE',
-    	fields: ['name']
-    }]
+		name: 'phase_index',
+		method: 'BTREE',
+		fields: ['phase']
+	}, {
+		name: 'name_index',
+		method: 'BTREE',
+		fields: ['name']
+	}]
 };
 
 module.exports = function(sequelize, DataTypes) {

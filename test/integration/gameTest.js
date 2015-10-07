@@ -57,7 +57,7 @@ describe('Game routes', function() {
 
 		async.waterfall([
 			function(cb) {
-			    agent
+				agent
 					.post('/users')
 					.send(_.cloneDeep(user))
 					.end(cb);
@@ -73,7 +73,7 @@ describe('Game routes', function() {
 					gameTemplate = _.cloneDeep(gameTemplate);
 					gameTemplate.name = 'Game ' + n;
 					gameTemplate.phase = (n % 2 == 0 ? 'FORMING' : 'STARTED')
-				    agent
+					agent
 						.post('/games')
 						.send(gameTemplate)
 						.end( function(err, response) {
@@ -93,7 +93,7 @@ describe('Game routes', function() {
 	});
 
 	it('Should create games', function (done) {
-	    agent
+		agent
 			.post('/games')
 			.send(_.cloneDeep(gameTemplate))
 			.end( function(err, response) {
@@ -108,7 +108,7 @@ describe('Game routes', function() {
 	});
 
 	it('Should filter by phase', function(done) {
-	    agent
+		agent
 			.get('/games?phase=FORMING,COMPLETED')
 			.end( function(err, response) {
 				if (err) {
@@ -127,7 +127,7 @@ describe('Game routes', function() {
 	});
 
 	it('Should page', function(done) {
-	    agent
+		agent
 			.get('/games?offset=3&limit=10')
 			.end( function(err, response) {
 				if (err) {
@@ -143,7 +143,7 @@ describe('Game routes', function() {
 	});
 
 	it('Should filter by name', function(done) {
-	    agent
+		agent
 			.get('/games?name=Ga%2515')
 			.end( function(err, response) {
 				if (err) {
