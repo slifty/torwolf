@@ -1,0 +1,164 @@
+swagger: '2.0'
+info:
+  version: 0.1.0
+  title: 'Torwolf Users API'
+paths:
+  /login: 
+    post:
+      description: Attempts to authenticate as a user
+      parameters:
+        - name: credentials
+          in: body
+          description: An email and password to be used for authentication
+          required: true
+          schema:
+            $ref: '#/definitions/Credentials'
+      responses:
+        302:
+          description: A redirect back to the login page, or to another page, as appropriate.
+        # TODO: error middleware
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /users:
+    post:
+      description: |
+        Creates a `User`
+      parameters:
+        - name: user
+          in: body
+          description: User to create
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/User'
+        # TODO: error middleware
+        404: 
+          description: User was not found
+          schema:
+            $ref: '#/definitions/Error'  
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /users/{id}:
+    get:
+      description: |
+        Gets a `User`
+      parameters:
+        - name: id
+          in: path
+          description: Id of the user to get
+          required: true
+          type: number
+          format: i32
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/User'
+        # TODO: error middleware
+        404: 
+          description: User was not found
+          schema:
+            $ref: '#/definitions/Error'  
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      description: |
+        Updates a `User`
+      parameters:
+        - name: id
+          in: path
+          description: Id of the user to update
+          required: true
+          type: number
+          format: i32
+        - name: user
+          in: body
+          description: An updated user
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/User'
+        # TODO: error middleware
+        404: 
+          description: User was not found
+          schema:
+            $ref: '#/definitions/Error'  
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'            
+            
+definitions: 
+  User:
+    required:
+      - username
+      - password
+      - email
+    properties:
+      username:
+        type: string
+        description: A handle for this user to be used throughout Torwolf.
+      password:
+        type: string
+        description: Password that this user should use for username + password authentication.
+      email:
+        type: string
+        description: The email for this user, which is used for username + password authentication.
+      createdAt:
+        type: string
+        format: date-time
+        description: When this user was created.
+      updatedAt:
+        type: string
+        format: date-time
+        description: When this user was last updated.
+      id:
+        type: integer
+        description: A unique identifier for this user.
+    example: 
+      username: Telrik
+      password: song are our several # this will be encrypted when received from the server
+      email: telrikk@gmail.com
+      createdAt: 2015-10-04 05:05:09.877 +00:00
+      updatedAt: 2015-10-04 05:05:09.877 +00:00
+      id: 39
+      
+  Credentials:
+    required:
+      - email
+      - password
+    properties:
+      email: 
+        type: string
+        description: Email to be used for authentication
+      password:
+        type: string
+        description: Password to be used for authentication.
+    example: 
+      password: song are our several
+      email: telrikk@gmail.com
+
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
