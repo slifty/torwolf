@@ -58,7 +58,7 @@ exports.EmailRegisterOutPayload = function(account) {
 	this.account = account;
 	this.getPayload = function() {
 		return {
-			type: constants.EMAIL_REGISTER,
+			type: constants.EMAIL_REGISTERED,
 			data: {
 				accountId: this.account.id,
 				address: this.account.address,
@@ -70,7 +70,7 @@ exports.EmailRegisterOutPayload = function(account) {
 
 exports.EmailSendInPayload = function(message) {
 	this.message = message;
-	
+
 	this.getPayload = function() {
 		return {
 			type: constants.EMAIL_SEND,
@@ -89,7 +89,7 @@ exports.EmailSendInPayload = function(message) {
 
 exports.EmailSendOutPayload = function(message) {
 	this.message = message;
-	
+
 	this.getPayload = function() {
 		var ccAddresses = [];
 		var toAddresses = [];
@@ -97,9 +97,9 @@ exports.EmailSendOutPayload = function(message) {
 			ccAddresses.push(message.cc[x].address);
 		for(var x in message.to)
 			toAddresses.push(message.to[x].address);
-		
+
 		return {
-			type: constants.EMAIL_SEND,
+			type: constants.EMAIL_SENT,
 			data: {
 				body: this.message.body,
 				ccAddresses: ccAddresses,
@@ -117,7 +117,7 @@ exports.IrcConnectOutPayload = function(message) {
 	this.user =  message.user;
 	this.getPayload = function() {
 		return {
-			type: constants.IRC_CONNECT,
+			type: constants.IRC_CONNECTED,
 			data: {
 				messageId: this.message.id,
 				playerId: this.user.player.id,
@@ -145,7 +145,7 @@ exports.IrcMessageOutPayload = function(message) {
 	this.message = message;
 	this.getPayload = function() {
 		return {
-			type: constants.IRC_MESSAGE,
+			type: constants.IRC_MESSAGED,
 			data: {
 				messageId: this.message.id,
 				text: this.message.text,
@@ -172,7 +172,7 @@ exports.IrcJoinOutPayload = function(user) {
 	this.user = user;
 	this.getPayload = function() {
 		return {
-			type: constants.IRC_JOIN,
+			type: constants.IRC_JOINED,
 			data: {
 				playerId: this.user.player.id,
 				userId: this.user.id,
@@ -182,11 +182,11 @@ exports.IrcJoinOutPayload = function(user) {
 	};
 };
 
-exports.IrcNickOutPayload = function(user) { 
+exports.IrcNickOutPayload = function(user) {
 	this.user = user;
 	this.getPayload = function() {
 		return {
-			type: constants.IRC_NICK,
+			type: constants.IRC_NICKSWITCHED,
 			data: {
 				nick: this.user.nick,
 				userId: this.user.id
@@ -211,7 +211,7 @@ exports.LobbyConnectOutPayload = function(player) {
 	this.player = player;
 	this.getPayload = function() {
 		return {
-			type: constants.LOBBY_CONNECT,
+			type: constants.LOBBY_CONNECTED,
 			data: {
 				playerId: this.player.id,
 				name: this.player.name
@@ -240,7 +240,7 @@ exports.LobbyCreateOutPayload = function(game) {
 	this.game = game;
 	this.getPayload = function() {
 		return {
-			type: constants.LOBBY_CREATE,
+			type: constants.LOBBY_CREATED,
 			data: {
 				gameId: this.game.id,
 				isPrivate: this.game.isPrivate,
@@ -275,7 +275,7 @@ exports.LobbyJoinOutPayload = function(player, game) {
 	this.game = game;
 	this.getPayload = function() {
 		return {
-			type: constants.LOBBY_JOIN,
+			type: constants.LOBBY_JOINED,
 			data: {
 				playerId: this.player.id,
 				gameId: this.game.id
@@ -287,7 +287,7 @@ exports.LobbyJoinOutPayload = function(player, game) {
 
 exports.NewspaperPublishInPayload = function(game) {
 	this.game = game
-	
+
 	this.getPayload = function() {
 		return {
 			type: constants.NEWSPAPER_PUBLISH,
@@ -300,14 +300,14 @@ exports.NewspaperPublishInPayload = function(game) {
 
 exports.NewspaperPublishOutPayload = function(edition) {
 	this.edition = edition;
-	
+
 	this.getPayload = function() {
 		var rumorIds = [];
 		for(var x in this.edition.rumors)
 			rumorIds.push(this.edition.rumors[x].id);
-		
+
 		return {
-			type: constants.NEWSPAPER_PUBLISH,
+			type: constants.NEWSPAPER_PUBLISHED,
 			data: {
 				copy: this.edition.copy,
 				editionId: this.edition.id,
@@ -322,7 +322,7 @@ exports.NewspaperPublishOutPayload = function(edition) {
 
 exports.SnooperInterceptInPayload = function(interaction) {
 	this.interaction = interaction;
-	
+
 	this.getPayload = function() {
 		return {
 			type: constants.SNOOPER_INTERCEPT,
@@ -336,10 +336,10 @@ exports.SnooperInterceptInPayload = function(interaction) {
 exports.SnooperInterceptOutPayload = function(interaction, player) {
 	this.interaction = interaction;
 	this.player = player;
-	
+
 	this.getPayload = function() {
 		return {
-			type: constants.SNOOPER_INTERCEPT,
+			type: constants.SNOOPER_INTERCEPTED,
 			data: {
 				interactionId: this.interaction.id,
 				message: this.interaction.message,
@@ -360,10 +360,10 @@ exports.SnooperSslInPayload = function() {
 exports.SnooperSslOutPayload = function(player, target) {
 	this.player = player;
 	this.target = target;
-	
+
 	this.getPayload = function() {
 		return {
-			type: constants.SNOOPER_TOR,
+			type: constants.SNOOPER_SSLED,
 			data: {
 				playerId: this.player.id,
 				target: this.target
@@ -382,10 +382,10 @@ exports.SnooperTorInPayload = function() {
 exports.SnooperTorOutPayload = function(player, state) {
 	this.player = player;
 	this.state = state;
-	
+
 	this.getPayload = function() {
 		return {
-			type: constants.SNOOPER_TOR,
+			type: constants.SNOOPER_TORRED,
 			data: {
 				playerId: this.player.id,
 				state: this.state
@@ -396,7 +396,7 @@ exports.SnooperTorOutPayload = function(player, state) {
 
 exports.SnooperWiretapInPayload = function(player) {
 	this.player = player;
-	
+
 	this.getPayload = function() {
 		return {
 			type: constants.SNOOPER_WIRETAP,
@@ -409,10 +409,10 @@ exports.SnooperWiretapInPayload = function(player) {
 
 exports.SnooperWiretapOutPayload = function(player) {
 	this.player = player;
-	
+
 	this.getPayload = function() {
 		return {
-			type: constants.SNOOPER_WIRETAP,
+			type: constants.SNOOPER_WIRETAPPED,
 			data: {
 				playerId: player.id
 			}
@@ -428,10 +428,10 @@ exports.StorytellerAllegianceOutPayload = function(player) {
 	this.player = player;
 	this.getPayload = function() {
 		return {
-			type: constants.STORYTELLER_ALLEGIANCE,
+			type: constants.STORYTELLER_ALLEGIANCECHANGE,
 			data: {
 				playerId: this.player.id,
-				allegiance: this.player.allegiance 
+				allegiance: this.player.allegiance
 			}
 		}
 	}
@@ -469,7 +469,7 @@ exports.StorytellerEndOutPayload = function(game) {
 	this.game = game;
 	this.getPayload = function() {
 		return {
-			type: constants.STORYTELLER_END,
+			type: constants.STORYTELLER_ENDED,
 			data: {
 				gameId: this.game.id,
 			}
@@ -481,10 +481,10 @@ exports.StorytellerEndOutPayload = function(game) {
 exports.StorytellerHeartbeatInPayload = function(game) {
 	this.game = game;
 	this.count = 0;
-	
+
 	this.getPayload = function() {
 		return {
-			type: constants.STORYTELLER_HEARTBEAT,
+			type: constants.STORYTELLER_HEARTBEATPING,
 			data: {
 				gameId: this.game.id,
 				count: this.count
@@ -497,7 +497,7 @@ exports.StorytellerHeartbeatOutPayload = function(count) {
 	this.count = count;
 	this.getPayload = function() {
 		return {
-			type: constants.STORYTELLER_HEARTBEAT,
+			type: constants.STORYTELLER_HEARTBEATPONG,
 			data: {
 				count: this.count,
 			}
@@ -538,7 +538,7 @@ exports.StorytellerJoinOutPayload = function(player) {
 	this.player = player;
 	this.getPayload = function() {
 		return {
-			type: constants.STORYTELLER_JOIN,
+			type: constants.STORYTELLER_JOINED,
 			data: {
 				playerId: this.player.id,
 				status: this.player.status,
@@ -566,7 +566,7 @@ exports.StorytellerKillOutPayload = function(player) {
 	this.player = player;
 	this.getPayload = function() {
 		return {
-			type: constants.STORYTELLER_KILL,
+			type: constants.STORYTELLER_KILLED,
 			data: {
 				playerId: this.player.id,
 			}
@@ -581,10 +581,10 @@ exports.StorytellerRoleOutPayload = function(player) {
 	this.player = player;
 	this.getPayload = function() {
 		return {
-			type: constants.STORYTELLER_ROLE,
+			type: constants.STORYTELLER_ROLESET,
 			data: {
 				playerId: this.player.id,
-				role: this.player.role 
+				role: this.player.role
 			}
 		}
 	}
@@ -595,7 +595,7 @@ exports.StorytellerRumorInPayload = function(rumor) {
 	this.rumor = rumor;
 	this.sourceId = "";
 	this.truthStatus = "";
-	
+
 	this.getPayload = function() {
 		return {
 			type: constants.STORYTELLER_RUMOR,
@@ -607,7 +607,7 @@ exports.StorytellerRumorInPayload = function(rumor) {
 			}
 		}
 	}
-	
+
 }
 
 exports.StorytellerRumorOutPayload = function(rumor) {
@@ -615,10 +615,10 @@ exports.StorytellerRumorOutPayload = function(rumor) {
 	this.rumor = rumor;
 	this.sourceId = "";
 	this.truthStatus = "";
-	
+
 	this.getPayload = function() {
 		return {
-			type: constants.STORYTELLER_RUMOR,
+			type: constants.STORYTELLER_RUMORRECEIVED,
 			data: {
 				destinationId: this.destinationId,
 				publicationStatus: this.rumor.publicationStatus,
@@ -637,7 +637,7 @@ exports.StorytellerStartInPayload = function(game) {
 		return {
 			type: constants.STORYTELLER_START,
 			data: {
-				gameId: this.game.id 
+				gameId: this.game.id
 			}
 		}
 	}
@@ -648,7 +648,7 @@ exports.StorytellerStartOutPayload = function(game) {
 
 exports.StorytellerTickInPayload = function(game) {
 	this.game = game;
-	
+
 	this.getPayload = function() {
 		return {
 			type: constants.STORYTELLER_TICK,
@@ -663,30 +663,9 @@ exports.StorytellerTickOutPayload = function(game) {
 	this.game = game;
 	this.getPayload = function() {
 		return {
-			type: constants.STORYTELLER_TICK,
+			type: constants.STORYTELLER_TOCK,
 			data: {
 				round: this.game.round
-			}
-		}
-	};
-}
-
-
-exports.TorBridgeInPayload = function() {
-	this.getPayload = function() {
-		return {
-			type: constants.TOR_BRIDGE,
-			data: {
-			}
-		}
-	};
-};
-
-exports.TorBridgeOutPayload = function() {
-	this.getPayload = function() {
-		return {
-			type: constants.TOR_BRIDGE,
-			data: {
 			}
 		}
 	};
@@ -705,7 +684,7 @@ exports.TorConnectInPayload = function() {
 exports.TorConnectOutPayload = function() {
 	this.getPayload = function() {
 		return {
-			type: constants.TOR_CONNECT,
+			type: constants.TOR_CONNECTED,
 			data: {
 			}
 		}
@@ -725,7 +704,7 @@ exports.TorDisconnectInPayload = function() {
 exports.TorDisconnectOutPayload = function() {
 	this.getPayload = function() {
 		return {
-			type: constants.TOR_DISCONNECT,
+			type: constants.TOR_DISCONNECTED,
 			data: {
 			}
 		}
@@ -735,7 +714,7 @@ exports.TorDisconnectOutPayload = function() {
 exports.TorRouteInPayload = function(message) {
 	this.message = message;
 	this.bridgeId = "";
-	
+
 	this.getPayload = function() {
 		return {
 			type: constants.TOR_ROUTE,
@@ -750,10 +729,10 @@ exports.TorRouteInPayload = function(message) {
 exports.TorRouteOutPayload = function(message) {
 	this.message = message;
 	this.bridgeId = "";
-	
+
 	this.getPayload = function() {
 		return {
-			type: constants.TOR_ROUTE,
+			type: constants.TOR_ROUTED,
 			data: {
 				bridgeId: this.bridgeId,
 				message: this.message
@@ -765,10 +744,10 @@ exports.TorRouteOutPayload = function(message) {
 exports.TorEducateOutPayload = function(teacherId, studentId) {
 	this.teacherId = teacherId;
 	this.studentId = studentId;
-	
+
 	this.getPayload = function() {
 		return {
-			type: constants.TOR_EDUCATION,
+			type: constants.TOR_EDUCATED,
 			data: {
 				teacherId: this.teacherId,
 				studentId: this.studentId
@@ -780,10 +759,10 @@ exports.TorEducateOutPayload = function(teacherId, studentId) {
 exports.TorEducateInPayload = function(message) {
 	this.teacherId = teacherId;
 	this.studentId = studentId;
-	
+
 	this.getPayload = function() {
 		return {
-			type: constants.TOR_EDUCATION,
+			type: constants.TOR_EDUCATE,
 			data: {
 				teacherId: this.teacherId,
 				studentId: this.studentId
