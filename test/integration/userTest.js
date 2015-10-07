@@ -5,7 +5,10 @@ var async = require('async');
 var _ = require('lodash');
 
 var url = 'http://localhost:3000';
-var app = require('../../server');
+if (!global.hasOwnProperty('testApp')) {
+	global.testApp = require('../../server');
+}
+var app = global.testApp;
 
 describe('User routes', function() {
 	var user = undefined;
@@ -54,10 +57,6 @@ describe('User routes', function() {
 				user = response.body;
 				done();
 		});
-	});
-
-	after(function() {
-		app.server.close();
 	});
 
 	it('Should create users', function (done) {
@@ -117,7 +116,7 @@ describe('User routes', function() {
 			    	.post('/login')
 					.send(_.cloneDeep(userTemplate))
 					.end(cb);
-			}, 
+			},
 			function(response, cb) {
 				updatedUser = {
 					username: 'dry bones' + Math.random(),
