@@ -20,9 +20,9 @@ The game takes place in a fictional country with an oppressive regime.  A rebell
 All roles are secret.
 
 ##Goals
-- <b>Rebellion</b> - They want to get three rumors published in the paper.
-- <b>Journalist</b> - They want to get three rumors published in the paper.
-- <b>Government</b> - They want to squelch the rebellion and keep the rest of the world out of it.  This is done by killing the current activist or the journalist before all three rumors are published.
+- <b>Rebellion</b> - They want to get rumors published in the paper.
+- <b>Journalist</b> - They want to get rumors published in the paper.
+- <b>Government</b> - They want to squelch the rebellion and keep the rest of the world out of it.  This is done by killing the current activist or the journalist before three rumors are published.
 
 <i>Note: Apathetic citizens have to pick a side or they can't win.</i>
 
@@ -38,25 +38,28 @@ The game is round based.  Rounds last for two minutes.
 
 **At the end of each round:**
 
-- The journalist may (secretly) submit a story to the newspaper.  It is published, and includes a deep investigation of one rumor he has been exposed to.  The rumor is published and the truth of the rumor is revealed.
-- If the journalist has not sent a rumor for investigation in five rounds, the newspaper ends their funding for the project and the government wins.
-- If the journalist has sent three rumors incorrectly, the newspaper fires the journalist and the government wins.
+- The journalist may submit a rumor to the newspaper.  It is published, along with a deep investigation, revealing the truth of the rumor to the world (and all players).
+- If the journalist has not sent a rumor for investigation in three rounds, the newspaper ends their funding for the project and the government wins.
+- If the journalist has sent four rumors incorrectly, the newspaper fires the journalist and the government wins.
 
 **When a true rumor is published:**
 
-- Every time a true rumor is about to be published, the agent will have an opportunity to assasinate someone.  This ends the game.  In this case if the person was the Journalist or the current Activist, the Government wins.  Otherwise the activists win.
-- Every time a true rumor is published, everyone is given a new rumor and a new activist is randomly selected among all pro-activist citizens.  Once again all rumors are false except for the rumor provided to the activist.
+- The agent has an opportunity to assasinate someone.  This ends the game.  In this case if the person was the Journalist or the current Activist, the Government wins.  Otherwise the activists win.
+- Everyone is given a new rumor and a new activist is randomly selected among all pro-activist citizens.  Once again all rumors are false except for the rumor provided to the activist.
 
 **During the round:**
 - Anyone may communicate however they want, with as many people as they want.  Communication is how rumors are spread.
 
-
 ##Communication
 
 There are a few forms of communication
-- **IRC:** everyone uses it and everyone is directly linked to their username.  There is a single public room and private messages are allowed.  This is where people will end up sharing their email addresses.
+
+- **IRC:** everyone uses it and everyone is directly linked to their username.  There is a single public room and private messages are allowed.  SSL can be enabled.
 - **Email:** PGP can be enabled with proper key sharing.  SSL can also be enabled.
-- **SSL:** Sending email with SSL means the agent doesn't learn your email credentials (and therefore can't pretend they are you).  Reading email with SSL means the agent doesn't know you read an email.  SSL doesn't stop the agent from seeing the email content because of the fact that communication between SMTP servers isn't necessarily secure.
+
+There are also a few forms of security the players have access to
+
+- **SSL:** Sending emails with SSL means the agent doesn't learn your email credentials (and therefore can't pretend they are you).  Reading email with SSL means the agent doesn't know you read an email.  SSL doesn't stop the agent from seeing the email content because of the fact that communication between SMTP servers isn't necessarily secure.  Furthermore, when the agent supoenas the email server SSL no longer provides any benefits.
 - **PGP:** encrypts the content of your email.  The government knows which account received it, but doesn't know the content.  If you have the public PGP key of someone you can send them a secure message.
 - **Tor:**  If you use Tor then you can create a new email address that the agent cannot directly associate with you.  The agent only knows that a Tor user created it.  The agent also knows who is using Tor.  Nobody can use Tor unless they have been trained by someone who knows how to use it.  The journalist starts as the only person who knows how to use Tor.
 
@@ -73,7 +76,7 @@ This section describes how the various forms of communication can be tracked by 
 KEY: 
  {+} means something good for the agent, without agent action.
  
- {*} means the agent gets this information only when the agent takes explicit action.
+ {*} means the agent gets this information only when the agent has gained an explicit advantage.
  
  {-} means something the activists can use to fight against the agent
 
@@ -99,21 +102,23 @@ KEY:
 
  {+}  The agent knows which email accounts a player is accessing.
 
+ {+}  The agent knows which emails have been read, and when.
+
  {-} ... unless the player is using SSL.
 
- {+} ... until the agent supoenas the Email server, at which point SSL no longer has any effect
+ {+} ... until the agent supoenas the Email server, at which point SSL no longer has any effect.
 
- {-} ... unless the player is using Tor.
+ {-} ... unless the player is using Tor.  Users of Tor always have the benefits of SSL.
 
 ###IRC
 
- {+}  The agent can see when a user does any action.
-
- {+}  The agent can see when a player does any action.
+ {+}  The agent can see when a player takes any action.
 
  {-} ... unless the player is using SSL.
 
- {+} ... until the agent supoenas the IRC server, at which point SSL no longer has any effect
+ {+} ... until the agent supoenas the IRC server, at which point SSL no longer has any effect.
+
+ (note: tor will have no effect on IRC for the first version)
 
 ###In General
 
