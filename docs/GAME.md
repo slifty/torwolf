@@ -59,7 +59,7 @@ There are a few forms of communication
 
 There are also a few forms of security the players have access to
 
-- **SSL:** Sending emails with SSL means the agent doesn't learn your email credentials (and therefore can't pretend they are you).  Reading email with SSL means the agent doesn't know you read an email.  SSL doesn't stop the agent from seeing the email content because of the fact that communication between SMTP servers isn't necessarily secure.  Furthermore, when the agent supoenas the email server SSL no longer provides any benefits.
+- **SSL:** Sending emails with SSL means the agent doesn't learn your email credentials (and therefore can't pretend they are you).  Reading email with SSL means the agent doesn't know you read an email.  SSL doesn't stop the agent from seeing the email content because of the fact that communication between SMTP servers isn't necessarily secure.  Furthermore, when the agent subpoenas the email server SSL no longer provides any benefits.
 - **PGP:** encrypts the content of your email.  The government knows which account received it, but doesn't know the content.  If you have the public PGP key of someone you can send them a secure message.
 - **Tor:**  If you use Tor then you can create a new email address that the agent cannot directly associate with you.  The agent only knows that a Tor user created it.  The agent also knows who is using Tor.  Nobody can use Tor unless they have been trained by someone who knows how to use it.  The journalist starts as the only person who knows how to use Tor.
 
@@ -106,7 +106,7 @@ KEY:
 
  {-} ... unless the player is using SSL.
 
- {+} ... until the agent supoenas the Email server, at which point SSL no longer has any effect.
+ {+} ... until the agent subpoenas the Email server, at which point SSL no longer has any effect.
 
  {-} ... unless the player is using Tor.  Users of Tor always have the benefits of SSL.
 
@@ -116,9 +116,9 @@ KEY:
 
  {-} ... unless the player is using SSL.
 
- {+} ... until the agent supoenas the IRC server, at which point SSL no longer has any effect.
+ {+} ... until the agent subpoenas the IRC server, at which point SSL no longer has any effect.
 
- (note: tor will have no effect on IRC for the first version)
+ (note: Tor will have no effect on IRC for the first version)
 
 ###In General
 
