@@ -3,7 +3,7 @@ Our mission with Torwolf is twofold:
 1. Make a fun game.
 2. Teach people about secure online communication.
 
-If you have played [werewolf or mafia](https://en.wikipedia.org/wiki/Mafia_(party_game)) (the in person deception game) it is inspired by that, but is a signficantly different scenario and ruleset.
+If you have played [werewolf or mafia](https://en.wikipedia.org/wiki/Mafia_(party_game)) (the in person deception game) it is inspired by that, but is a significantly different scenario and ruleset.
 
 #The Scenario
 
