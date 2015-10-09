@@ -478,9 +478,9 @@ exports.StorytellerEndOutPayload = function(game) {
 }
 
 
-exports.StorytellerHeartbeatInPayload = function(game) {
+exports.StorytellerHeartbeatInPayload = function(game, count) {
 	this.game = game;
-	this.count = 0;
+	this.count = count;
 
 	this.getPayload = function() {
 		return {
