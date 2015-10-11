@@ -1,0 +1,163 @@
+swagger: '2.0'
+info:
+  version: 0.1.0
+  title: 'Torwolf Games API'
+paths:
+  /games:
+    get:
+      description: Finds games
+      parameters:
+        - name: offset
+          in: query
+          description: The offset at which the result set should begin
+          required: false
+          type: integer
+          default: 0
+        - name: limit
+          in: query
+          description: Result will contain at most limit items
+          required: false
+          type: integer
+          default: 20
+        - name: phase
+          in: query
+          description: Games in the result set should be in the provided list of comma separated phases
+          required: false
+          type: string
+          enum: ["FORMING", "STARTED", "COMPLETED"]
+        - name: name
+          in: query
+          description: Games should match the provided text search string
+          required: false
+          type: string
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ResultSet'
+        # TODO: error middleware
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      description: Creates a game
+      parameters:
+        - name: game
+          in: body
+          description: Game to create
+          required: true
+          schema:
+            $ref: '#/definitions/Game'
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Game'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /games/{id}:
+    get:
+      description: Gets a game
+      parameters:
+        - name: id
+          in: path
+          description: Id of the game to get
+          required: true
+          type: number
+          format: i32
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Game'
+        # TODO: error middleware
+        404:
+          description: Game was not found
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+definitions:
+  Game:
+    required:
+      - name
+      - description
+    properties:
+      name:
+        type: string
+        description: The name of this game
+      description:
+        type: string
+        description: A description of what to expect in this game
+      victor:
+        type: string
+        description: Which side won the game
+        enum: ['GOVERNMENT', 'REBELLION']
+      phase:
+        type: string
+        description: Which phase the game is currently in
+        enum: ['FORMING', 'STARTED', 'COMPLETED']
+      startedAt:
+        type: string
+        format: date-time
+        description: When this game entered the 'STARTED' phase
+      completedAt:
+        type: string
+        format: date-time
+        description: When this game entered the 'COMPLETED' phase
+      createdAt:
+        type: string
+        format: date-time
+        description: When this game was created
+      updatedAt:
+        type: string
+        format: date-time
+        description: When this game was last updated
+      id:
+        type: integer
+        description: A unique identifier for this game
+    example:
+      name: Example Game
+      description: A really good example
+      victor: REBELLION
+      phase: COMPLETED
+      startedAt: 2015-10-04 05:05:09.877 +00:00
+      completedAt: 2015-10-04 05:05:09.877 +00:00
+      createdAt: 2015-10-04 05:05:09.877 +00:00
+      updatedAt: 2015-10-04 05:05:09.877 +00:00
+      id: 39
+
+  ResultSet:
+    type: object
+    required:
+      - start
+      - totalCount
+      - results
+    properties:
+      start:
+        type: integer
+        format: int32
+      totalCount:
+        type: integer
+        format: i32
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/Game'
+
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
