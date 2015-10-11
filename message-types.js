@@ -3,6 +3,19 @@ if(typeof(window) != "undefined") {
 } else {
 }
 
+/**
+ * Message types are implicitly split into two categories.
+ * 
+ * a) Action - An action to perform. These will always be present tense. Upon receiving
+ * an action, if it is a valid action, an event should be emitted to all appropriate sockets.
+ * If a it is an invalid action, an error should be emitted instead. Example: EMAIL_SEND.
+ * 
+ * b) Event - The result of an action. These will always be past tense, meaning 
+ * that they have already occurred, and consumers of the message type should make 
+ * appropriate updates. Example: EMAIL_SENT.
+ * 
+ * /
+
 exports.EMAIL_REGISTER = "register"; // Create a new email account
 exports.EMAIL_REGISTERED = "registered"; // A new email account has been created
 exports.EMAIL_SEND = "send"; // Send an email
