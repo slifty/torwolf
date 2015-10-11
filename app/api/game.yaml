@@ -9,7 +9,7 @@ paths:
       parameters:
         - name: offset
           in: query
-          description: The offset at which the result set should begin.
+          description: The offset at which the result set should begin
           required: false
           type: integer
           default: 0
@@ -21,7 +21,7 @@ paths:
           default: 20
         - name: phase
           in: query
-          description: Games in the result set should be in the provided list of comma separated phases.
+          description: Games in the result set should be in the provided list of comma separated phases
           required: false
           type: string
           enum: ["FORMING", "STARTED", "COMPLETED"]
@@ -91,37 +91,37 @@ definitions:
     properties:
       name:
         type: string
-        description: The name of this game.
+        description: The name of this game
       description:
         type: string
-        description: A description of what to expect in this game.
+        description: A description of what to expect in this game
       victor:
         type: string
-        description: Which side won the game.
+        description: Which side won the game
         enum: ['GOVERNMENT', 'REBELLION']
       phase:
         type: string
-        description: Which phase the game is currently in.
+        description: Which phase the game is currently in
         enum: ['FORMING', 'STARTED', 'COMPLETED']
       startedAt:
         type: string
         format: date-time
-        description: When this game entered the 'STARTED' phase.
+        description: When this game entered the 'STARTED' phase
       completedAt:
         type: string
         format: date-time
-        description: When this game entered the 'COMPLETED' phase.
+        description: When this game entered the 'COMPLETED' phase
       createdAt:
         type: string
         format: date-time
-        description: When this game was created.
+        description: When this game was created
       updatedAt:
         type: string
         format: date-time
-        description: When this game was last updated.
+        description: When this game was last updated
       id:
         type: integer
-        description: A unique identifier for this game.
+        description: A unique identifier for this game
     example:
       name: Example Game
       description: A really good example
