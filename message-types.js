@@ -14,7 +14,7 @@ if(typeof(window) != "undefined") {
  * that they have already occurred, and consumers of the message type should make 
  * appropriate updates. Example: EMAIL_SENT.
  * 
- * /
+ */
 
 exports.EMAIL_REGISTER = "register"; // Create a new email account
 exports.EMAIL_REGISTERED = "registered"; // A new email account has been created
