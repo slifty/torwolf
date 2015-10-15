@@ -44,7 +44,7 @@ var schema = {
 	createdAt: {
     	type: Sequelize.DATE,
     	field: 'created_at'
-    }, 	
+    },
     updatedAt: {
     	type: Sequelize.DATE,
     	field: 'updated_at'
@@ -63,6 +63,6 @@ var options = {
 };
 
 module.exports = function (sequelize, DataTypes) {
-  return sequelize.define("User", schema, options);
+	return sequelize.define("User", schema, options);
 };
 //#JSCOVERAGE_ENDIF

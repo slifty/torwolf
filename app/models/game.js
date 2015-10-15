@@ -1,4 +1,11 @@
-var Sequelize = require('sequelize');
+var Sequelize = require('sequelize'),
+	constants = require('../../constants'),
+	defaultRoles = {};
+defaultRoles[constants.PLAYER_ROLE_CITIZEN_AGENT] = [];
+defaultRoles[constants.PLAYER_ROLE_JOURNALIST] = [];
+defaultRoles[constants.PLAYER_ROLE_AGENT] = [];
+defaultRoles[constants.PLAYER_ROLE_CITIZEN_ACTIVIST] = [];
+defaultRoles[constants.PLAYER_ROLE_CITIZEN_APATHETIC] = [];
 
 //#JSCOVERAGE_IF
 var schema = {
@@ -33,6 +40,11 @@ var schema = {
 	updatedAt: {
 		type: Sequelize.DATE,
 		field: 'updated_at'
+	},
+	roles: {
+		type: Sequelize.HSTORE(),
+		allowNull: false,
+		defaultValue: defaultRoles
 	}
 };
 
@@ -56,7 +68,9 @@ var options = {
 module.exports = function(sequelize, DataTypes) {
 	var User = sequelize.import(__dirname + '/user');
 	var Game = sequelize.define('Game', schema, options);
-	Game.hasMany(User);
+	Game.belongsToMany(User, {
+		through: 'user_game'
+	});
 	return Game;
 };
 //#JSCOVERAGE_ENDIF

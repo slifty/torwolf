@@ -1,9 +1,11 @@
 var sequelize = global.database.sequelize;
 var Game = sequelize.import(__dirname + '/../models/game');
+var User = sequelize.import(__dirname + '/../models/user');
+var _ = require('lodash');
 
 module.exports = {
 	get: function(id, cb) {
-		Game.findById(id)
+		Game.findById(id, { include: [User] })
 		.then(function(game) {
 			if (!game) {
 				return cb(new Error("Could not find game with id " + id));
@@ -37,6 +39,16 @@ module.exports = {
 		Game.count(options)
 		.then(function(count) {
 			cb(null, count);
+		}).catch(function(error) {
+			return cb(error);
+		});
+	},
+
+	update: function (game, id, cb) {
+		game.id = id;
+		game.save(game)
+		.then(function(result) {
+			return cb(null, result);
 		}).catch(function(error) {
 			return cb(error);
 		});

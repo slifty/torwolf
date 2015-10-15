@@ -420,6 +420,47 @@ exports.SnooperWiretapOutPayload = function(player) {
 	}
 }
 
+exports.StorytellerSubpoenaIrcInPayload = function(game) {
+	this.game = game;
+	this.getPayload = function() {
+		return {
+			type: constants.STORYTELLER_IRCSUBPOENA,
+			data: {
+			}
+		}
+	};
+};
+
+exports.StorytellerSubpoenaIrcOutPayload = function() {
+	this.getPayload = function() {
+		return {
+			type: constants.STORYTELLER_IRCSUBPOENAD,
+			data: {
+			}
+		}
+	};
+}
+
+exports.StorytellerSubpoenaEmailInPayload = function(game) {
+	this.game = game;
+	this.getPayload = function() {
+		return {
+			type: constants.STORYTELLER_EMAILSUBPOENA,
+			data: {
+			}
+		}
+	};
+};
+
+exports.StorytellerSubpoenaEmailOutPayload = function() {
+	this.getPayload = function() {
+		return {
+			type: constants.STORYTELLER_EMAILSUBPOENAD,
+			data: {
+			}
+		}
+	};
+}
 
 exports.StorytellerAllegianceInPayload = function() {
 }
@@ -646,8 +687,9 @@ exports.StorytellerStartInPayload = function(game) {
 exports.StorytellerStartOutPayload = function(game) {
 }
 
-exports.StorytellerTickInPayload = function(game) {
+exports.StorytellerTickInPayload = function(game, round) {
 	this.game = game;
+	this.round = round;
 
 	this.getPayload = function() {
 		return {
@@ -659,17 +701,17 @@ exports.StorytellerTickInPayload = function(game) {
 	};
 };
 
-exports.StorytellerTickOutPayload = function(game) {
-	this.game = game;
+exports.StorytellerTickOutPayload = function(round) {
+	this.round = round;
 	this.getPayload = function() {
 		return {
 			type: constants.STORYTELLER_TOCK,
 			data: {
-				round: this.game.round
+				round: this.rounds
 			}
 		}
 	};
-}
+};
 
 exports.TorConnectInPayload = function() {
 	this.getPayload = function() {

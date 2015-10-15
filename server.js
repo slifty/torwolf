@@ -48,20 +48,26 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 io.sockets.on('connection', function(socket) {
 	socket.locale = constants.LOCALE_DEFAULT;
-
 	var payload = new payloads.StorytellerHeartbeatOutPayload(0);
-	messageSender.send(
-		payload,
-		messageTypes.STORYTELLER_HEARTBEATPING,
-		socket);
+
+	setTimeout(function() {
+		messageSender.send(
+			payload,
+			messageTypes.STORYTELLER_HEARTBEATPING,
+			socket);
+	}, constants.TICK_HEARTBEAT);
 
 	socket.on('locale', function (locale) {
 		socket.locale = locale;
 	});
 
 	socket.on('message', function (payload) {
-		logger.debug('Received message ' + JSON.stringify(payload));
-		router.receiveMessage(payload, socket);
+		try {
+			logger.debug('Received message ' + JSON.stringify(payload));
+			router.receiveMessage(payload, socket);
+		} catch (error) {
+			logger.error(error);
+		}
 	});
 });
 

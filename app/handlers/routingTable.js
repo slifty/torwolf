@@ -1,8 +1,13 @@
-var messageTypes = require('../../message-types');
+var messageTypes = require('../../message-types'),
+	heartbeat = require('./heartbeat'),
+	start = require('./storyteller/startGame'),
+	join = require('./storyteller/joinGame'),
+	tick = require('./storyteller/tick'),
+	table = {};
 
-var heartbeat = require('./heartbeat');
-
-var table = {};
 table[messageTypes.STORYTELLER_HEARTBEATPONG] = heartbeat;
+table[messageTypes.STORYTELLER_JOIN] = join;
+table[messageTypes.STORYTELLER_START] = start;
+table[messageTypes.STORYTELLER_TICK] = tick;
 
 module.exports = table;

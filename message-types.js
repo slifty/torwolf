@@ -68,6 +68,10 @@ exports.STORYTELLER_START = "start"; // Start the game
 exports.STORYTELLER_STARTED = "started"; // The game has started
 exports.STORYTELLER_TICK = "tick"; // Trigger a tick
 exports.STORYTELLER_TOCK = "tock"; // A tick has occurred
+exports.STORYTELLER_IRCSUBPOENA = "subpoena-irc"; // subpoena irc server
+exports.STORYTELLER_IRCSUBPOENAD = "subpoenad-irc"; // irc server has been subpoena'd
+exports.STORYTELLER_EMAILSUBPOENA = "subpoena-email"; // subpoena email server
+exports.STORYTELLER_EMAILSUBPOENAD = "subpoenad-email"; // email server has been subpoena'd
 
 exports.TOR_CONNECT = "connect"; // Connect to Tor
 exports.TOR_CONNECTED = "connected"; // Connection to Tor complete

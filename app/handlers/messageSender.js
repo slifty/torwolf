@@ -1,4 +1,20 @@
-exports.send = function(payload, type, socket, interaction) {
+var config = require('../../config');
+var serverSocket = require('socket.io-client')(config.socketIoHost + ':' + config.socketIoPort);
+
+exports.sendToServer = function(payload, type) {
+	var message = {
+		payload: payload,
+		type: type
+	};
+
+	serverSocket.emit('message', message);
+};
+
+exports.send = function(payload, type, sockets, interaction) {
+	if (!(sockets instanceof Array)) {
+		sockets = [sockets];
+	}
+
 	var message = {
 		payload: payload,
 		type: type
@@ -19,5 +35,7 @@ exports.send = function(payload, type, socket, interaction) {
 		// 	constants.COMMUNICATION_SOCKET_SERVER);
 	}
 
-	socket.emit('message', message);
+	for (var socket in sockets) {
+		sockets[socket].emit('message', message);
+	}
 };
