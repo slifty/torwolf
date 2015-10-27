@@ -182,8 +182,33 @@ describe('Core sockets', function() {
 		startGame();
 	});
 
-	it.only('Should assign rumors when a game starts', function(done) {
-		// TODO
+	it('Should assign rumors when a game starts', function(done) {
+		trueRumors = 0;
+		falseRumors = 0;
+		var expectedUsers = _.indexBy(users, 'id');
+		socket.on('message', function(data) {
+			if (data.payload.type === messageTypes.STORYTELLER_RUMORRECEIVED) {
+				rumor = data.payload.data;
+      			should.exist(rumor.text);
+      			rumor.destinationId.should.equal(rumor.sourceId);
+      			rumor.rumorId.should.exist;
+      			rumor.publicationStatus.should.equal(constants.RUMOR_PUBLICATIONSTATUS_UNPUBLISHED);
+      			should.exist(rumor.truthStatus);
+      			switch (rumor.truthStatus) {
+      				case constants.RUMOR_TRUTHSTATUS_TRUE:
+      					trueRumors++;
+      					break;
+  					case constants.RUMOR_TRUTHSTATUS_FALSE:
+  						falseRumors++;
+  						break
+      			}
+				delete expectedUsers[rumor.sourceId];
+				if (_.isEmpty(expectedUsers) && falseRumors === 7 && trueRumors === 1) {
+					return done();
+				}
+			}
+		});
+		startGame();
 	});
 
 	it('Should start ticks when a game starts', function(done) {

@@ -75,13 +75,13 @@ exports.handle = function(payload, interaction) {
 				}
 				gameState.storeRumor(rumor);
 
-				var rumorIn = new payloads.StorytellerRumorInPayload(rumor);
-				rumorIn.destinationId = player.id;
-				rumorIn.sourceId = player.id;
-				rumorIn.truthStatus = rumor.truthStatus;
+				var rumorOut = new payloads.StorytellerRumorOutPayload(rumor);
+				rumorOut.destinationId = player.id;
+				rumorOut.sourceId = player.id;
+				rumorOut.truthStatus = rumor.truthStatus;
 
 				messageSender.send(
-					rumorIn.getPayload(),
+					rumorOut.getPayload(),
 					gameState.getSocketByPlayerId(player.id));
 
 				// TODO: agent
