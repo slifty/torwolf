@@ -1,7 +1,7 @@
-var sequelize = global.database.sequelize;
-var Game = sequelize.import(__dirname + '/../models/game');
-var User = sequelize.import(__dirname + '/../models/user');
-var _ = require('lodash');
+var sequelize = global.database.sequelize,
+	Game = sequelize.import(__dirname + '/../models/game'),
+	User = sequelize.import(__dirname + '/../models/user'),
+	_ = require('lodash');
 
 module.exports = {
 	get: function(id, cb) {
@@ -46,6 +46,7 @@ module.exports = {
 
 	update: function (game, id, cb) {
 		game.id = id;
+		// FIXME: has to be a better way to do this with sequelize
 		game.save(game)
 		.then(function(result) {
 			return cb(null, result);

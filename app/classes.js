@@ -12,14 +12,22 @@ exports.Interaction = function() {
 };
 
 exports.Rumor = function(gameId) {
+	this.generateText = function() {
+		var rumorText = "";
+		for(var x = 0 ; x < 2 ; ++x) {
+			var word = words.words[Math.floor(Math.random() * words.words.length)];
+			rumorText += ((x===0)?"":" ") + word;
+		}
+		return rumorText;
+	};
+
 	this.gameId = gameId;
 	this.id = uuid.v4();
 	this.truthStatus = "";
 	this.publicationStatus = "";
 	this.sourceId = "";
-	this.text = "";
+	this.text = this.generateText();
 	this.transfers = [];
-	this.rumor = generateRumor();
 
 	this.getPlayerTruthStatus = function(player) {
 		if (this.publicationStatus == constants.RUMOR_PUBLICATIONSTATUS_PUBLISHED || this.sourceId === player.id) {
@@ -28,20 +36,4 @@ exports.Rumor = function(gameId) {
 			return constants.RUMOR_TRUTHSTATUS_UNKNOWN;
 		}
 	};
-
-	this.randomWord = function() {
-		var x = Math.floor(Math.random() * words.words.length);
-		return words.words[x];
-	};
-
-	function generateRumor () {
-		var rumorText = "";
-		for(var x = 0 ; x < 2 ; ++x) {
-			var word = this.randomWord();
-			rumorText += ((x===0)?"":" ") + word;
-		}
-
-		this.text = rumorText;
-		return rumor;
-	}
 };

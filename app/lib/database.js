@@ -13,7 +13,7 @@ if(!global.hasOwnProperty('database')) {
       host: config.sqlHost,
       port: config.sqlPort,
       logging: function (message) {
-        logger.debug(message);
+        // logger.debug(message);
       },
       dialect: 'postgres',
       // underscore casing

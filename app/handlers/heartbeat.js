@@ -6,10 +6,10 @@ var constants = require('../../constants'),
 	gameRepository = require('../repositories/game'),
 	messageTypes = require('../../message-types');
 
-exports.handle = function(data, interaction) {
+exports.handle = function(payload, interaction) {
 	var socket = interaction.socket;
-	var count = data.count;
-	var game = gameRepository.get(data.game.id, function (err, game) {
+	var count = payload.data.count;
+	var game = gameRepository.get(payload.data.gameId, function (err, game) {
 		if (err) {
 			throw err;
 		}
@@ -21,10 +21,9 @@ exports.handle = function(data, interaction) {
 
 		// Start the next heartbeat
 		return setTimeout(function() {
-			var payload = new payloads.StorytellerHeartbeatOutPayload(++count);
+			var heartbeatPayload = new payloads.StorytellerHeartbeatOutPayload(++count);
 			messageSender.send(
-				payload,
-				messageTypes.STORYTELLER_HEARTBEATPING,
+				heartbeatPayload.getPayload(),
 				socket,
 				interaction);
 		}, constants.TICK_HEARTBEAT);

@@ -6,7 +6,7 @@ var classes = require('../classes'),
 	logger = require('../lib/logger').logger;
 
 exports.receiveMessage = function(message, socket) {
-	if(!message.payload || !message.type) {
+	if(!message.payload || !message.payload.type) {
 		logger.info("Invalid payload received " + JSON.stringify(message));
 		return; // Invalid payload
 	}
@@ -26,5 +26,5 @@ exports.receiveMessage = function(message, socket) {
 	gameState.storeInteraction(interaction);
 	message.interactionId = interaction.id;
 
-	routingTable[message.type].handle(message.payload, interaction);
+	routingTable[message.payload.type].handle(message.payload, interaction);
 };

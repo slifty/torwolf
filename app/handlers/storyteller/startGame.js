@@ -2,38 +2,46 @@ var async = require('async'),
 	gameRepository = require('../../repositories/game'),
 	gameState = require('../../lib/gameState'),
 	messageSender = require('../messageSender'),
-	messageTypes = require('../../../message-types'),
 	payloads = require('../../../payloads'),
 	classes = require('../../classes'),
+	constants = require('../../../constants'),
 	logger = require('../../lib/logger').logger,
 	_ = require('lodash');
 
-exports.handle = function(data, interaction) {
+exports.handle = function(payload, interaction) {
 	var socket = interaction.socket;
-
 	async.waterfall([
 		function(callback) {
-			gameRepository.get(data.gameId, callback);
+			gameRepository.get(payload.data.gameId, callback);
 		},
 		function(game, callback) {
 			// Assign information to the players
-			var roles = _.cloneDeep(Object.keys(game.roles));
-			for(var x in game.Users) {
-				var player = game.Users[x];
+			var roles = [
+				constants.PLAYER_ROLE_ACTIVIST,
+				constants.PLAYER_ROLE_CITIZEN_ACTIVIST,
+				constants.PLAYER_ROLE_CITIZEN_ACTIVIST,
+				constants.PLAYER_ROLE_CITIZEN_ACTIVIST,
+				constants.PLAYER_ROLE_CITIZEN_APATHETIC,
+				constants.PLAYER_ROLE_JOURNALIST,
+				constants.PLAYER_ROLE_AGENT,
+				constants.PLAYER_ROLE_CITIZEN_AGENT
+			];
+
+			var gameStateGame = gameState.getGameById(game.id);
+			for(var x in gameStateGame.players) {
+				var player = gameStateGame.players[x];
 
 				// Assign a "random" role
-				// TODO: make sure roles are not double assigned
 				var role = roles.pop();
-				game.roles[role].push(player.id);
+				player.role = role;
+				gameState.assignRole(game.id, player.id, role);
 
 				// Tell the player his role
 				var roleOut = new payloads.StorytellerRoleOutPayload(player);
 				messageSender.send(
 					roleOut.getPayload(),
-					messageTypes.STORYTELLER_ROLESET,
 					gameState.getSocketByPlayerId(player.id));
 
-				// TODO: persist?
 				switch(player.role) {
 					case constants.PLAYER_ROLE_ACTIVIST:
 					case constants.PLAYER_ROLE_CITIZEN_ACTIVIST:
@@ -51,8 +59,7 @@ exports.handle = function(data, interaction) {
 
 				var allegianceOut = new payloads.StorytellerAllegianceOutPayload(player);
 				messageSender.send(
-					allegianceOut,
-					messageTypes.STORYTELLER_ALLEGIANCECHANGE,
+					allegianceOut.getPayload(),
 					gameState.getSocketByPlayerId(player.id));
 
 				// Give the player his starting rumors
@@ -74,8 +81,7 @@ exports.handle = function(data, interaction) {
 				rumorIn.truthStatus = rumor.truthStatus;
 
 				messageSender.send(
-					rumorIn,
-					messageTypes.STORYTELLER_RUMOR,
+					rumorIn.getPayload(),
 					gameState.getSocketByPlayerId(player.id));
 
 				// TODO: agent
@@ -91,8 +97,7 @@ exports.handle = function(data, interaction) {
 			var tickIn = new payloads.StorytellerTickInPayload(game, 0);
 
 			messageSender.sendToServer(
-				tickIn,
-				messageTypes.STORYTELLER_TICK);
+				tickIn.getPayload());
 
 			gameRepository.update(game, game.id, callback);
 		}

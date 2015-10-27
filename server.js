@@ -47,13 +47,13 @@ passport.use(new LocalStrategy({
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 io.sockets.on('connection', function(socket) {
+	logger.debug('Socket connected');
 	socket.locale = constants.LOCALE_DEFAULT;
 	var payload = new payloads.StorytellerHeartbeatOutPayload(0);
 
 	setTimeout(function() {
 		messageSender.send(
-			payload,
-			messageTypes.STORYTELLER_HEARTBEATPING,
+			payload.getPayload(),
 			socket);
 	}, constants.TICK_HEARTBEAT);
 

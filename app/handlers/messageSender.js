@@ -1,23 +1,21 @@
 var config = require('../../config');
 var serverSocket = require('socket.io-client')(config.socketIoHost + ':' + config.socketIoPort);
 
-exports.sendToServer = function(payload, type) {
+exports.sendToServer = function(payload) {
 	var message = {
-		payload: payload,
-		type: type
+		payload: payload
 	};
 
 	serverSocket.emit('message', message);
 };
 
-exports.send = function(payload, type, sockets, interaction) {
+exports.send = function(payload, sockets, interaction) {
 	if (!(sockets instanceof Array)) {
 		sockets = [sockets];
 	}
 
 	var message = {
-		payload: payload,
-		type: type
+		payload: payload
 	};
 
 	// Add to the interaction

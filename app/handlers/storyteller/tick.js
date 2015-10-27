@@ -1,34 +1,32 @@
 var constants = require('../../../constants'),
 	messageSender = require('../messageSender'),
-	messageTypes = require('../../../message-types'),
 	payloads = require('../../../payloads'),
 	gameState = require('../../lib/gameState');
 
-exports.handle = function(data, interaction) {
-	var round = data.round;
-	var game = data.game;
+exports.handle = function(payload, interaction) {
+	var round = payload.data.round;
+	var game = {
+		id: payload.data.gameId
+	};
 
 	// notify clients of next tick
 	var thisTick = new payloads.StorytellerTickOutPayload();
 	messageSender.send(
-		thisTick,
-		messageTypes.STORYTELLER_TOCK,
-		gameState.getSocketsByGame(data.game)
+		thisTick.getPayload(),
+		gameState.getSocketsByGame(game)
 	);
 
 	if (round === constants.TICK_IRCSUBPOENA) {
-		var payload = new payloads.StorytellerSubpoenaIrcInPayload(game);
+		var ircPayload = new payloads.StorytellerSubpoenaIrcInPayload(game);
 		messageSender.sendToServer(
-			payload,
-			messageTypes.STORYTELLER_IRCSUBPOENA
+			ircPayload.getPayload()
 		);
 	}
 
 	if (round === constants.TICK_EMAILSUBPOENA) {
-		var payload = new payloads.StorytellerSubpoenaEmailInPayload(game);
+		var emailPayload = new payloads.StorytellerSubpoenaEmailInPayload(game);
 		messageSender.sendToServer(
-			payload,
-			messageTypes.STORYTELLER_EMAILSUBPOENA
+			emailPayload.getPayload()
 		);
 	}
 
@@ -36,7 +34,6 @@ exports.handle = function(data, interaction) {
 	setTimeout(function() {
 		var nextTick = new payloads.StorytellerTickInPayload(game, ++round);
 		messageSender.sendToServer(
-			nextTick,
-			messageTypes.STORYTELLER_TICK);
+			nextTick.getPayload());
 	}, constants.TICK_LENGTH);
 };

@@ -525,7 +525,7 @@ exports.StorytellerHeartbeatInPayload = function(game, count) {
 
 	this.getPayload = function() {
 		return {
-			type: constants.STORYTELLER_HEARTBEATPING,
+			type: constants.STORYTELLER_HEARTBEATPONG,
 			data: {
 				gameId: this.game.id,
 				count: this.count
@@ -538,7 +538,7 @@ exports.StorytellerHeartbeatOutPayload = function(count) {
 	this.count = count;
 	this.getPayload = function() {
 		return {
-			type: constants.STORYTELLER_HEARTBEATPONG,
+			type: constants.STORYTELLER_HEARTBEATPING,
 			data: {
 				count: this.count,
 			}
@@ -696,6 +696,7 @@ exports.StorytellerTickInPayload = function(game, round) {
 			type: constants.STORYTELLER_TICK,
 			data: {
 				gameId: this.game.id,
+				round: this.round
 			}
 		}
 	};

@@ -2,22 +2,21 @@ var should = require('chai').should(),
 	request = require('supertest'),
 	async = require('async'),
 	io = require('socket.io-client'),
-	url = 'http://localhost:3000',
 	userFactory = require('../factories/user'),
 	gameFactory = require('../factories/game'),
 	payloads = require('../../payloads'),
 	messageTypes = require('../../message-types'),
 	constants = require('../../constants'),
-	_ = require('lodash');
+	_ = require('lodash'),
+	gameState = require('../../app/lib/gameState');
 
-constants.TICK_HEARTBEAT = 300;
+constants.TICK_HEARTBEAT = 1000;
 
 if (!global.hasOwnProperty('testApp')) {
 	global.testApp = require('../../server');
 }
 
 var app = global.testApp;
-var socket;
 
 describe('Core sockets', function() {
 	var game = undefined;
@@ -25,18 +24,30 @@ describe('Core sockets', function() {
 	var users = undefined;
 	var user = undefined;
 	var agent = request.agent(app.app);
+	var socket = undefined;
 	this.timeout(5000);
 
+	var startGame = function() {
+		for (var index in users) {
+			player = users[index];
+			payload = new payloads.StorytellerJoinInPayload(player, game);
+			socket.emit('message', {
+				payload: payload.getPayload()
+			});
+		}
+	};
+
 	beforeEach(function(done) {
+		socket = io.connect('http://localhost:3000', {'force new connection': true});
 		async.waterfall([
 			function(cb) {
-				async.times(2, function(n, next) {
+				async.times(8, function(n, next) {
 					user = userFactory.create();
 					agent
 						.post('/users')
 						.send(user)
 						.end( function(err, response) {
-							if (err) {
+							if (err || response.statusCode != 200) {
 								return next(err);
 							}
 							next(null, response);
@@ -71,54 +82,128 @@ describe('Core sockets', function() {
 		});
 	});
 
-	it.only('Should allow players to join game', function(done) {
-		var socket = require('socket.io-client')('http://localhost:3000');
-		var expectedUsers = _.indexBy(users, 'id');
-		socket.on('message', function(data) {
-			if (data.type === messageTypes.STORYTELLER_JOINED) {
-				should.exist(expectedUsers[data.payload.player.id]);
-				agent
-					.get('/games/' + game.id)
-					.end(function(err, response) {
-						var game = response.body;
-						game.Users.should.have.length(2);
-						delete expectedUsers[data.payload.player.id];
-						if (_.isEmpty(expectedUsers)) {
-							done();
-						}
-					});
-			}
-		});
-		socket.emit('message', {
-			payload: new payloads.StorytellerJoinInPayload(users[0], game),
-			type: messageTypes.STORYTELLER_JOIN
-		});
-		setTimeout(function() {
-			socket.emit('message', {
-				payload: new payloads.StorytellerJoinInPayload(users[1], game),
-				type: messageTypes.STORYTELLER_JOIN
-			});
-		}, 1500);
-	});
-
-	it('Should start game when enough players have joined', function(done) {
+	afterEach(function(done) {
+		socket.disconnect();
 		done();
 	});
 
 	it('Should heartbeat', function (done) {
 		var expectedCount = 0;
-		var socket = require('socket.io-client')('http://localhost:3000');
 		socket.on('message', function(data) {
-			if (data.payload.count === 3) {
+			if (data.payload.type === messageTypes.STORYTELLER_HEARTBEATPING) {
+				if (data.payload.data.count === 2) {
+					done();
+				}
+				data.payload.data.count.should.equal(expectedCount);
+				expectedCount++;
+				data.payload.type.should.equal(messageTypes.STORYTELLER_HEARTBEATPING);
+				payload = new payloads.StorytellerHeartbeatInPayload({id: game.id}, data.payload.data.count);
+				socket.emit('message', {
+					payload: payload.getPayload()
+				});
+			}
+		});
+	});
+
+	it('Should allow players to join game', function(done) {
+		var expectedUsers = _.indexBy(users, 'id');
+		socket.on('message', function(data) {
+			if (data.payload.type === messageTypes.STORYTELLER_JOINED) {
+				playerId = data.payload.data.playerId;
+				game = gameState.getGameById(game.id);
+				for (var index in game.players) {
+					player = game.players[index];
+					should.exist(player);
+				}
+				delete expectedUsers[playerId];
+				game.players.length.should.equal(2);
+				// FIXME should be 6
+				if (Object.keys(expectedUsers).length === 7) {
+					done();
+				}
+			}
+		});
+		joinPayload = new payloads.StorytellerJoinInPayload(users[0], game);
+		socket.emit('message', {
+			payload: joinPayload.getPayload()
+		});
+		joinPayload = new payloads.StorytellerJoinInPayload(users[1], game);
+		socket.emit('message', {
+			payload: joinPayload.getPayload()
+		});
+	});
+
+	it('Should assign roles when a game starts', function(done) {
+		expectedUsers = _.indexBy(users, 'id');
+
+		var roles = {};
+		roles[constants.PLAYER_ROLE_ACTIVIST] = 1;
+		roles[constants.PLAYER_ROLE_CITIZEN_ACTIVIST] = 3;
+		roles[constants.PLAYER_ROLE_CITIZEN_APATHETIC] = 1;
+		roles[constants.PLAYER_ROLE_JOURNALIST] = 1;
+		roles[constants.PLAYER_ROLE_AGENT] = 1;
+		roles[constants.PLAYER_ROLE_CITIZEN_AGENT] = 1;
+
+		socket.on('message', function(data) {
+			if (data.payload.type === messageTypes.STORYTELLER_ROLESET) {
+				roles[data.payload.data.role]--;
+				if (roles[data.payload.data.role] === 0) {
+					delete roles[data.payload.data.role];
+				}
+				delete expectedUsers[data.payload.data.playerId];
+				if (_.isEmpty(roles) && _.isEmpty(expectedUsers)) {
+					return done();
+				}
+			}
+		});
+		startGame();
+	});
+
+	it('Should assign allegiances when a game starts', function(done) {
+		var expectedUsers = _.indexBy(users, 'id');
+
+		var allegiances = {};
+		allegiances[constants.PLAYER_ALLEGIANCE_GOVERNMENT] = 2;
+		allegiances[constants.PLAYER_ALLEGIANCE_NEUTRAL] = 2;
+		allegiances[constants.PLAYER_ALLEGIANCE_REBELLION] = 4;
+
+		socket.on('message', function(data) {
+			if (data.payload.type === messageTypes.STORYTELLER_ALLEGIANCECHANGE) {
+				allegiances[data.payload.data.allegiance] -= 1;
+				if (allegiances[data.payload.data.allegiance] === 0) {
+					delete allegiances[data.payload.data.allegiance];
+				}
+				delete expectedUsers[data.payload.data.playerId];
+				if (_.isEmpty(allegiances) && _.isEmpty(expectedUsers)) {
+					return done();
+				}
+			}
+		});
+		startGame();
+	});
+
+	it.only('Should assign rumors when a game starts', function(done) {
+		// TODO
+	});
+
+	it('Should start ticks when a game starts', function(done) {
+		var expectedCount = 2;
+		var actualCount = 0;
+		socket.on('message', function(data) {
+			if (data.payload.type === messageTypes.STORYTELLER_TOCK && ++actualCount === expectedCount) {
 				done();
 			}
-			data.payload.count.should.equal(expectedCount);
-			expectedCount++;
-			data.type.should.equal(messageTypes.STORYTELLER_HEARTBEATPING);
-			socket.emit('message', {
-				payload: new payloads.StorytellerHeartbeatInPayload({id: game.id}, data.payload.count),
-				type: messageTypes.STORYTELLER_HEARTBEATPONG
-			});
 		});
+		startGame();
+	});
+
+	it('Should start game when enough players have joined', function(done) {
+		socket.on('message', function(data) {
+			if (data.payload.type === messageTypes.STORYTELLER_TOCK) {
+				done();
+			}
+			// TODO: assert
+		});
+		startGame();
 	});
 });

@@ -1,11 +1,4 @@
-var Sequelize = require('sequelize'),
-	constants = require('../../constants'),
-	defaultRoles = {};
-defaultRoles[constants.PLAYER_ROLE_CITIZEN_AGENT] = [];
-defaultRoles[constants.PLAYER_ROLE_JOURNALIST] = [];
-defaultRoles[constants.PLAYER_ROLE_AGENT] = [];
-defaultRoles[constants.PLAYER_ROLE_CITIZEN_ACTIVIST] = [];
-defaultRoles[constants.PLAYER_ROLE_CITIZEN_APATHETIC] = [];
+var Sequelize = require('sequelize');
 
 //#JSCOVERAGE_IF
 var schema = {
@@ -40,11 +33,6 @@ var schema = {
 	updatedAt: {
 		type: Sequelize.DATE,
 		field: 'updated_at'
-	},
-	roles: {
-		type: Sequelize.HSTORE(),
-		allowNull: false,
-		defaultValue: defaultRoles
 	}
 };
 

@@ -5,7 +5,6 @@ var messageTypes = require('../../message-types');
 exports.error = function (message, socket) {
 	var error = new payloads.ErrorPayload(message);
 	socket.emit('error', {
-		payload: error,
-		type: messageTypes.GENERAL_ERROR
+		payload: error.getPayload()
 	});
 };
