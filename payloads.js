@@ -426,6 +426,7 @@ exports.StorytellerSubpoenaIrcInPayload = function(game) {
 		return {
 			type: constants.STORYTELLER_IRCSUBPOENA,
 			data: {
+				gameId: game.id
 			}
 		}
 	};
@@ -435,8 +436,7 @@ exports.StorytellerSubpoenaIrcOutPayload = function() {
 	this.getPayload = function() {
 		return {
 			type: constants.STORYTELLER_IRCSUBPOENAD,
-			data: {
-			}
+			data: {}
 		}
 	};
 }
@@ -447,6 +447,7 @@ exports.StorytellerSubpoenaEmailInPayload = function(game) {
 		return {
 			type: constants.STORYTELLER_EMAILSUBPOENA,
 			data: {
+				gameId: game.id
 			}
 		}
 	};
@@ -456,8 +457,7 @@ exports.StorytellerSubpoenaEmailOutPayload = function() {
 	this.getPayload = function() {
 		return {
 			type: constants.STORYTELLER_EMAILSUBPOENAD,
-			data: {
-			}
+			data: {}
 		}
 	};
 }

@@ -94,7 +94,7 @@ exports.handle = function(payload, interaction) {
 			}
 
 			// Start first turn
-			var tickIn = new payloads.StorytellerTickInPayload(game, 0);
+			var tickIn = new payloads.StorytellerTickInPayload(game, 1);
 
 			messageSender.sendToServer(
 				tickIn.getPayload());

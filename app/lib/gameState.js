@@ -51,6 +51,11 @@ exports.getSocketByPlayerId = function(playerId) {
 	return sockets[playerId];
 };
 
+exports.getSocketsByGameId = function(gameId) {
+	game = exports.getGameById(gameId);
+	return exports.getSocketsByGame(game);
+};
+
 exports.getSocketsByGame = function(game) {
 	var sockets = [];
 	game = exports.getGameById(game.id);

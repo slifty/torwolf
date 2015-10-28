@@ -11,6 +11,7 @@ var should = require('chai').should(),
 	gameState = require('../../app/lib/gameState');
 
 constants.TICK_HEARTBEAT = 1000;
+constants.TICK_LENGTH = 200;
 
 if (!global.hasOwnProperty('testApp')) {
 	global.testApp = require('../../server');
@@ -206,6 +207,40 @@ describe('Core sockets', function() {
 				if (_.isEmpty(expectedUsers) && falseRumors === 7 && trueRumors === 1) {
 					return done();
 				}
+			}
+		});
+		startGame();
+	});
+
+	it('Should subpoena irc', function(done) {
+		var tick = 0;
+		socket.on('message', function(data) {
+			if (data.payload.type === messageTypes.STORYTELLER_TOCK) {
+				tick++;
+				return;
+			}
+
+			if (data.payload.type === messageTypes.STORYTELLER_IRCSUBPOENAD) {
+				tick /= 8; // 8 players receive tick messages
+				tick.should.equal(constants.TICK_IRCSUBPOENA);
+				done();
+			}
+		});
+		startGame();
+	});
+
+	it('Should subpoena email', function(done) {
+		var tick = 0;
+		socket.on('message', function(data) {
+			if (data.payload.type === messageTypes.STORYTELLER_TOCK) {
+				tick++;
+				return;
+			}
+
+			if (data.payload.type === messageTypes.STORYTELLER_EMAILSUBPOENAD) {
+				tick /= 8; // 8 players receive tick messages
+				tick.should.equal(constants.TICK_EMAILSUBPOENA);
+				done();
 			}
 		});
 		startGame();
