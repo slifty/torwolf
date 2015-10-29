@@ -8,7 +8,8 @@ var should = require('chai').should(),
 	messageTypes = require('../../message-types'),
 	constants = require('../../constants'),
 	_ = require('lodash'),
-	gameState = require('../../app/lib/gameState');
+	gameState = require('../../app/lib/gameState'),
+	locales = require('../../locales');
 
 constants.TICK_HEARTBEAT = 1000;
 constants.TICK_LENGTH = 200;
@@ -251,6 +252,34 @@ describe('Core sockets', function() {
 		var actualCount = 0;
 		socket.on('message', function(data) {
 			if (data.payload.type === messageTypes.STORYTELLER_TOCK && ++actualCount === expectedCount) {
+				done();
+			}
+		});
+		startGame();
+	});
+
+	it('Should kill a player', function(done) {
+		killedEventsReceived = 0;
+		announcementsReceived = 0;
+		var playerId = undefined;
+		socket.on('message', function(data) {
+			if (data.payload.type === messageTypes.STORYTELLER_ROLESET &&
+				data.payload.data.role === constants.PLAYER_ROLE_AGENT ) {
+				playerId = data.payload.data.playerId;
+				killPayload = new payloads.StorytellerKillInPayload({ id: playerId }, game);
+				socket.emit('message', {
+					payload: killPayload.getPayload()
+				});
+			} else if (data.payload.type === messageTypes.STORYTELLER_KILLED) {
+				data.payload.data.playerId.should.equal(playerId);
+				killedEventsReceived++;
+			} else if (data.payload.type === messageTypes.STORYTELLER_ANNOUNCEMENT) {
+				data.payload.data.text.should.equal(locales['default'].messages.storyteller.VICTORY_ACTIVISTS_KILLING);
+				announcementsReceived++;
+			} else {
+				// do nothing
+			}
+			if (killedEventsReceived === 8 && announcementsReceived === 8) {
 				done();
 			}
 		});

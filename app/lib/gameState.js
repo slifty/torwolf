@@ -3,9 +3,13 @@ var classes = require('../classes'),
 	sockets = {},
 	investigations = {},
 	rumors = {},
-	games = {};
+	games = {},
+	roles = {},
+	players = {},
+	playersBySocketId = {};
 
 exports.assignRole = function(gameId, playerId, role) {
+	roles[playerId] = role;
 	var game = games[gameId];
 	if (!game.roles[role]) {
 		game.roles[role] = [];
@@ -13,14 +17,22 @@ exports.assignRole = function(gameId, playerId, role) {
 	game.roles[role].push(playerId);
 };
 
-exports.addPlayerToGame = function(gameId, player) {
+exports.getRoleByPlayerId = function(playerId) {
+	return roles[playerId];
+};
+
+exports.addPlayerToGame = function(gameId, player, socket) {
 	games[gameId].players.push(player);
+	players[player.id] = player;
+	playersBySocketId[socket.id] = player;
 };
 
 exports.storeGame = function(game) {
 	game.roles = {};
 	game.players = [];
 	games[game.id] = game;
+	// TODO: locales
+	game.locale = 'default';
 };
 
 exports.getGameById = function(id) {
@@ -45,6 +57,10 @@ exports.storeInteraction = function(interaction) {
 
 exports.storeSocket = function(socket, playerId) {
 	sockets[playerId] = socket;
+};
+
+exports.getPlayerBySocketId = function(socketId) {
+	return playersBySocketId[socketId];
 };
 
 exports.getSocketByPlayerId = function(playerId) {

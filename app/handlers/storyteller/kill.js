@@ -1,59 +1,54 @@
-// exports.handle = function (data, interaction) {
-// 	var socket = interaction.socket;
-// 	var player = communication.getPlayerById(data.playerId);
-// 	var killer = communication.getPlayerBySocketId(socket.id);
-// 	var game = communication.getGameByPlayerId(player.id);
+var gameState = require('../../lib/gameState'),
+	error = require('../error'),
+	locales = require('../../../locales'),
+	messageSender = require('../messageSender'),
+	constants = require('../../../constants'),
+	payloads = require('../../../payloads');
 
-// 	if(player == null) {
-// 		return error(locales[socket.locale].errors.storyteller.KILL_NOBODY, socket);
-// 	}
+exports.handle = function (data, interaction) {
+	var socket = interaction.socket;
+	var playerRole = gameState.getRoleByPlayerId(data.data.playerId);
+	var killer = gameState.getPlayerBySocketId(socket.id);
+	var killerRole = gameState.getRoleByPlayerId(data.data.playerId);
+	var game = gameState.getGameById(data.data.gameId);
 
-// 	if(killer.role != constants.PLAYER_ROLE_SPY) {
-// 		return error(locales[socket.locale].errors.storyteller.KILL_ILLEGAL, socket);
-// 	}
+	if(!playerRole) {
+		return error(locales[socket.locale].errors.storyteller.KILL_NOBODY, socket);
+	}
 
-// 	// Kill the player
-// 	player.status = constants.PLAYER_STATUS_DEAD;
+	if(killerRole != constants.PLAYER_ROLE_AGENT) {
+		return error(locales[socket.locale].errors.storyteller.KILL_ILLEGAL, socket);
+	}
 
-// 	var killOut = new payloads.StorytellerKillOutPayload(player);
-// 	exports.sendPayload(
-// 		killOut.getPayload(),
-// 		communication.getSocketsByGameId(game.id));
+	var killOut = new payloads.StorytellerKillOutPayload({ id : data.data.playerId });
+	messageSender.send(
+		killOut.getPayload(),
+		gameState.getSocketsByGameId(game.id));
 
-// 	// Check victory conditions
-// 	if(player.role == constants.PLAYER_ROLE_ACTIVIST) {
-// 		var announcementOut = new payloads.StorytellerAnnouncementOutPayload(locales[game.locale].messages.storyteller.VICTORY_GOVERNMENT_ACTIVIST);
-// 		exports.sendPayload(
-// 			announcementOut.getPayload(),
-// 			communication.getSocketsByGameId(game.id));
+	// Check victory conditions
+	if(playerRole == constants.PLAYER_ROLE_ACTIVIST) {
+		announcementOut = new payloads.StorytellerAnnouncementOutPayload(locales[game.locale].messages.storyteller.VICTORY_GOVERNMENT_ACTIVIST);
+		messageSender.send(
+			announcementOut.getPayload(),
+			gameState.getSocketsByGameId(game.id));
 
-// 		var endIn = new payloads.StorytellerEndInPayload(game);
-// 		communication.routeMessage(
-// 			constants.COMMUNICATION_TARGET_STORYTELLER,
-// 			endIn.getPayload(),
-// 			constants.COMMUNICATION_SOCKET_SERVER);
+		endIn = new payloads.StorytellerEndInPayload(game);
+		messageSender.sendToServer(endIn.getPayload());
+	} else if(playerRole == constants.PLAYER_ROLE_JOURNALIST) {
+		announcementOut = new payloads.StorytellerAnnouncementOutPayload(locales[game.locale].messages.storyteller.VICTORY_GOVERNMENT_JOURNALIST);
+		messageSender.send(
+			announcementOut.getPayload(),
+			gameState.getSocketsByGameId(game.id));
 
-// 	} else if(player.role == constants.PLAYER_ROLE_JOURNALIST) {
-// 		var announcementOut = new payloads.StorytellerAnnouncementOutPayload(locales[game.locale].messages.storyteller.VICTORY_GOVERNMENT_JOURNALIST);
-// 		exports.sendPayload(
-// 			announcementOut.getPayload(),
-// 			communication.getSocketsByGameId(game.id));
+		endIn = new payloads.StorytellerEndInPayload(game);
+		messageSender.routeMessage(endIn.getPayload());
+	} else {
+		announcementOut = new payloads.StorytellerAnnouncementOutPayload(locales[game.locale].messages.storyteller.VICTORY_ACTIVISTS_KILLING);
+		messageSender.send(
+			announcementOut.getPayload(),
+			gameState.getSocketsByGameId(game.id));
 
-// 		var endIn = new payloads.StorytellerEndInPayload(game);
-// 		communication.routeMessage(
-// 			constants.COMMUNICATION_TARGET_STORYTELLER,
-// 			endIn.getPayload(),
-// 			constants.COMMUNICATION_SOCKET_SERVER);
-// 	} else {
-// 		var announcementOut = new payloads.StorytellerAnnouncementOutPayload(locales[game.locale].messages.storyteller.VICTORY_ACTIVISTS_KILLING);
-// 		exports.sendPayload(
-// 			announcementOut.getPayload(),
-// 			communication.getSocketsByGameId(game.id));
-
-// 		var endIn = new payloads.StorytellerEndInPayload(game);
-// 		communication.routeMessage(
-// 			constants.COMMUNICATION_TARGET_STORYTELLER,
-// 			endIn.getPayload(),
-// 			constants.COMMUNICATION_SOCKET_SERVER);
-// 	}
-// }
+		endIn = new payloads.StorytellerEndInPayload(game);
+		messageSender.sendToServer(endIn.getPayload());
+	}
+};

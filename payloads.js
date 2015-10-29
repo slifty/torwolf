@@ -591,13 +591,15 @@ exports.StorytellerJoinOutPayload = function(player) {
 	}
 }
 
-exports.StorytellerKillInPayload = function(player) {
+exports.StorytellerKillInPayload = function(player, game) {
 	this.player = player;
+	this.game = game;
 	this.getPayload = function() {
 		return {
 			type: constants.STORYTELLER_KILL,
 			data: {
-				playerId: this.player.id
+				playerId: this.player.id,
+				gameId: this.game.id
 			}
 		}
 	}

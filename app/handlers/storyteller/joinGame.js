@@ -49,7 +49,7 @@ exports.handle = function(payload, interaction) {
 		);
 
 		gameState.storeSocket(socket, player.id);
-		gameState.addPlayerToGame(game.id, player);
+		gameState.addPlayerToGame(game.id, player, socket);
 
 		// FIXME: do not hard code length
 		if(gameState.getGameById(game.id).players.length == 8) {
