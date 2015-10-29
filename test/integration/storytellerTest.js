@@ -258,9 +258,10 @@ describe('Core sockets', function() {
 		startGame();
 	});
 
-	it('Should kill a player', function(done) {
+	it.only('Should kill a player', function(done) {
 		killedEventsReceived = 0;
-		announcementsReceived = 0;
+		gameOversReceived = 0;
+		resultsReceived = 0;
 		var playerId = undefined;
 		socket.on('message', function(data) {
 			if (data.payload.type === messageTypes.STORYTELLER_ROLESET &&
@@ -274,12 +275,15 @@ describe('Core sockets', function() {
 				data.payload.data.playerId.should.equal(playerId);
 				killedEventsReceived++;
 			} else if (data.payload.type === messageTypes.STORYTELLER_ANNOUNCEMENT) {
-				data.payload.data.text.should.equal(locales['default'].messages.storyteller.VICTORY_ACTIVISTS_KILLING);
-				announcementsReceived++;
+				if (data.payload.data.text === locales['default'].messages.storyteller.VICTORY_ACTIVISTS_KILLING) {
+					resultsReceived++;
+				} else if (data.payload.data.text === locales['default'].messages.storyteller.GAMEOVER) {
+					gameOversReceived++;
+				}
 			} else {
 				// do nothing
 			}
-			if (killedEventsReceived === 8 && announcementsReceived === 8) {
+			if (killedEventsReceived === 8 && resultsReceived === 8 && gameOversReceived === 8) {
 				done();
 			}
 		});
