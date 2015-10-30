@@ -7,6 +7,7 @@ var messageTypes = require('../../message-types'),
 	emailSubpoena = require('./storyteller/subpoenaEmail'),
 	kill = require('./storyteller/kill'),
 	end = require('./storyteller/end'),
+	publish = require('./newspaper/publish'),
 	table = {};
 
 table[messageTypes.STORYTELLER_HEARTBEATPONG] = heartbeat;
@@ -17,5 +18,7 @@ table[messageTypes.STORYTELLER_IRCSUBPOENA] = ircSubpoena;
 table[messageTypes.STORYTELLER_EMAILSUBPOENA] = emailSubpoena;
 table[messageTypes.STORYTELLER_KILL] = kill;
 table[messageTypes.STORYTELLER_END] = end;
+
+table[messageTypes.NEWSPAPER_PUBLISH] = publish;
 
 module.exports = table;
