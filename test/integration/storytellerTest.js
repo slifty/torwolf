@@ -248,7 +248,7 @@ describe('Core sockets', function() {
 		startGame();
 	});
 
-	it.only('Should start ticks when a game starts', function(done) {
+	it('Should start ticks when a game starts', function(done) {
 		var expectedCount = 2;
 		var actualCount = 0;
 		socket.on('message', function(data) {
