@@ -3,7 +3,6 @@ var gameState = require('../../lib/gameState'),
 	locales = require('../../../locales'),
 	messageSender = require('../messageSender');
 
-// Handlers
 exports.handle = function (data, interaction) {
 	var game = gameState.getGameById(data.data.gameId);
 	game.isOver = true;
