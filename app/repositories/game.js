@@ -46,7 +46,6 @@ module.exports = {
 
 	update: function (game, id, cb) {
 		game.id = id;
-		// FIXME: has to be a better way to do this with sequelize
 		game.save(game)
 		.then(function(result) {
 			return cb(null, result);

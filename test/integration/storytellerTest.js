@@ -120,7 +120,6 @@ describe('Core sockets', function() {
 				}
 				delete expectedUsers[playerId];
 				game.players.length.should.equal(2);
-				// FIXME should be 6
 				if (Object.keys(expectedUsers).length === 7) {
 					done();
 				}
@@ -253,13 +252,7 @@ describe('Core sockets', function() {
 		var actualCount = 0;
 		socket.on('message', function(data) {
 			if (data.payload.type === messageTypes.STORYTELLER_TOCK && ++actualCount === expectedCount) {
-				gameRepository.get(game.id, function(err, game) {
-					if (err) {
-						return done(err);
-					}
-					game.phase.should.equal('STARTED');
-					done();
-				});
+				done();
 			}
 		});
 		startGame();
@@ -306,9 +299,14 @@ describe('Core sockets', function() {
 	it('Should start game when enough players have joined', function(done) {
 		socket.on('message', function(data) {
 			if (data.payload.type === messageTypes.STORYTELLER_TOCK) {
-				done();
+				gameRepository.get(game.id, function(err, game) {
+					if (err) {
+						return done(err);
+					}
+					game.phase.should.equal('STARTED');
+					done();
+				});
 			}
-			// TODO: assert
 		});
 		startGame();
 	});
