@@ -99,6 +99,7 @@ exports.handle = function(payload, interaction) {
 			messageSender.sendToServer(
 				tickIn.getPayload());
 
+			game.phase = 'STARTED';
 			gameRepository.update(game, game.id, callback);
 		}
 	], function(err) {

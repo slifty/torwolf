@@ -58,7 +58,6 @@ exports.handle = function(payload, interaction) {
 			messageSender.sendToServer(
 				startOut.getPayload());
 		}
-		// TODO: update game
 
 		// TODO: Have them join IRC
 		// var joinIn = new payloads.IrcJoinInPayload(player.name);

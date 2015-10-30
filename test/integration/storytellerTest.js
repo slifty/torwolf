@@ -9,7 +9,8 @@ var should = require('chai').should(),
 	constants = require('../../constants'),
 	_ = require('lodash'),
 	gameState = require('../../app/lib/gameState'),
-	locales = require('../../locales');
+	locales = require('../../locales'),
+	gameRepository = require('../../app/repositories/game');
 
 constants.TICK_HEARTBEAT = 1000;
 constants.TICK_LENGTH = 200;
@@ -247,12 +248,18 @@ describe('Core sockets', function() {
 		startGame();
 	});
 
-	it('Should start ticks when a game starts', function(done) {
+	it.only('Should start ticks when a game starts', function(done) {
 		var expectedCount = 2;
 		var actualCount = 0;
 		socket.on('message', function(data) {
 			if (data.payload.type === messageTypes.STORYTELLER_TOCK && ++actualCount === expectedCount) {
-				done();
+				gameRepository.get(game.id, function(err, game) {
+					if (err) {
+						return done(err);
+					}
+					game.phase.should.equal('STARTED');
+					done();
+				});
 			}
 		});
 		startGame();
@@ -284,7 +291,13 @@ describe('Core sockets', function() {
 				// do nothing
 			}
 			if (killedEventsReceived === 8 && resultsReceived === 8 && gameOversReceived === 8) {
-				done();
+				gameRepository.get(game.id, function(err, game) {
+					if (err) {
+						return done(err);
+					}
+					game.phase.should.equal('COMPLETED');
+					done();
+				});
 			}
 		});
 		startGame();
