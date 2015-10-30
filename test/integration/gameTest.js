@@ -1,10 +1,10 @@
-var should = require('chai').should();
-var request = require('supertest');
-var moment = require('moment');
-var async = require('async');
-var _ = require('lodash');
-
-var url = 'http://localhost:3000';
+var should = require('chai').should(),
+	expect = require('chai').expect,
+	request = require('supertest'),
+	moment = require('moment'),
+	async = require('async'),
+	_ = require('lodash'),
+	url = 'http://localhost:3000';
 
 if (!global.hasOwnProperty('testApp')) {
 	global.testApp = require('../../server');
@@ -153,7 +153,8 @@ describe('Game routes', function() {
 				var resultSet = response.body;
 				resultSet.start.should.equal(0);
 				resultSet.totalCount.should.exist;
-				resultSet.results.should.have.length(20);
+				expect(resultSet.results.length).to.be.at.least(1);
+				expect(resultSet.results.length).to.be.at.most(20);
 				resultSet.results.forEach(function(game) {
 					game.name.should.equal('Game ' + 15);
 				});

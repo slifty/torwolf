@@ -8,6 +8,14 @@ var classes = require('../classes'),
 	players = {},
 	playersBySocketId = {};
 
+exports.processInvestigations = function (game) {
+	for(var x in game.activeInvestigations) {
+		var investigation = game.activeInvestigations[x];
+		delete this.activeInvestigations[rumorId];
+		game.pastInvestigations[rumorId] = rumor;
+	}
+};
+
 exports.assignRole = function(gameId, playerId, role) {
 	roles[playerId] = role;
 	var game = games[gameId];
@@ -31,6 +39,9 @@ exports.storeGame = function(game) {
 	game.roles = {};
 	game.players = [];
 	games[game.id] = game;
+	game.activeInvestigations = {};
+	game.pastInvestigations = {};
+	game.rumorCount = 3;
 	// TODO: locales
 	game.locale = 'default';
 };
@@ -68,7 +79,7 @@ exports.getSocketByPlayerId = function(playerId) {
 };
 
 exports.getSocketsByGameId = function(gameId) {
-	game = exports.getGameById(gameId);
+	var game = exports.getGameById(gameId);
 	return exports.getSocketsByGame(game);
 };
 
