@@ -3,7 +3,7 @@ var messageSender = require('../messageSender'),
 	payloads = require('../../../payloads');
 
 exports.handle = function(payload, interaction) {
-	outPayload = new payloads.StorytellerSubpoenaIrcOutPayload();
+	var outPayload = new payloads.StorytellerSubpoenaIrcOutPayload();
 	messageSender.send(
 		outPayload.getPayload(),
 		gameState.getSocketsByGameId(payload.data.gameId));

@@ -26,6 +26,8 @@ exports.handle = function (data, interaction) {
 		gameState.getSocketsByGameId(game.id));
 
 	// Check victory conditions
+	var endIn = null;
+	var announcementOut = null;
 	if(playerRole == constants.PLAYER_ROLE_ACTIVIST) {
 		announcementOut = new payloads.StorytellerAnnouncementOutPayload(locales[game.locale].messages.storyteller.VICTORY_GOVERNMENT_ACTIVIST);
 		messageSender.send(

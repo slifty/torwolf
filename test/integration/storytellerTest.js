@@ -258,7 +258,7 @@ describe('Core sockets', function() {
 		startGame();
 	});
 
-	it.only('Should kill a player', function(done) {
+	it('Should kill a player', function(done) {
 		killedEventsReceived = 0;
 		gameOversReceived = 0;
 		resultsReceived = 0;

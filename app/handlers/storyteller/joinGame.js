@@ -22,17 +22,18 @@ exports.handle = function(payload, interaction) {
 		if (error) {
 			throw error;
 		}
-		game = results[0];
-		player = results[1];
+		var game = results[0];
+		var player = results[1];
 
 		if (!gameState.getGameById(game.id)) {
 			gameState.storeGame(game);
 		}
 
 		// Tell the player who is in the game
+		var joinOut = null;
 		for(var x in gameState.getGameById(game.id).players) {
 			// TODO: replace with state replay
-			otherPlayer = gameState.getGameById(game.id).players[x];
+			var otherPlayer = gameState.getGameById(game.id).players[x];
 			joinOut = new payloads.StorytellerJoinOutPayload(otherPlayer);
 			messageSender.send(
 				joinOut.getPayload(),
