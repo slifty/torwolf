@@ -58,12 +58,5 @@ exports.handle = function(payload, interaction) {
 			messageSender.sendToServer(
 				startOut.getPayload());
 		}
-
-		// TODO: Have them join IRC
-		// var joinIn = new payloads.IrcJoinInPayload(player.name);
-		// communication.routeMessage(
-		// 	constants.COMMUNICATION_TARGET_IRC,
-		// 	joinIn.getPayload(),
-		// 	socket);
 	});
 };

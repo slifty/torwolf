@@ -18,10 +18,10 @@ exports.IRC_DISCONNECT = "disconnect" // Disconnect from IRC
 exports.IRC_DISCONNECTED = "disconnected" // A player has disconnected from IRC
 exports.IRC_MESSAGE = "message"; // Send an IRC message
 exports.IRC_MESSAGED = "messaged"; // An IRC message has been sent
-exports.IRC_JOIN = "join"; // Join an IRC channel
-exports.IRC_JOINED = "joined"; // A player has joined an IRC channel
-exports.IRC_LEAVE = "leave"; // Leave an IRC channel
-exports.IRC_LEFT = "left"; // A player has left an IRC channel
+exports.IRC_JOIN = "join-irc"; // Join an IRC channel
+exports.IRC_JOINED = "joined-irc"; // A player has joined an IRC channel
+exports.IRC_LEAVE = "leave-irc"; // Leave an IRC channel
+exports.IRC_LEFT = "left-irc"; // A player has left an IRC channel
 exports.IRC_SWITCHNICK = "switch nick"; // switch IRC nicks
 exports.IRC_NICKSWITCHED = "nick switched"; // A player has switched IRC nicks
 

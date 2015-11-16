@@ -91,6 +91,9 @@ exports.handle = function(payload, interaction) {
 				// 		activateOut.getPayload(),
 				// 		communication.getSocketByPlayerId(player.id));
 				// }
+
+                var joinIn = new payloads.IrcJoinInPayload(player);
+                messageSender.sendToServer(joinIn.getPayload());
 			}
 
 			// Start first turn

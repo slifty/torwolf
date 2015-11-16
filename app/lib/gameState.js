@@ -6,7 +6,31 @@ var classes = require('../classes'),
 	games = {},
 	roles = {},
 	players = {},
-	playersBySocketId = {};
+	playersBySocketId = {},
+	users = {};
+
+// TODO: oh hello it's a massive memory leak
+
+exports.switchIrcUserNick = function(playerId, newNick) {
+	users[playerId].nick = newNick;
+};
+
+exports.getIrcUserByNick = function (nick) {
+	for(var userId in users) {
+		if(users[userId].nick === nick) {
+			return users[userId];
+		}
+	}
+	return null;
+};
+
+exports.getIrcUserByPlayerId = function (playerId) {
+	return (playerId in users) ? users [playerId] : null;
+};
+
+exports.addPlayerToIrc = function(player) {
+	users[player.id] = player;
+};
 
 exports.processInvestigations = function (game) {
 	for(var x in game.activeInvestigations) {
@@ -29,7 +53,12 @@ exports.getRoleByPlayerId = function(playerId) {
 	return roles[playerId];
 };
 
+exports.getPlayerById = function(playerId) {
+	return players[playerId];
+};
+
 exports.addPlayerToGame = function(gameId, player, socket) {
+	player.activeGameId = gameId;
 	games[gameId].players.push(player);
 	players[player.id] = player;
 	playersBySocketId[socket.id] = player;

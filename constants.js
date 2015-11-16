@@ -42,3 +42,10 @@ exports.RUMOR_SOURCE_SYSTEM = "S";
 exports.RUMOR_SOURCE_NEWSPAPER = "N";
 
 exports.LOCALE_DEFAULT = "default";
+
+exports.IRC_MESSAGE_TYPE_ACTION = "A";
+exports.IRC_MESSAGE_TYPE_JOIN = "J";
+exports.IRC_MESSAGE_TYPE_LEAVE = "L";
+exports.IRC_MESSAGE_TYPE_MESSAGE = "M";
+exports.IRC_MESSAGE_TYPE_NICK = "N";
+exports.IRC_MESSAGE_TYPE_SYSTEM = "S";

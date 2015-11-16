@@ -156,13 +156,14 @@ exports.IrcMessageOutPayload = function(message) {
 	};
 };
 
-exports.IrcJoinInPayload = function(nick) {
-	this.nick = nick;
+exports.IrcJoinInPayload = function(player) {
+	this.player = player;
 	this.getPayload = function() {
 		return {
 			type: constants.IRC_JOIN,
 			data: {
-				nick: this.nick
+				nick: this.player.username,
+				playerId: this.player.id
 			}
 		}
 	};
@@ -177,6 +178,32 @@ exports.IrcJoinOutPayload = function(user) {
 				playerId: this.user.player.id,
 				userId: this.user.id,
 				nick: this.user.nick
+			}
+		}
+	};
+};
+
+exports.IrcLeaveInPayload = function(user) {
+	this.user = user;
+	this.getPayload = function() {
+		return {
+			type: constants.IRC_LEAVE,
+			data: {
+				playerId: this.user.player.id,
+				userId: this.user.id
+			}
+		}
+	};
+};
+
+exports.IrcLeaveOutPayload = function(user) {
+	this.user = user;
+	this.getPayload = function() {
+		return {
+			type: constants.IRC_LEFT,
+			data: {
+				playerId: this.user.player.id,
+				userId: this.user.id
 			}
 		}
 	};

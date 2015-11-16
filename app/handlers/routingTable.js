@@ -8,6 +8,9 @@ var messageTypes = require('../../message-types'),
 	kill = require('./storyteller/kill'),
 	end = require('./storyteller/end'),
 	publish = require('./newspaper/publish'),
+	joinIrc = require('./irc/join'),
+	leaveIrc = require('./irc/leave'),
+	messageIrc = require('./irc/message'),
 	table = {};
 
 table[messageTypes.STORYTELLER_HEARTBEATPONG] = heartbeat;
@@ -20,5 +23,9 @@ table[messageTypes.STORYTELLER_KILL] = kill;
 table[messageTypes.STORYTELLER_END] = end;
 
 table[messageTypes.NEWSPAPER_PUBLISH] = publish;
+
+table[messageTypes.IRC_JOIN] = joinIrc;
+table[messageTypes.IRC_LEAVE] = leaveIrc;
+table[messageTypes.IRC_MESSAGE] = messageIrc;
 
 module.exports = table;

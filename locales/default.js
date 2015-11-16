@@ -192,6 +192,7 @@ if(typeof(window) != "undefined") {
 		irc: {
 			CONNECTING: "Connecting to IRC... ",
 			CONNECTED: "Connected.",
+			DISCONNECTED: "Disconnected from IRC.",
 			JOINED: "has joined the channel.",
 			LEFT: "has left the channel.",
 			MOTD: "MOTD for irc.torwolf.net: Welcome to the torwolf IRC server! " +

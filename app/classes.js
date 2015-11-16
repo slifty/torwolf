@@ -2,6 +2,36 @@ var uuid = require('uuid'),
 	constants = require('../constants'),
 	words = require('../words');
 
+exports.IrcMessage = function(text, type, user) {
+		this.id = uuid.v4();
+		this.text = text;
+		this.type = type;
+		this.user = user;
+
+		//getters and setters
+		this.getId = function() {
+			return this.id;
+		};
+		this.getText = function() {
+			return this.text;
+		};
+		this.getType = function() {
+			return this.type;
+		};
+		this.getUser = function() {
+			return this.user;
+		};
+		this.setText = function(text) {
+			this.text = text;
+		};
+};
+
+exports.IrcUser = function() {
+	this.id = uuid.v4();
+	this.nick = "";
+	this.player = null;
+};
+
 exports.Interaction = function() {
 	this.id = uuid.v4();
 	this.isSsl = false;
